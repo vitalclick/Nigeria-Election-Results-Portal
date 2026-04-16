@@ -1,7 +1,7 @@
 # OpenBallot Nigeria
 
 > **Transparent. Verifiable. Irreversible.**
-> Nigeria's first open, multi-source, document-first election results platform — powered by Form EC8A, built by civil society, accountable to the public.
+> Nigeria's first open, multi-source, document-first election results platform - powered by Form EC8A, built by civil society, accountable to the public.
 
 ---
 
@@ -23,7 +23,7 @@
 6. [The EC8A Pipeline](#the-ec8a-pipeline)
 7. [Multi-Source Verification Engine](#multi-source-verification-engine)
 8. [Discrepancy Detection & Escalation](#discrepancy-detection--escalation)
-9. [The Audit Trail — Level C](#the-audit-trail--level-c)
+9. [The Audit Trail - Level C](#the-audit-trail--level-c)
 10. [Election Types Supported](#election-types-supported)
 11. [Interactive Results Map](#interactive-results-map)
 12. [Agent & Observer Onboarding](#agent--observer-onboarding)
@@ -43,28 +43,28 @@
 
 ## What is OpenBallot Nigeria?
 
-**OpenBallot Nigeria** is an open-source, civic technology platform that enables the real-time collection, verification, and public display of Nigerian election results — directly from Form EC8A, the legally binding result sheet signed by the Presiding Officer and all party agents at every polling unit.
+**OpenBallot Nigeria** is an open-source, civic technology platform that enables the real-time collection, verification, and public display of Nigerian election results - directly from Form EC8A, the legally binding result sheet signed by the Presiding Officer and all party agents at every polling unit.
 
 It is owned and governed by a consortium of civil society organisations (CSOs), open to all INEC-registered political parties and accredited election observers, and free for any citizen to access.
 
-OpenBallot does not compete with INEC. It runs **in parallel** — providing an independent, multi-source, document-anchored view of results that can be publicly compared to the official INEC IReV portal the moment INEC uploads its own EC8A scans.
+OpenBallot does not compete with INEC. It runs **in parallel** - providing an independent, multi-source, document-anchored view of results that can be publicly compared to the official INEC IReV portal the moment INEC uploads its own EC8A scans.
 
-**Built for the 2027 Nigerian General Elections — and every election after.**
+**Built for the 2027 Nigerian General Elections - and every election after.**
 
 ---
 
 ## The Problem We Are Solving
 
-In the 2023 Nigerian Presidential Election, the INEC Result Viewing portal (IReV) — designed to show real-time polling unit results — experienced failures that prevented timely uploads of presidential election results. The fundamental question of whether the results declared matched the forms signed at polling units was never fully resolved in the public mind. Trust collapsed. Litigation followed.
+In the 2023 Nigerian Presidential Election, the INEC Result Viewing portal (IReV) - designed to show real-time polling unit results - experienced failures that prevented timely uploads of presidential election results. The fundamental question of whether the results declared matched the forms signed at polling units was never fully resolved in the public mind. Trust collapsed. Litigation followed.
 
 The structural problem was not merely technical. It was architectural: **a single official source, under pressure, with no independent verification layer.**
 
 OpenBallot solves this by design:
 
 - **No single source of truth.** Multiple independent parties and observers upload EC8A simultaneously. Results emerge from consensus, not from a single upload.
-- **No manually entered numbers.** The form itself is the data. Nobody types tallies into OpenBallot. The physical signed document is photographed, uploaded, and read by AI — eliminating the manipulation surface entirely.
+- **No manually entered numbers.** The form itself is the data. Nobody types tallies into OpenBallot. The physical signed document is photographed, uploaded, and read by AI - eliminating the manipulation surface entirely.
 - **No closed system.** Every document, every extracted figure, every reconciliation decision, and every discrepancy is visible to the public and downloadable as open data.
-- **No black box.** The entire evidentiary chain — who submitted what, when, from where, what the AI extracted, and what the verification engine decided — is published as a permanent open dataset after every election.
+- **No black box.** The entire evidentiary chain - who submitted what, when, from where, what the AI extracted, and what the verification engine decided - is published as a permanent open dataset after every election.
 
 ---
 
@@ -133,10 +133,10 @@ Election Day
 | **API access** | None | Open REST API + embeddable widget |
 | **Languages** | English only | English, Hausa, Yoruba, Igbo, Nigerian Pidgin |
 | **Agent accountability** | N/A | Full identity chain per submission |
-| **Historical data** | Yes (2004–present) | Yes — from 2023 forward, expanding |
+| **Historical data** | Yes (2004–present) | Yes - from 2023 forward, expanding |
 | **Between elections** | Static archive | Live platform, always auditable |
-| **Legal document basis** | No | Yes — EC8A is primary legal evidence |
-| **Open source** | No | Yes — fully open, community auditable |
+| **Legal document basis** | No | Yes - EC8A is primary legal evidence |
+| **Open source** | No | Yes - fully open, community auditable |
 
 ---
 
@@ -189,20 +189,20 @@ OpenBallot is composed of six core services, each independently deployable:
 
 ## The EC8A Pipeline
 
-Form EC8A is the **legally binding result sheet** signed by the Presiding Officer and all party agents at every polling unit in Nigeria. It is the primary evidence document in every election tribunal and Supreme Court case involving disputed results. OpenBallot makes it the foundation — not a supplement — of the results record.
+Form EC8A is the **legally binding result sheet** signed by the Presiding Officer and all party agents at every polling unit in Nigeria. It is the primary evidence document in every election tribunal and Supreme Court case involving disputed results. OpenBallot makes it the foundation - not a supplement - of the results record.
 
 ### Submission Flow
 
 1. **Agent photographs EC8A** at the polling unit using the OpenBallot PWA
-2. **GPS coordinates are locked** at the moment of capture — stored in image metadata
-3. **Submission is queued** — the app works fully offline; uploads automatically when connectivity resumes
+2. **GPS coordinates are locked** at the moment of capture - stored in image metadata
+3. **Submission is queued** - the app works fully offline; uploads automatically when connectivity resumes
 4. **Ingestion Service receives the image** and runs:
    - Blur and lighting quality check
    - Whole-form visibility check (no cutoff edges)
-   - Form classification — confirms this is EC8A, not another INEC form
-   - Duplicate detection — has this polling unit code already been submitted by this party?
-   - Geolocation validation — GPS coordinates must fall within 100 metres of the polling unit's registered location (flagged, not hard-blocked, to account for GPS drift)
-   - EXIF metadata integrity check — flags if metadata has been stripped or altered
+   - Form classification - confirms this is EC8A, not another INEC form
+   - Duplicate detection - has this polling unit code already been submitted by this party?
+   - Geolocation validation - GPS coordinates must fall within 100 metres of the polling unit's registered location (flagged, not hard-blocked, to account for GPS drift)
+   - EXIF metadata integrity check - flags if metadata has been stripped or altered
 5. **AI Extraction Engine** processes the image:
    - Google Document AI (primary) extracts structured fields
    - GPT-4o Vision (secondary) verifies low-confidence extractions
@@ -210,13 +210,13 @@ Form EC8A is the **legally binding result sheet** signed by the Presiding Office
    - Detects: Presiding Officer signature, Party Agent signatures, Official stamp
    - Runs arithmetic consistency check: `sum(candidate votes) == Total Valid Votes`
    - Assigns a **confidence score** to each field
-6. **Human Review Queue** — any extraction below confidence threshold is routed to a human reviewer before publication
+6. **Human Review Queue** - any extraction below confidence threshold is routed to a human reviewer before publication
 7. **Structured result object** written to database
 8. **Verification Engine** cross-references with other party submissions for the same polling unit
 
 ### What Is Always Published Alongside Numbers
 
-Every result displayed on OpenBallot — no matter how high the confidence score — is accompanied by:
+Every result displayed on OpenBallot - no matter how high the confidence score - is accompanied by:
 - The actual EC8A photograph submitted
 - The name and credential type of the submitting agent/observer
 - The confidence score of each extracted field
@@ -234,13 +234,13 @@ When multiple parties and observers submit EC8A for the same polling unit, the V
 | Status | Condition | Map Colour |
 |---|---|---|
 | **No Data** | No submissions yet | ⬜ White |
-| **Unverified — Single Source** | Only one party/observer has submitted | 🟡 Yellow |
+| **Unverified - Single Source** | Only one party/observer has submitted | 🟡 Yellow |
 | **Consensus** | Multiple independent sources agree on figures | 🟢 Green |
 | **Discrepancy Detected** | Submissions exist but figures differ | 🟠 Orange |
 | **INEC Confirmed** | INEC IReV upload matches consensus | 🔵 Blue |
 | **INEC Conflict** | INEC IReV figures differ from multi-source consensus | 🔴 Red |
 
-The **Red state** — where INEC's official upload conflicts with independent multi-source consensus — is the most powerful accountability signal the platform produces. It is publicly visible, permanently recorded, and immediately escalated.
+The **Red state** - where INEC's official upload conflicts with independent multi-source consensus - is the most powerful accountability signal the platform produces. It is publicly visible, permanently recorded, and immediately escalated.
 
 ---
 
@@ -271,17 +271,17 @@ OpenBallot does not adjudicate. It presents the evidence and escalates to the ap
 
 ---
 
-## The Audit Trail — Level C
+## The Audit Trail - Level C
 
 OpenBallot implements the highest level of evidentiary accountability:
 
 ### Level C Audit Trail
 
 **1. Cryptographic Image Hashing**
-Every EC8A image uploaded to OpenBallot is immediately hashed using SHA-256. The hash is stored in the database and published in a publicly downloadable manifest file. This means anyone — today, or ten years from now — can verify that the EC8A image OpenBallot displays is byte-for-byte identical to what was submitted on election day. Any alteration changes the hash.
+Every EC8A image uploaded to OpenBallot is immediately hashed using SHA-256. The hash is stored in the database and published in a publicly downloadable manifest file. This means anyone - today, or ten years from now - can verify that the EC8A image OpenBallot displays is byte-for-byte identical to what was submitted on election day. Any alteration changes the hash.
 
 **2. Blockchain Anchoring**
-Batches of hashes (every 30 minutes during active elections) are anchored to the Ethereum mainnet via an OP_RETURN transaction. This creates a permanent, third-party-verifiable record that the batch of hashes existed at that point in time — without any dependence on OpenBallot's own infrastructure.
+Batches of hashes (every 30 minutes during active elections) are anchored to the Ethereum mainnet via an OP_RETURN transaction. This creates a permanent, third-party-verifiable record that the batch of hashes existed at that point in time - without any dependence on OpenBallot's own infrastructure.
 
 **3. Full Evidentiary Chain Publication**
 After each election concludes, OpenBallot publishes the complete evidentiary dataset as open data:
@@ -295,7 +295,7 @@ After each election concludes, OpenBallot publishes the complete evidentiary dat
 This dataset is released under a Creative Commons Attribution licence. Any researcher, journalist, political party, or citizen can download and independently audit the entire election result record.
 
 **4. Tamper-Evidence for OpenBallot Itself**
-The full audit log is append-only. No record can be deleted or altered — only flagged. Any attempt to modify historical records is detectable via hash chain verification. This protects against the "insider threat" scenario — even someone with database access cannot rewrite history without detection.
+The full audit log is append-only. No record can be deleted or altered - only flagged. Any attempt to modify historical records is detectable via hash chain verification. This protects against the "insider threat" scenario - even someone with database access cannot rewrite history without detection.
 
 ---
 
@@ -325,11 +325,11 @@ The public-facing map is the primary interface for citizens, journalists, and ob
 
 ### Map Layers
 
-- **National view** — choropleth by state, showing lead party and completion percentage
-- **State view** — choropleth by LGA
-- **LGA view** — choropleth by Ward
-- **Ward view** — individual polling unit dots, colour-coded by verification status
-- **Polling Unit detail** — full result card with EC8A image, extracted figures, all submissions, reconciliation status
+- **National view** - choropleth by state, showing lead party and completion percentage
+- **State view** - choropleth by LGA
+- **LGA view** - choropleth by Ward
+- **Ward view** - individual polling unit dots, colour-coded by verification status
+- **Polling Unit detail** - full result card with EC8A image, extracted figures, all submissions, reconciliation status
 
 ### Controls
 
@@ -368,7 +368,7 @@ OpenBallot is designed to be accessible to any Nigerian who can use a smartphone
 
 ### Party Onboarding Flow
 
-1. Party applies to OpenBallot consortium (any INEC-registered party is eligible — no exclusions)
+1. Party applies to OpenBallot consortium (any INEC-registered party is eligible - no exclusions)
 2. Consortium verifies INEC registration status
 3. Party receives access to the **Party Admin Portal**
 4. Party uploads agent roster (CSV: agent name, phone number, assigned polling unit code)
@@ -384,7 +384,7 @@ Accredited election observers (domestic and international) can register independ
 3. Observer can submit EC8A for any polling unit they are deployed to (not locked to a single unit, since observers may cover multiple units)
 4. Observer submissions are labelled separately from party agent submissions in the public record
 
-### The Agent App — Core UX Flow
+### The Agent App - Core UX Flow
 
 The agent app has exactly four screens:
 
@@ -401,7 +401,7 @@ That is the entire flow. Four screens, no forms to fill, no numbers to type.
 
 ## Multi-Language Support
 
-The full platform — agent PWA, public dashboard, party admin portal, and all system notifications — is available in:
+The full platform - agent PWA, public dashboard, party admin portal, and all system notifications - is available in:
 
 | Language | Code | Region Coverage |
 |---|---|---|
@@ -524,7 +524,7 @@ The 2023 General Election results are available on INEC's IReV portal as EC8A im
 
 ### Schema Design for Permanence
 
-Every table in the database is scoped by `election_id`, enabling any number of elections to coexist. The polling unit register (master geo table) is election-agnostic — elections reference it, not the reverse.
+Every table in the database is scoped by `election_id`, enabling any number of elections to coexist. The polling unit register (master geo table) is election-agnostic - elections reference it, not the reverse.
 
 ### Between Elections
 
@@ -532,7 +532,7 @@ The platform remains live and useful between election cycles:
 - Historical results are always browsable and downloadable
 - The public API remains active
 - Researchers and journalists can query the full dataset at any time
-- New elections are added to the same platform — agents simply re-register for the next cycle
+- New elections are added to the same platform - agents simply re-register for the next cycle
 
 ---
 
@@ -547,8 +547,8 @@ The platform remains live and useful between election cycles:
 | **Backend API** | Next.js API Routes + FastAPI (Python) | Next.js for web layer; FastAPI for ingestion/AI workers |
 | **Database** | Supabase (PostgreSQL + PostGIS) | Geo queries, Realtime subscriptions, Row-level security |
 | **Real-time** | Supabase Realtime | Map updates as submissions arrive |
-| **OCR — Primary** | Google Document AI (Form Parser) | Purpose-built for structured form extraction |
-| **OCR — Secondary** | GPT-4o Vision API | Fallback and verification for low-confidence extractions |
+| **OCR - Primary** | Google Document AI (Form Parser) | Purpose-built for structured form extraction |
+| **OCR - Secondary** | GPT-4o Vision API | Fallback and verification for low-confidence extractions |
 | **Image Storage** | Supabase Storage + Cloudflare R2 | Redundant storage; CDN-delivered EC8A images |
 | **Queue** | BullMQ + Redis | Async processing of ingestion pipeline |
 | **Blockchain** | Ethereum (OP_RETURN via Infura) | Hash anchoring for immutability proof |
@@ -653,7 +653,7 @@ audit_log (
 | **Coordinated fake EC8A submissions** | Geo-fencing (GPS must match PU); multi-party cross-verification (hard to fake agreement); image metadata integrity; public scrutiny via visible EC8A images |
 | **Agent account takeover** | Phone OTP authentication; device binding; anomaly detection (same agent submitting from multiple locations) |
 | **Party admin account compromise** | 2FA enforced on all admin accounts; all admin actions logged and auditable |
-| **Insider threat (platform team)** | Append-only audit log; blockchain-anchored hashes; full dataset published after election — any alteration is externally verifiable |
+| **Insider threat (platform team)** | Append-only audit log; blockchain-anchored hashes; full dataset published after election - any alteration is externally verifiable |
 | **AI hallucination in OCR** | Confidence scoring; human review queue; source image always publicly visible; arithmetic consistency checks |
 | **Malicious form uploads (non-EC8A)** | Form classification model; format validation before any data extraction |
 | **EXIF stripping / metadata manipulation** | Flagged as "metadata integrity warning" in submission record; does not block submission but is publicly visible |
@@ -701,13 +701,13 @@ OpenBallot Nigeria is a civic public good, operated on a not-for-profit basis. T
 
 We are approaching the following funders ahead of the 2027 election cycle:
 
-- **MacArthur Foundation** — Nigeria-focused civic and democratic governance grants
-- **Ford Foundation** — Civic technology, transparency, and human rights
-- **European Union Election Observation Missions** — Digital infrastructure for election integrity
+- **MacArthur Foundation** - Nigeria-focused civic and democratic governance grants
+- **Ford Foundation** - Civic technology, transparency, and human rights
+- **European Union Election Observation Missions** - Digital infrastructure for election integrity
 
 ### For Funders
 
-The full grant documentation package — including platform architecture, governance structure, budget breakdown, and risk assessment — is available on request at **grants@openballot.ng**
+The full grant documentation package - including platform architecture, governance structure, budget breakdown, and risk assessment - is available on request at **grants@openballot.ng**
 
 The OpenBallot codebase is fully open source (AGPL v3). Funders, partners, and the public can audit every line of code at any time.
 
@@ -715,16 +715,16 @@ The OpenBallot codebase is fully open source (AGPL v3). Funders, partners, and t
 
 ## Roadmap
 
-### Phase 1 — Foundation (Months 1–4)
+### Phase 1 - Foundation (Months 1–4)
 - [ ] Core data model and Supabase schema
 - [ ] Agent PWA (four-screen offline-first upload flow)
-- [ ] OCR pipeline (Google Document AI + GPT-4o) — tested against 2023 EC8A samples
+- [ ] OCR pipeline (Google Document AI + GPT-4o) - tested against 2023 EC8A samples
 - [ ] Basic public map (national and state level)
 - [ ] Pilot deployment: one off-cycle governorship election (single state)
 - [ ] Founding CSO consortium established
 - [ ] Grant applications submitted
 
-### Phase 2 — Multi-Party & Multi-State (Months 5–9)
+### Phase 2 - Multi-Party & Multi-State (Months 5–9)
 - [ ] Party Admin Portal with bulk agent onboarding
 - [ ] Multi-source Verification Engine
 - [ ] Discrepancy Register (public page)
@@ -735,7 +735,7 @@ The OpenBallot codebase is fully open source (AGPL v3). Funders, partners, and t
 - [ ] Blockchain hash anchoring
 - [ ] Deployment: multi-state off-cycle elections
 
-### Phase 3 — National Scale (Months 10–18)
+### Phase 3 - National Scale (Months 10–18)
 - [ ] Scale testing at 176,846 polling unit load
 - [ ] Observer onboarding portal
 - [ ] Historical data ingestion (2023 IReV EC8A images)
@@ -753,12 +753,12 @@ OpenBallot Nigeria is open source and community contributions are welcome.
 
 ### Ways to Contribute
 
-- **Code** — See open issues tagged `good-first-issue` and `help-wanted`
-- **Language** — Help translate or review UI strings in Hausa, Yoruba, Igbo, or Pidgin
-- **OCR Testing** — Help build and label the EC8A training dataset
-- **GeoData** — Help verify and improve polling unit coordinates
-- **Documentation** — Improve technical and user-facing docs
-- **Security** — Responsible disclosure: **security@openballot.ng**
+- **Code** - See open issues tagged `good-first-issue` and `help-wanted`
+- **Language** - Help translate or review UI strings in Hausa, Yoruba, Igbo, or Pidgin
+- **OCR Testing** - Help build and label the EC8A training dataset
+- **GeoData** - Help verify and improve polling unit coordinates
+- **Documentation** - Improve technical and user-facing docs
+- **Security** - Responsible disclosure: **security@openballot.ng**
 
 ### Development Setup
 
@@ -801,7 +801,7 @@ See [LICENSE](/LICENSE) for the full licence text.
 
 ---
 
-*OpenBallot Nigeria — The form is the truth. The truth is public.*
+*OpenBallot Nigeria - The form is the truth. The truth is public.*
 
 ---
 
