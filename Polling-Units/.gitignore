@@ -1,0 +1,60 @@
+# =========================
+# Node.js dependencies
+# =========================
+node_modules/
+
+# =========================
+# Output data (VERY IMPORTANT)
+# =========================
+polling_units.json
+*.json
+*.csv
+*.xlsx
+
+# If you later add database dumps
+*.sql
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.local
+.env.*.local
+
+# =========================
+# Puppeteer / Chromium cache
+# =========================
+.cache/
+.puppeteer/
+chrome-profile/
+user-data/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / editor files
+# =========================
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# Backup / temp files
+# =========================
+backup/
+temp/
+tmp/
+*.bak
