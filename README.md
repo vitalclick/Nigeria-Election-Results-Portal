@@ -804,3 +804,12 @@ See [LICENSE](/LICENSE) for the full licence text.
 *OpenBallot Nigeria - The form is the truth. The truth is public.*
 
 ---
+
+**Website:** https://openballot.ng  
+**API:** https://api.openballot.ng  
+**GitHub:** https://github.com/openballot-nigeria  
+**Contact:** hello@openballot.ng  
+**Press:** press@openballot.ng  
+**Grants:** grants@openballot.ng  
+**Security:** security@openballot.ng  
+**Consortium membership:** consortium@openballot.ng
