@@ -1,13 +1,14 @@
 const path = require("path");
 
 module.exports = {
-  // Fallback base URLs (the scraper auto-discovers the current theme first)
+  // Fallback base URLs tried when auto-discovery fails.
+  // The scraper first fetches the INEC polling-units page and parses
+  // the current theme from CSS/JS links in the HTML.
   BASE_URLS: [
     "https://www.inecnigeria.org/wp-content/themes/rishi/custom/views",
     "https://www.inecnigeria.org/wp-content/themes/independent-national-electoral-commission/custom/views",
   ],
 
-  // PHP endpoints under the theme's custom/views/ directory
   ENDPOINTS: {
     states: "getPollingState.php",
     lgas: "lgaView.php",
