@@ -143,22 +143,61 @@ class INECPollingUnitsScraper {
       const res = await httpGet("https://www.inecnigeria.org/polling-units/", {
         timeout: 20000,
       });
-      // Parse theme path from CSS/JS URLs in the HTML
-      const themeRegex =
-        /https?:\/\/(?:www\.)?inecnigeria\.org\/wp-content\/themes\/([^/]+)\//g;
+
       const themes = new Set();
+
+      // Pattern 1: absolute URLs with theme path
+      const absRegex =
+        /https?:\/\/[^"'\s]*?inecnigeria\.org\/wp-content\/themes\/([^/"'\s]+)\//gi;
       let match;
-      while ((match = themeRegex.exec(res.data)) !== null) {
+      while ((match = absRegex.exec(res.data)) !== null) {
         themes.add(match[1]);
       }
+
+      // Pattern 2: relative URLs (/wp-content/themes/...)
+      const relRegex =
+        /["'\/]wp-content\/themes\/([^/"'\s]+)\//gi;
+      while ((match = relRegex.exec(res.data)) !== null) {
+        themes.add(match[1]);
+      }
+
+      // Pattern 3: look for AJAX/API endpoint URLs in inline scripts
+      const ajaxRegex =
+        /["']([^"']*(?:getPollingState|lgaView|wardView|pollingView|unitView)[^"']*\.php)["']/gi;
+      const ajaxUrls = [];
+      while ((match = ajaxRegex.exec(res.data)) !== null) {
+        ajaxUrls.push(match[1]);
+      }
+
       if (themes.size > 0) {
         const themeNames = [...themes];
         console.log(`  Discovered theme(s): ${themeNames.join(", ")}`);
-        return themeNames.map(
+        const urls = themeNames.map(
           (t) =>
             `https://www.inecnigeria.org/wp-content/themes/${t}/custom/views`
         );
+        // Also add any direct AJAX URLs found (strip filename to get base)
+        for (const ajaxUrl of ajaxUrls) {
+          const base = ajaxUrl.replace(/\/[^/]+\.php$/, "");
+          const fullBase = base.startsWith("http")
+            ? base
+            : `https://www.inecnigeria.org${base.startsWith("/") ? "" : "/"}${base}`;
+          if (!urls.includes(fullBase)) urls.push(fullBase);
+        }
+        return urls;
       }
+
+      if (ajaxUrls.length > 0) {
+        console.log(`  Found API URLs in page: ${ajaxUrls.join(", ")}`);
+        return ajaxUrls.map((u) => {
+          const base = u.replace(/\/[^/]+\.php$/, "");
+          return base.startsWith("http")
+            ? base
+            : `https://www.inecnigeria.org${base.startsWith("/") ? "" : "/"}${base}`;
+        });
+      }
+
+      console.log("  No theme URLs found in page HTML");
     } catch (err) {
       console.log(`  Auto-discovery failed: ${err.message}`);
     }
@@ -180,13 +219,31 @@ class INECPollingUnitsScraper {
       const url = `${baseUrl}/${config.ENDPOINTS.states}`;
       try {
         const res = await httpGet(url, { timeout: 15000 });
-        const parsed = JSON.parse(res.data);
+        let parsed;
+        try {
+          parsed = JSON.parse(res.data);
+        } catch {
+          console.log(`  Tried: ${baseUrl}`);
+          console.log(`  Result: Response is not JSON: ${res.data.slice(0, 150)}\n`);
+          continue;
+        }
         const states = objectToArray(parsed);
-        if (states.length > 0 && (states[0].code || states[0].id)) {
-          console.log(`  Working base URL: ${baseUrl}`);
-          console.log(`  States found: ${states.length}\n`);
-          this.baseUrl = baseUrl;
-          return states;
+        if (states.length > 0) {
+          // Accept any response with state-like objects
+          const first = states[0];
+          if (first.code || first.id || first.state_id || first.s_name || first.name) {
+            console.log(`  Working base URL: ${baseUrl}`);
+            console.log(`  States found: ${states.length}`);
+            console.log(`  Sample: ${JSON.stringify(first).slice(0, 200)}\n`);
+            this.baseUrl = baseUrl;
+            return states;
+          }
+          console.log(`  Tried: ${baseUrl}`);
+          console.log(`  Result: Got ${states.length} items but unexpected format:`);
+          console.log(`  Sample: ${JSON.stringify(first).slice(0, 200)}\n`);
+        } else {
+          console.log(`  Tried: ${baseUrl}`);
+          console.log(`  Result: Empty response\n`);
         }
       } catch (err) {
         console.log(`  Tried: ${baseUrl}`);
