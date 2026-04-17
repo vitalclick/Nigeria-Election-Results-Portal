@@ -6,7 +6,7 @@ const {
   INECPollingUnitsScraper,
   objectToArray,
   toKebabCase,
-  encodeFormData,
+  buildQueryString,
 } = require("../scraper");
 const config = require("../config");
 
@@ -40,9 +40,10 @@ describe("objectToArray", () => {
     assert.deepEqual(objectToArray({}), []);
   });
 
-  it("wraps non-numeric-keyed objects in array", () => {
+  it("uses Object.values for non-numeric-keyed objects", () => {
     const input = { name: "Lagos", code: "25" };
-    assert.deepEqual(objectToArray(input), [{ name: "Lagos", code: "25" }]);
+    const result = objectToArray(input);
+    assert.deepEqual(result, ["Lagos", "25"]);
   });
 });
 
@@ -65,19 +66,24 @@ describe("toKebabCase", () => {
   });
 });
 
-describe("encodeFormData", () => {
-  it("encodes key-value pairs", () => {
-    const result = encodeFormData({ state_id: "25", lga_id: "10" });
-    assert.equal(result, "state_id=25&lga_id=10");
+describe("buildQueryString", () => {
+  it("builds query string from params", () => {
+    const result = buildQueryString({ state_id: "25", lga_id: "10" });
+    assert.equal(result, "?state_id=25&lga_id=10");
   });
 
   it("handles special characters", () => {
-    const result = encodeFormData({ name: "Akwa Ibom" });
-    assert.equal(result, "name=Akwa%20Ibom");
+    const result = buildQueryString({ name: "Akwa Ibom" });
+    assert.equal(result, "?name=Akwa%20Ibom");
   });
 
-  it("handles empty params", () => {
-    assert.equal(encodeFormData({}), "");
+  it("returns empty string for empty params", () => {
+    assert.equal(buildQueryString({}), "");
+  });
+
+  it("filters out null/undefined values", () => {
+    const result = buildQueryString({ state_id: "25", lga_id: null, ward_id: undefined });
+    assert.equal(result, "?state_id=25");
   });
 });
 
@@ -392,7 +398,6 @@ describe("INECPollingUnitsScraper - fetchWithRetry", () => {
     config.RETRY_ATTEMPTS = 1;
     config.RETRY_BASE_DELAY_MS = 10;
 
-    // This will fail because we can't reach the server in test
     const result = await scraper.fetchWithRetry(
       "nonexistent.php",
       { state_id: "99" },
@@ -437,9 +442,7 @@ describe("config", () => {
 
   it("has browser-like headers", () => {
     assert.ok(config.HEADERS["User-Agent"]);
-    assert.ok(config.HEADERS["Content-Type"]);
     assert.ok(config.HEADERS.Referer.includes("inecnigeria.org"));
-    assert.ok(config.HEADERS.Origin.includes("inecnigeria.org"));
   });
 
   it("has valid directory paths", () => {
@@ -450,7 +453,7 @@ describe("config", () => {
   });
 });
 
-// ─── CLI Argument Parsing Behavior Tests ────────────────────────────────────
+// ─── Data Flow Tests ────────────────────────────────────────────────────────
 
 describe("scraper data flow", () => {
   let scraper;
@@ -474,7 +477,6 @@ describe("scraper data flow", () => {
     const originalDir = config.RESULTS_DIR;
     config.RESULTS_DIR = tempResults;
 
-    // Mock the fetch methods
     scraper.baseUrl = "https://mock.test";
     scraper.fetchLGAs = async () => [
       { id: "1", name: "Test LGA" },
@@ -506,6 +508,40 @@ describe("scraper data flow", () => {
     config.RESULTS_DIR = originalDir;
   });
 
+  it("scrapeState uses s_name field from INEC API response", async () => {
+    const originalDir = config.RESULTS_DIR;
+    config.RESULTS_DIR = tempResults;
+
+    scraper.baseUrl = "https://mock.test";
+    scraper.fetchLGAs = async () => [];
+
+    const state = { code: "25", s_name: "LAGOS" };
+    const result = await scraper.scrapeState(state);
+
+    assert.equal(result.state_name, "LAGOS");
+    assert.equal(result.state_id, "25");
+
+    config.RESULTS_DIR = originalDir;
+  });
+
+  it("scrapeState uses lga.abbreviation as lgaId", async () => {
+    const originalDir = config.RESULTS_DIR;
+    config.RESULTS_DIR = tempResults;
+
+    scraper.baseUrl = "https://mock.test";
+    scraper.fetchLGAs = async () => [
+      { id: "999", abbreviation: "ALM", name: "Alimosho" },
+    ];
+    scraper.fetchWards = async () => [];
+
+    const state = { code: "25", s_name: "LAGOS" };
+    const result = await scraper.scrapeState(state);
+
+    assert.equal(result.lgas[0].lga_id, "ALM");
+
+    config.RESULTS_DIR = originalDir;
+  });
+
   it("resume skips completed states", () => {
     const originalDir = config.PROGRESS_DIR;
     config.PROGRESS_DIR = tempProgress;
@@ -530,7 +566,6 @@ describe("scraper data flow", () => {
     config.RESULTS_DIR = tempResults;
     config.PROGRESS_DIR = tempProgress;
 
-    // Mock methods
     scraper.baseUrl = "https://mock.test";
     scraper.fetchLGAs = async (stateId) => {
       if (stateId === "1") return [{ id: "L1", name: "LGA One" }];
@@ -542,18 +577,15 @@ describe("scraper data flow", () => {
       { id: "P1", code: "X/Y/Z/001", name: "PU Alpha" },
     ];
 
-    // Scrape two states
     const state1 = await scraper.scrapeState({ code: "1", name: "Alpha State" });
     scraper.saveStateResult(state1);
 
     const state2 = await scraper.scrapeState({ code: "2", name: "Beta State" });
     scraper.saveStateResult(state2);
 
-    // Merge
     const total = scraper.mergeResults();
     assert.equal(total, 2);
 
-    // Verify merged file
     const merged = JSON.parse(
       fs.readFileSync(path.join(tempResults, "all-polling-units.json"), "utf8")
     );

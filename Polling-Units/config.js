@@ -1,12 +1,13 @@
 const path = require("path");
 
 module.exports = {
+  // Fallback base URLs (the scraper auto-discovers the current theme first)
   BASE_URLS: [
     "https://www.inecnigeria.org/wp-content/themes/rishi/custom/views",
-    "https://www.inecnigeria.org/wp-content/themes/developer starter theme starter starter starter starter starter theme developer starter theme developer starter theme developer developer starter starter theme developer starter/custom/views",
     "https://www.inecnigeria.org/wp-content/themes/independent-national-electoral-commission/custom/views",
   ],
 
+  // PHP endpoints under the theme's custom/views/ directory
   ENDPOINTS: {
     states: "getPollingState.php",
     lgas: "lgaView.php",
@@ -32,8 +33,6 @@ module.exports = {
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     Accept: "application/json, text/html, */*",
     "Accept-Language": "en-US,en;q=0.9",
-    "Content-Type": "application/x-www-form-urlencoded",
-    Origin: "https://www.inecnigeria.org",
     Referer: "https://www.inecnigeria.org/polling-units/",
   },
 };

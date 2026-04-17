@@ -13,6 +13,7 @@
  *   node scraper.js --detect-only       # Only detect working API base URL
  */
 
+const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
@@ -34,7 +35,7 @@ function toKebabCase(str) {
 /**
  * INEC's PHP endpoints return objects with numeric keys instead of arrays.
  * e.g. { "0": {...}, "1": {...}, "2": {...} }
- * This converts them to proper arrays.
+ * This converts them to proper arrays via Object.values().
  */
 function objectToArray(obj) {
   if (Array.isArray(obj)) return obj;
@@ -47,13 +48,20 @@ function objectToArray(obj) {
       .sort((a, b) => Number(a) - Number(b))
       .map((k) => obj[k]);
   }
-  return [obj];
+  return Object.values(obj);
 }
 
-function encodeFormData(params) {
-  return Object.entries(params)
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-    .join("&");
+function buildQueryString(params) {
+  const entries = Object.entries(params).filter(
+    ([, v]) => v !== undefined && v !== null
+  );
+  if (entries.length === 0) return "";
+  return (
+    "?" +
+    entries
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      .join("&")
+  );
 }
 
 function ensureDir(dirPath) {
@@ -64,25 +72,38 @@ function ensureDir(dirPath) {
 
 // ─── HTTP Client ──────────────────────────────────────────────────────────────
 
-function httpRequest(url, { method = "GET", body = null, headers = {}, timeout = config.REQUEST_TIMEOUT_MS } = {}) {
+function httpGet(url, { headers = {}, timeout = config.REQUEST_TIMEOUT_MS } = {}) {
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
+    const transport = urlObj.protocol === "https:" ? https : http;
     const options = {
       hostname: urlObj.hostname,
-      port: urlObj.port || 443,
+      port: urlObj.port || (urlObj.protocol === "https:" ? 443 : 80),
       path: urlObj.pathname + urlObj.search,
-      method,
-      headers: { ...config.HEADERS, ...headers },
+      method: "GET",
+      headers: {
+        "User-Agent": config.HEADERS["User-Agent"],
+        Accept: config.HEADERS.Accept,
+        "Accept-Language": config.HEADERS["Accept-Language"],
+        Referer: config.HEADERS.Referer,
+        ...headers,
+      },
       timeout,
       rejectUnauthorized: false,
     };
 
-    const req = https.request(options, (res) => {
+    const req = transport.request(options, (res) => {
+      // Follow redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        const redirectUrl = new URL(res.headers.location, url).href;
+        return httpGet(redirectUrl, { headers, timeout }).then(resolve, reject);
+      }
+
       let data = "";
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve({ status: res.statusCode, data });
+          resolve({ status: res.statusCode, data, headers: res.headers });
         } else {
           reject(new Error(`HTTP ${res.statusCode}: ${data.slice(0, 200)}`));
         }
@@ -94,8 +115,6 @@ function httpRequest(url, { method = "GET", body = null, headers = {}, timeout =
       req.destroy();
       reject(new Error(`Request timeout after ${timeout}ms`));
     });
-
-    if (body) req.write(body);
     req.end();
   });
 }
@@ -116,19 +135,55 @@ class INECPollingUnitsScraper {
     };
   }
 
+  // ── Auto-Discover Theme URL ───────────────────────────────────────────────
+
+  async discoverThemeUrl() {
+    console.log("  Auto-discovering INEC WordPress theme...");
+    try {
+      const res = await httpGet("https://www.inecnigeria.org/polling-units/", {
+        timeout: 20000,
+      });
+      // Parse theme path from CSS/JS URLs in the HTML
+      const themeRegex =
+        /https?:\/\/(?:www\.)?inecnigeria\.org\/wp-content\/themes\/([^/]+)\//g;
+      const themes = new Set();
+      let match;
+      while ((match = themeRegex.exec(res.data)) !== null) {
+        themes.add(match[1]);
+      }
+      if (themes.size > 0) {
+        const themeNames = [...themes];
+        console.log(`  Discovered theme(s): ${themeNames.join(", ")}`);
+        return themeNames.map(
+          (t) =>
+            `https://www.inecnigeria.org/wp-content/themes/${t}/custom/views`
+        );
+      }
+    } catch (err) {
+      console.log(`  Auto-discovery failed: ${err.message}`);
+    }
+    return [];
+  }
+
   // ── API Base URL Detection ────────────────────────────────────────────────
 
   async detectBaseUrl() {
     console.log("Detecting working INEC API base URL...\n");
 
-    for (const baseUrl of config.BASE_URLS) {
+    // First: try auto-discovering from the live site
+    const discoveredUrls = await this.discoverThemeUrl();
+
+    // Combine discovered + fallback URLs, deduplicating
+    const allUrls = [...new Set([...discoveredUrls, ...config.BASE_URLS])];
+
+    for (const baseUrl of allUrls) {
       const url = `${baseUrl}/${config.ENDPOINTS.states}`;
       try {
-        const res = await httpRequest(url, { timeout: 15000 });
+        const res = await httpGet(url, { timeout: 15000 });
         const parsed = JSON.parse(res.data);
         const states = objectToArray(parsed);
-        if (states.length > 0 && states[0].code) {
-          console.log(`  Found working base URL: ${baseUrl}`);
+        if (states.length > 0 && (states[0].code || states[0].id)) {
+          console.log(`  Working base URL: ${baseUrl}`);
           console.log(`  States found: ${states.length}\n`);
           this.baseUrl = baseUrl;
           return states;
@@ -140,24 +195,23 @@ class INECPollingUnitsScraper {
     }
 
     throw new Error(
-      "Could not find a working INEC API base URL. " +
-        "The INEC website may have changed its WordPress theme. " +
-        "Check https://www.inecnigeria.org/polling-units/ and update BASE_URLS in config.js."
+      "Could not find a working INEC API base URL.\n" +
+        "The INEC website may have changed its WordPress theme or endpoint structure.\n\n" +
+        "To fix: open https://www.inecnigeria.org/polling-units/ in your browser,\n" +
+        "open DevTools (F12) -> Network tab, select a state from the dropdown,\n" +
+        "and look for the XHR request URL. Update BASE_URLS in config.js with the new theme path."
     );
   }
 
-  // ── Fetch with Retry ──────────────────────────────────────────────────────
+  // ── Fetch with Retry (GET with query params) ─────────────────────────────
 
   async fetchWithRetry(endpoint, params = {}, label = "") {
-    const isPost = Object.keys(params).length > 0;
-    const url = `${this.baseUrl}/${endpoint}`;
-    const fetchOptions = isPost
-      ? { method: "POST", body: encodeFormData(params) }
-      : { method: "GET" };
+    const qs = buildQueryString(params);
+    const url = `${this.baseUrl}/${endpoint}${qs}`;
 
     for (let attempt = 1; attempt <= config.RETRY_ATTEMPTS; attempt++) {
       try {
-        const res = await httpRequest(url, fetchOptions);
+        const res = await httpGet(url);
         let parsed;
         try {
           parsed = JSON.parse(res.data);
@@ -209,7 +263,7 @@ class INECPollingUnitsScraper {
     return results;
   }
 
-  // ── Data Fetchers ─────────────────────────────────────────────────────────
+  // ── Data Fetchers (all use GET with query parameters) ─────────────────────
 
   async fetchStates() {
     return this.fetchWithRetry(config.ENDPOINTS.states, {}, "states");
@@ -242,7 +296,6 @@ class INECPollingUnitsScraper {
       `PUs for ward ${wardId}`
     );
 
-    // Fallback to alt endpoint if primary returns nothing
     if (results.length === 0 && !this.useAltPollingEndpoint) {
       results = await this.fetchWithRetry(
         config.ENDPOINTS_ALT.pollingUnits,
@@ -287,7 +340,7 @@ class INECPollingUnitsScraper {
 
   async scrapeState(state) {
     const stateId = state.code || state.id || state.state_id;
-    const stateName = state.name || state.state_name || `State-${stateId}`;
+    const stateName = state.s_name || state.name || state.state_name || `State-${stateId}`;
     console.log(`\n${"=".repeat(60)}`);
     console.log(`STATE: ${stateName} (ID: ${stateId})`);
     console.log("=".repeat(60));
@@ -309,7 +362,7 @@ class INECPollingUnitsScraper {
 
     for (let i = 0; i < rawLGAs.length; i++) {
       const lga = rawLGAs[i];
-      const lgaId = lga.id || lga.lga_id || lga.abbreviation;
+      const lgaId = lga.abbreviation || lga.id || lga.lga_id;
       const lgaName = lga.name || lga.lga_name || `LGA-${lgaId}`;
       console.log(`\n  LGA ${i + 1}/${rawLGAs.length}: ${lgaName}`);
 
@@ -327,7 +380,6 @@ class INECPollingUnitsScraper {
       }
       console.log(`    Found ${rawWards.length} wards`);
 
-      // Fetch polling units for all wards with concurrency control
       const wardTasks = rawWards.map((ward) => async () => {
         const wardId = ward.id || ward.ward_id || ward.abbreviation;
         const wardName = ward.name || ward.ward_name || `Ward-${wardId}`;
@@ -343,7 +395,7 @@ class INECPollingUnitsScraper {
             pu.polling_unit ||
             pu.polling_unit_name ||
             "",
-          delim: pu.abbreviation || pu.delim || "",
+          delim: pu.delimitation || pu.abbreviation || pu.delim || "",
           registration_area:
             pu.registration_area || pu.registration_area_name || "",
         }));
@@ -451,7 +503,10 @@ class INECPollingUnitsScraper {
   mergeResults() {
     ensureDir(config.RESULTS_DIR);
     const files = fs.readdirSync(config.RESULTS_DIR).filter(
-      (f) => f.endsWith(".json") && f !== "summary.json" && f !== "all-polling-units.json"
+      (f) =>
+        f.endsWith(".json") &&
+        f !== "summary.json" &&
+        f !== "all-polling-units.json"
     );
 
     const allPollingUnits = [];
@@ -500,39 +555,34 @@ class INECPollingUnitsScraper {
       console.log("Progress cleared. Starting fresh.\n");
     }
 
-    // Step 1: Detect working base URL and fetch states
     const rawStates = await this.detectBaseUrl();
     console.log(`Total states from API: ${rawStates.length}\n`);
 
-    // Step 2: Filter if --state flag is used
     let statesToScrape = rawStates;
     if (filterState) {
       statesToScrape = rawStates.filter(
         (s) =>
-          (s.name || "").toLowerCase() === filterState.toLowerCase() ||
+          (s.s_name || s.name || "").toLowerCase() ===
+            filterState.toLowerCase() ||
           (s.code || "").toString() === filterState.toString()
       );
       if (statesToScrape.length === 0) {
         console.log(`State "${filterState}" not found. Available states:`);
-        rawStates.forEach((s) => console.log(`  - ${s.name} (ID: ${s.code})`));
+        rawStates.forEach((s) =>
+          console.log(`  - ${s.s_name || s.name} (ID: ${s.code})`)
+        );
         process.exit(1);
       }
     }
 
-    // Step 3: Load progress for resume capability
     const progress = this.loadProgress();
     const stateResults = [];
 
     for (const state of statesToScrape) {
-      const stateName = state.name || state.state_name;
+      const stateName = state.s_name || state.name || state.state_name;
 
-      // Skip already-completed states (resume)
-      if (
-        !filterState &&
-        progress.completedStates.includes(stateName)
-      ) {
+      if (!filterState && progress.completedStates.includes(stateName)) {
         console.log(`\nSkipping ${stateName} (already completed)`);
-        // Load existing result for summary
         const filename = `${toKebabCase(stateName)}.json`;
         const filepath = path.join(config.RESULTS_DIR, filename);
         if (fs.existsSync(filepath)) {
@@ -553,26 +603,21 @@ class INECPollingUnitsScraper {
         continue;
       }
 
-      // Mark state as in-progress
       progress.inProgress = stateName;
       this.saveProgress(progress);
 
-      // Scrape the state
       const stateData = await this.scrapeState(state);
       const result = this.saveStateResult(stateData);
       stateResults.push(result);
 
-      // Mark state as completed
       progress.completedStates.push(stateName);
       progress.inProgress = null;
       this.saveProgress(progress);
     }
 
-    // Step 4: Save summary and merge
     const summary = this.saveSummary(stateResults);
     this.mergeResults();
 
-    // Step 5: Final report
     const duration = Math.round((Date.now() - this.stats.startTime) / 1000);
     const minutes = Math.floor(duration / 60);
     const seconds = duration % 60;
@@ -606,9 +651,7 @@ async function main() {
 
   const stateIndex = args.indexOf("--state");
   const filterState =
-    stateIndex !== -1 && args[stateIndex + 1]
-      ? args[stateIndex + 1]
-      : null;
+    stateIndex !== -1 && args[stateIndex + 1] ? args[stateIndex + 1] : null;
   const reset = args.includes("--reset");
   const detectOnly = args.includes("--detect-only");
 
@@ -616,7 +659,9 @@ async function main() {
     try {
       const states = await scraper.detectBaseUrl();
       console.log("States found:");
-      states.forEach((s) => console.log(`  ${s.code}: ${s.name}`));
+      states.forEach((s) =>
+        console.log(`  ${s.code}: ${s.s_name || s.name}`)
+      );
     } catch (err) {
       console.error(err.message);
       process.exit(1);
@@ -640,7 +685,7 @@ module.exports = {
   INECPollingUnitsScraper,
   objectToArray,
   toKebabCase,
-  encodeFormData,
+  buildQueryString,
 };
 
 if (require.main === module) {
