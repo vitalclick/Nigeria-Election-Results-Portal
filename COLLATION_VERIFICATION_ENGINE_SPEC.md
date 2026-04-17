@@ -1,5 +1,5 @@
 # OpenBallot Nigeria
-# Collation Verification Engine — Full Technical Specification
+# Collation Verification Engine - Full Technical Specification
 # Version 1.0 | April 2026
 
 ---
@@ -9,12 +9,12 @@
 In the 2023 Nigerian Presidential Election, the BBC counted EC8A forms for all
 6,866 polling units in Rivers State and compared them to the official state
 declaration. The official result for one candidate showed 80,239 votes.
-The EC8A forms showed 17,293. A difference of 62,946 votes — fabricated at
+The EC8A forms showed 17,293. A difference of 62,946 votes - fabricated at
 the state collation level, in a single state, in a single election.
 
 This was not discovered by INEC. It was not discovered by party legal teams in
 time to matter. It was discovered by journalists doing manual arithmetic on
-publicly available scanned documents — weeks after the declaration.
+publicly available scanned documents - weeks after the declaration.
 
 OpenBallot automates this arithmetic. In real time. For every ward, every LGA,
 every state, every election. Before the returning officer picks up the
@@ -24,7 +24,7 @@ This specification defines exactly how.
 
 ---
 
-## 1. The Nigerian Collation Chain — Full Structure
+## 1. The Nigerian Collation Chain - Full Structure
 
 ### 1.1 The Five Forms and Their Legal Function
 
@@ -139,7 +139,7 @@ National/HQ    Chief Returning Officer national_agent (Pres. only)
 - A single person CANNOT hold assignments at two different levels for the
   same election (prevents one compromised person submitting at multiple levels
   to create false consensus).
-- Election observers are NOT level-locked — they may submit at any level they
+- Election observers are NOT level-locked - they may submit at any level they
   are physically present at. Observer submissions are labelled separately.
 
 ### 2.3 Agent Credential Structure
@@ -169,17 +169,17 @@ agents (
 
 ---
 
-## 3. The Upload Flow — All Levels
+## 3. The Upload Flow - All Levels
 
 ### 3.1 Universal Upload Rules (Apply to All Levels)
 
 1. Agent authenticates via phone OTP.
 2. App confirms agent's assigned level and unit (read-only, cannot be changed
    by agent).
-3. Agent opens camera — app captures GPS, timestamp, and device ID at the
+3. Agent opens camera - app captures GPS, timestamp, and device ID at the
    moment the shutter is pressed.
 4. If offline: submission is queued locally and synced when signal returns.
-   The GPS and timestamp captured at photo time are immutable — they cannot
+   The GPS and timestamp captured at photo time are immutable - they cannot
    be updated post-capture even if the upload is delayed.
 5. All submissions at all levels are SHA-256 hashed on ingestion.
 6. All submissions pass through the Ingestion Validation layer before any
@@ -233,7 +233,7 @@ TIMING: After Ward Collation Officer announces ward totals and signs EC8B.
         after polls close.
 
 AGENT: ward_agent assigned to this ward. May be same person as a PU agent
-       from this ward — but the system treats this as a separate submission
+       from this ward - but the system treats this as a separate submission
        event at a separate level.
 
 GEOFENCE: GPS must be within 500m of the ward collation centre's registered
@@ -358,7 +358,7 @@ FORM CONTAINS:
 CROSS-CHECK:
   Declared total vs. OpenBallot computed total from all verified EC8As.
   Declared winner's votes vs. OpenBallot computed winner votes from EC8As.
-  Any mismatch → DECLARATION_DISCREPANCY — the highest severity flag.
+  Any mismatch → DECLARATION_DISCREPANCY - the highest severity flag.
 ```
 
 ---
@@ -392,7 +392,7 @@ COMPARISON LAYER: At every level, SCE total vs. INEC declared total.
 
 ### 4.2 Coverage Calculation
 
-The SCE works in real time as EC8A forms arrive. Not all forms arrive at once —
+The SCE works in real time as EC8A forms arrive. Not all forms arrive at once -
 this needs to be handled gracefully.
 
 For every geographic unit (ward, LGA, state, national), the SCE tracks:
@@ -467,7 +467,7 @@ be catastrophically slow. The SCE uses incremental delta computation:
 
 ```
 On new EC8A consensus for PU X in Ward Y, LGA Z, State W:
-  1. Recompute Ward Y total (affects ~20 PU rows — fast)
+  1. Recompute Ward Y total (affects ~20 PU rows - fast)
   2. Update LGA Z total = (old LGA Z total) - (old Ward Y total) + (new Ward Y total)
   3. Update State W total = (old State W total) - (old LGA Z total) + (new LGA Z total)
   4. Update National total = (old National total) - (old State W total) + (new State W total)
@@ -492,13 +492,13 @@ CODE                          DESCRIPTION
 ────────────────────────────────────────────────────────────────────────────
 PU_ROW_ALTERED                A PU's figures on an EC8B (or higher form) differ
                               from the verified EC8A for that PU. The most
-                              precise fraud signal — identifies the exact PU
+                              precise fraud signal - identifies the exact PU
                               whose figures were changed during ward collation.
 
 WARD_TOTAL_FABRICATED         Ward total on EC8B cannot be derived from any
                               combination of its constituent EC8A forms, even
                               with incomplete EC8A coverage. Numerically
-                              impossible — implies figures were invented.
+                              impossible - implies figures were invented.
 
 LGA_TOTAL_FABRICATED          Same as above at LGA level (EC8C vs EC8Bs/EC8As).
 
@@ -522,31 +522,31 @@ of the collation chain introduced a discrepancy.
 ```
 Given a discrepancy between EC8E declared total and SCE national total:
 
-STEP 1 — State Isolation:
+STEP 1 - State Isolation:
   For each state:
     Compare EC8D[state] vs SCE[state]
     States where they match → rigging did NOT occur in that state
     States where they differ → rigging occurred IN or BELOW this state
 
-STEP 2 — LGA Isolation (within flagged states):
+STEP 2 - LGA Isolation (within flagged states):
   For each LGA in flagged state:
     Compare EC8C[lga] vs SCE[lga]
     LGAs where they match → rigging did NOT occur in that LGA
     LGAs where they differ → rigging occurred IN or BELOW this LGA
 
-STEP 3 — Ward Isolation (within flagged LGAs):
+STEP 3 - Ward Isolation (within flagged LGAs):
   For each ward in flagged LGA:
     Compare EC8B[ward] vs SCE[ward]
     Wards where they match → clean
     Wards where they differ → rigging occurred at or below ward level
 
-STEP 4 — PU Row Isolation (within flagged wards):
+STEP 4 - PU Row Isolation (within flagged wards):
   For each PU row on the EC8B:
     Compare EC8B[pu_row] vs EC8A consensus[pu]
     PUs where they differ → SPECIFIC PU ROWS THAT WERE ALTERED, NAMED
 ```
 
-The output of this algorithm is not "there are discrepancies" — it is:
+The output of this algorithm is not "there are discrepancies" - it is:
 
 > "Figures for 3 candidates were altered at Surulere Ward 4 collation centre.
 > The following 7 polling units had their figures changed on the EC8B:
@@ -559,7 +559,7 @@ automatically, publicly, before the declaration is even finalised.
 
 ### 5.3 Confidence Thresholds for Divergence Alerts
 
-Not every computed divergence is displayed as a fraud signal — EC8A coverage
+Not every computed divergence is displayed as a fraud signal - EC8A coverage
 may be incomplete. The system applies confidence thresholds:
 
 ```
@@ -567,15 +567,15 @@ EC8A Coverage    Divergence Treatment
 ─────────────────────────────────────────────────────────────
 < 30%            No divergence alert. Show as "Insufficient
                  data for comparison."
-30–49%           Show as "Early indication — [X]% of PUs
+30–49%           Show as "Early indication - [X]% of PUs
                  reporting." Orange flag. Not escalated yet.
-50–74%           Show as "Significant divergence detected —
+50–74%           Show as "Significant divergence detected -
                  [X]% of PUs reporting." Red flag. Automated
                  notification to parties and observer bodies.
-75–89%           Show as "Strong divergence signal — [X]%
+75–89%           Show as "Strong divergence signal - [X]%
                  of PUs reporting." Red flag. Agency escalation
                  triggered.
-90–100%          Show as "Verified divergence — [X]% of PUs
+90–100%          Show as "Verified divergence - [X]% of PUs
                  reporting." Red flag with fraud localisation
                  output. Maximum escalation.
 ```
@@ -603,7 +603,7 @@ This is the standard the system is designed to meet.
 
 ### 6.1 The Collation Chain View (New UI Component)
 
-Each election on OpenBallot has a dedicated Collation Chain View — a visual
+Each election on OpenBallot has a dedicated Collation Chain View - a visual
 representation of the entire result chain from EC8A upward.
 
 ```
@@ -620,7 +620,7 @@ EC8A FOUNDATION (176,846 PUs)
 
 EC8D DECLARED (36 states)
   INEC Official: [awaiting]
-  Match Status:  ◐ Partial — 28 of 36 states declared
+  Match Status:  ◐ Partial - 28 of 36 states declared
 
   State breakdown:
   Lagos:    SCE: 1,204,847  |  INEC: 1,204,847  ✅ Match
@@ -653,7 +653,7 @@ This page shows:
   * The blockchain transaction ID anchoring the hash
   * Whether the figures were faithfully carried through EC8B → EC8C → EC8D → EC8E
     or altered at any collation level
-- "Verify this form" tool — paste any SHA-256 hash to confirm it matches
+- "Verify this form" tool - paste any SHA-256 hash to confirm it matches
   what OpenBallot has stored
 
 This page is permanent. It exists between elections. It is the electoral
@@ -668,15 +668,15 @@ https://openballot.ng/discrepancies
 
 Layout:
 ```
-ACTIVE DISCREPANCIES — 2027 Presidential Election
+ACTIVE DISCREPANCIES - 2027 Presidential Election
 Last updated: 14 seconds ago
 
 ┌─────────────────────────────────────────────────────────────────┐
-│ 🔴 DECLARATION CONFLICT — Rivers State                           │
+│ 🔴 DECLARATION CONFLICT - Rivers State                           │
 │ Severity: CRITICAL  |  Detected: 11:47 PM  |  Status: ESCALATED │
 │                                                                  │
-│ SCE Computed (94% coverage): Candidate B — 847,293              │
-│ INEC EC8D Declared:          Candidate B — 1,204,000            │
+│ SCE Computed (94% coverage): Candidate B - 847,293              │
+│ INEC EC8D Declared:          Candidate B - 1,204,000            │
 │ Unexplained difference:      +356,707 votes                     │
 │                                                                  │
 │ Fraud Localised To: Obio/Akpor LGA, Okrika LGA                  │
@@ -684,7 +684,7 @@ Last updated: 14 seconds ago
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
-│ 🟠 WARD TOTAL FABRICATED — Surulere Ward 4, Lagos               │
+│ 🟠 WARD TOTAL FABRICATED - Surulere Ward 4, Lagos               │
 │ Severity: HIGH  |  Detected: 6:23 PM  |  Status: NOTIFIED       │
 │ ...                                                              │
 └─────────────────────────────────────────────────────────────────┘
@@ -699,7 +699,7 @@ Each discrepancy card links to a full evidence page showing:
 
 ---
 
-## 7. Data Model — Full Schema
+## 7. Data Model - Full Schema
 
 ```sql
 -- ─────────────────────────────────────────────────────────────────────────
@@ -833,7 +833,7 @@ CREATE TABLE ec8a_consensus (
 );
 
 -- ─────────────────────────────────────────────────────────────────────────
--- SHADOW COLLATION ENGINE — computed totals at every level
+-- SHADOW COLLATION ENGINE - computed totals at every level
 -- ─────────────────────────────────────────────────────────────────────────
 
 CREATE TABLE sce_totals (
@@ -856,7 +856,7 @@ CREATE TABLE sce_totals (
 
   -- Computation metadata
   computed_at       TIMESTAMPTZ,
-  computation_basis TEXT              -- 'ec8a_direct' (always — SCE never trusts EC8B+)
+  computation_basis TEXT              -- 'ec8a_direct' (always - SCE never trusts EC8B+)
 );
 
 -- ─────────────────────────────────────────────────────────────────────────
@@ -879,7 +879,7 @@ CREATE TABLE inec_declared_totals (
 );
 
 -- Row-level PU figures as declared on collation forms (EC8B onward)
--- This is how we detect PU_ROW_ALTERED — the most precise fraud signal
+-- This is how we detect PU_ROW_ALTERED - the most precise fraud signal
 CREATE TABLE collation_pu_rows (
   id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   submission_id     UUID REFERENCES form_submissions,  -- the EC8B/C form
@@ -926,7 +926,7 @@ CREATE TABLE divergences (
 );
 
 -- ─────────────────────────────────────────────────────────────────────────
--- AUDIT LOG (append-only — never DELETE or UPDATE)
+-- AUDIT LOG (append-only - never DELETE or UPDATE)
 -- ─────────────────────────────────────────────────────────────────────────
 
 CREATE TABLE audit_log (
@@ -961,7 +961,7 @@ has EC8A for 14 of 22 PUs in that ward. Can we still run the comparison?
 - Compare that partial total against the sum of the 14 matching rows on
   the EC8B form (using collation_pu_rows table).
 - If the 14 known PU rows match → clean for those PUs, flag others as
-  "unverified — no independent EC8A."
+  "unverified - no independent EC8A."
 - If ANY of the 14 known PU rows differ → PU_ROW_ALTERED flagged immediately
   regardless of overall coverage.
 - The system can detect a single altered PU row even at 1% coverage.
@@ -1030,7 +1030,7 @@ the collation at that ward has been announced.
   * If comparison status changes → update divergence record and notify.
   * The audit log shows: "Comparison updated: new EC8A submission received
     for PU X (captured 14:23, uploaded 22:47)."
-- Delayed uploads never retroactively remove a fraud flag — they can only
+- Delayed uploads never retroactively remove a fraud flag - they can only
   confirm or deepen one.
 
 ### 8.7 Form EC60EC (Posted Results Sheet)
@@ -1039,15 +1039,15 @@ INEC mandates that a copy of the EC8A is publicly posted at each polling unit
 after the result is announced. This is the "people's result sheet."
 
 **Handling:**
-- Treat EC60EC uploads as a separate document type — they are photographs of
+- Treat EC60EC uploads as a separate document type - they are photographs of
   the posted sheet, not the signed original.
 - Display alongside EC8A submissions as corroborating evidence.
-- Do NOT use EC60EC figures in SCE computation — only signed EC8A counts.
+- Do NOT use EC60EC figures in SCE computation - only signed EC8A counts.
 - Any citizen (not just registered agents) can upload an EC60EC photo.
-  This is publicly crowdsourced. Clearly labelled as "Community Upload —
+  This is publicly crowdsourced. Clearly labelled as "Community Upload -
   Not Agent-Verified."
 
-### 8.8 Presidential 25% Rule — Spread Computation
+### 8.8 Presidential 25% Rule - Spread Computation
 
 The Nigerian constitution requires the presidential winner to have not just
 the most votes nationally, but at least 25% of votes cast in at least 2/3
@@ -1072,7 +1072,7 @@ centres, forcing cancellation or relocation.
 - This logs an event_type = 'COLLATION_DISRUPTION' in the audit log.
 - The platform displays a visible "Collation Disruption Reported" alert
   for that unit.
-- SCE computation for that unit is paused and marked "DISRUPTED — results
+- SCE computation for that unit is paused and marked "DISRUPTED - results
   pending."
 - INEC is automatically notified via the escalation protocol.
 
@@ -1137,18 +1137,18 @@ Understanding the timeline is critical to the system's design:
 ```
 T+0:00    Polls close
 T+0:30    EC8A uploads begin (agents photograph immediately after announcement)
-T+1:00    EC8A uploads at high volume — SCE ward totals begin populating
+T+1:00    EC8A uploads at high volume - SCE ward totals begin populating
 T+2:00    EC8B ward collation begins at most centres
-T+3:00    EC8B uploads begin — FIRST COMPARISON POINT
+T+3:00    EC8B uploads begin - FIRST COMPARISON POINT
           Platform begins running PU_ROW_ALTERED checks
 T+4:00    Most EC8Bs expected. SCE has ~60-80% ward coverage.
 T+6:00    LGA collation begins
-T+8:00    EC8C uploads begin — SECOND COMPARISON POINT
+T+8:00    EC8C uploads begin - SECOND COMPARISON POINT
 T+12:00   State collation begins (for some states)
-T+24:00   EC8D uploads begin — THIRD COMPARISON POINT
+T+24:00   EC8D uploads begin - THIRD COMPARISON POINT
 T+48:00   Some state declarations. Others take longer.
 T+72:00   Presidential state declarations expected.
-T+96:00   INEC HQ collation and EC8E declaration — FINAL COMPARISON POINT
+T+96:00   INEC HQ collation and EC8E declaration - FINAL COMPARISON POINT
 ```
 
 The system must be designed to handle the full sequence, not just election
@@ -1177,7 +1177,7 @@ System availability on E-Day    99.9% uptime target
 ```
 
 To meet these requirements:
-- All EC8A images served from Cloudflare R2 via CDN — never from origin
+- All EC8A images served from Cloudflare R2 via CDN - never from origin
 - SCE computation is event-driven via Redis pub/sub + BullMQ workers
 - Database reads for public map use Supabase read replicas
 - Divergence detection runs as dedicated workers, not inline with uploads
@@ -1186,7 +1186,7 @@ To meet these requirements:
 
 ---
 
-## 12. What This Architecture Makes Possible — Summary
+## 12. What This Architecture Makes Possible - Summary
 
 This system, when fully built, produces something that has never existed in
 Nigerian electoral history:
@@ -1199,16 +1199,16 @@ Nigerian electoral history:
    neither has been altered since submission.
 
 2. See whether that polling unit's figures were faithfully carried through
-   every collation level — or altered, and at exactly which level.
+   every collation level - or altered, and at exactly which level.
 
 3. See the real-time difference between what the EC8A forms collectively
-   say the result should be, and what INEC has officially declared —
-   at ward, LGA, state, and national level — simultaneously.
+   say the result should be, and what INEC has officially declared -
+   at ward, LGA, state, and national level - simultaneously.
 
 4. Download the complete evidentiary dataset for any election and verify
    every claim independently.
 
-The forensic work the BBC did manually for Rivers State over six weeks —
+The forensic work the BBC did manually for Rivers State over six weeks -
 OpenBallot does automatically, nationally, in real time.
 
 That is the standard this specification is written to meet.
