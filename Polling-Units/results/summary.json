@@ -1,0 +1,21 @@
+{
+  "scraped_at": "2026-04-17T03:15:57.553Z",
+  "base_url": "https://www.inecnigeria.org/wp-content/themes/rishi/custom/views",
+  "totals": {
+    "states": 1,
+    "lgas": 0,
+    "wards": 0,
+    "polling_units": 0
+  },
+  "duration_seconds": 5,
+  "failures": 0,
+  "failure_details": [],
+  "states": [
+    {
+      "filename": "lagos.json",
+      "lgas": 0,
+      "wards": 0,
+      "pollingUnits": 0
+    }
+  ]
+}

@@ -1,11 +1,6 @@
 # Node.js dependencies
 node_modules/
 
-# Scraper output data
-results/
-progress/
-polling_units.json
-
 # Logs
 logs/
 *.log
