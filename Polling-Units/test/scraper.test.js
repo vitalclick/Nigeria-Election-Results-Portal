@@ -13,16 +13,39 @@ const config = require("../config");
 // ─── Helper Utilities Tests ─────────────────────────────────────────────────
 
 describe("objectToArray", () => {
-  it("converts numeric-keyed objects to arrays", () => {
+  it("converts numeric-keyed objects to arrays and injects _key", () => {
     const input = { "0": { name: "A" }, "1": { name: "B" }, "2": { name: "C" } };
     const result = objectToArray(input);
-    assert.deepEqual(result, [{ name: "A" }, { name: "B" }, { name: "C" }]);
+    assert.deepEqual(result, [
+      { _key: "0", name: "A" },
+      { _key: "1", name: "B" },
+      { _key: "2", name: "C" },
+    ]);
   });
 
   it("preserves order by numeric key", () => {
     const input = { "2": { id: 3 }, "0": { id: 1 }, "1": { id: 2 } };
     const result = objectToArray(input);
-    assert.deepEqual(result, [{ id: 1 }, { id: 2 }, { id: 3 }]);
+    assert.deepEqual(result, [
+      { _key: "0", id: 1 },
+      { _key: "1", id: 2 },
+      { _key: "2", id: 3 },
+    ]);
+  });
+
+  it("preserves numeric keys as state IDs for INEC format", () => {
+    const input = { "0": { s_name: "ABIA" }, "1": { s_name: "ADAMAWA" } };
+    const result = objectToArray(input);
+    assert.equal(result[0]._key, "0");
+    assert.equal(result[0].s_name, "ABIA");
+    assert.equal(result[1]._key, "1");
+    assert.equal(result[1].s_name, "ADAMAWA");
+  });
+
+  it("does not inject _key for non-object values", () => {
+    const input = { "0": "hello", "1": "world" };
+    const result = objectToArray(input);
+    assert.deepEqual(result, ["hello", "world"]);
   });
 
   it("returns arrays as-is", () => {
@@ -520,6 +543,22 @@ describe("scraper data flow", () => {
 
     assert.equal(result.state_name, "LAGOS");
     assert.equal(result.state_id, "25");
+
+    config.RESULTS_DIR = originalDir;
+  });
+
+  it("scrapeState uses _key as state ID when no other ID field exists", async () => {
+    const originalDir = config.RESULTS_DIR;
+    config.RESULTS_DIR = tempResults;
+
+    scraper.baseUrl = "https://mock.test";
+    scraper.fetchLGAs = async () => [];
+
+    const state = { _key: "24", s_name: "LAGOS" };
+    const result = await scraper.scrapeState(state);
+
+    assert.equal(result.state_name, "LAGOS");
+    assert.equal(result.state_id, "24");
 
     config.RESULTS_DIR = originalDir;
   });
