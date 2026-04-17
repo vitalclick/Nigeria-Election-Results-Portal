@@ -34,8 +34,9 @@ function toKebabCase(str) {
 
 /**
  * INEC's PHP endpoints return objects with numeric keys instead of arrays.
- * e.g. { "0": {...}, "1": {...}, "2": {...} }
- * This converts them to proper arrays via Object.values().
+ * e.g. { "0": {"s_name":"ABIA"}, "1": {"s_name":"ADAMAWA"} }
+ * The numeric keys are the IDs used by subsequent API calls.
+ * This converts them to arrays while injecting each key as `_key`.
  */
 function objectToArray(obj) {
   if (Array.isArray(obj)) return obj;
@@ -46,7 +47,13 @@ function objectToArray(obj) {
   if (allNumeric) {
     return keys
       .sort((a, b) => Number(a) - Number(b))
-      .map((k) => obj[k]);
+      .map((k) => {
+        const item = obj[k];
+        if (item && typeof item === "object" && !Array.isArray(item)) {
+          return { _key: k, ...item };
+        }
+        return item;
+      });
   }
   return Object.values(obj);
 }
@@ -425,7 +432,7 @@ class INECPollingUnitsScraper {
 
   async scrapeState(state) {
     const stateId = this.extractId(
-      state, "code", "id", "state_id", "s_id", "value", "state_code"
+      state, "code", "id", "state_id", "s_id", "value", "state_code", "_key"
     );
     const stateName = this.extractName(
       state, "s_name", "name", "state_name", "state", "label", "text"
@@ -458,7 +465,7 @@ class INECPollingUnitsScraper {
     for (let i = 0; i < rawLGAs.length; i++) {
       const lga = rawLGAs[i];
       const lgaId = this.extractId(
-        lga, "abbreviation", "id", "lga_id", "code", "value"
+        lga, "abbreviation", "id", "lga_id", "code", "value", "_key"
       );
       const lgaName = this.extractName(
         lga, "name", "lga_name", "label", "text"
@@ -481,7 +488,7 @@ class INECPollingUnitsScraper {
 
       const wardTasks = rawWards.map((ward) => async () => {
         const wardId = this.extractId(
-          ward, "id", "ward_id", "abbreviation", "code", "value"
+          ward, "id", "ward_id", "abbreviation", "code", "value", "_key"
         );
         const wardName = this.extractName(
           ward, "name", "ward_name", "label", "text"
