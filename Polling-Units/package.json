@@ -1,0 +1,17 @@
+{
+  "name": "inec-polling-units-scraper",
+  "version": "1.0.0",
+  "description": "Scrapes all 176,846 Nigerian polling units from INEC: State → LGA → Ward → Polling Units",
+  "main": "scraper.js",
+  "scripts": {
+    "scrape": "node scraper.js",
+    "scrape:state": "node scraper.js --state",
+    "test": "node --test test/scraper.test.js",
+    "test:verbose": "node --test --test-reporter=spec test/scraper.test.js"
+  },
+  "keywords": ["inec", "polling-units", "nigeria", "elections", "scraper"],
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
