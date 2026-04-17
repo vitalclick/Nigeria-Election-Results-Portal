@@ -393,13 +393,48 @@ class INECPollingUnitsScraper {
     if (fs.existsSync(p)) fs.unlinkSync(p);
   }
 
+  // ── Extract ID from API response objects ───────────────────────────────────
+
+  extractId(obj, ...fieldNames) {
+    for (const f of fieldNames) {
+      if (obj[f] !== undefined && obj[f] !== null && obj[f] !== "") return obj[f];
+    }
+    // Last resort: find the first field that looks like a numeric ID
+    for (const [key, val] of Object.entries(obj)) {
+      if (typeof val === "number" || (typeof val === "string" && /^\d+$/.test(val))) {
+        return val;
+      }
+    }
+    return undefined;
+  }
+
+  extractName(obj, ...fieldNames) {
+    for (const f of fieldNames) {
+      if (obj[f] !== undefined && obj[f] !== null && obj[f] !== "") return obj[f];
+    }
+    // Last resort: find the first field that looks like a name (non-numeric string)
+    for (const [key, val] of Object.entries(obj)) {
+      if (typeof val === "string" && val.length > 1 && !/^\d+$/.test(val)) {
+        return val;
+      }
+    }
+    return undefined;
+  }
+
   // ── Scrape a Single State ─────────────────────────────────────────────────
 
   async scrapeState(state) {
-    const stateId = state.code || state.id || state.state_id;
-    const stateName = state.s_name || state.name || state.state_name || `State-${stateId}`;
+    const stateId = this.extractId(
+      state, "code", "id", "state_id", "s_id", "value", "state_code"
+    );
+    const stateName = this.extractName(
+      state, "s_name", "name", "state_name", "state", "label", "text"
+    ) || `State-${stateId}`;
     console.log(`\n${"=".repeat(60)}`);
     console.log(`STATE: ${stateName} (ID: ${stateId})`);
+    if (stateId === undefined) {
+      console.log(`  WARNING: Could not extract state ID from: ${JSON.stringify(state).slice(0, 300)}`);
+    }
     console.log("=".repeat(60));
 
     const stateData = {
@@ -414,14 +449,21 @@ class INECPollingUnitsScraper {
       return stateData;
     }
     console.log(`  Found ${rawLGAs.length} LGAs`);
+    if (rawLGAs[0]) {
+      console.log(`  LGA sample keys: ${Object.keys(rawLGAs[0]).join(", ")}`);
+    }
 
     let statePollingUnitCount = 0;
 
     for (let i = 0; i < rawLGAs.length; i++) {
       const lga = rawLGAs[i];
-      const lgaId = lga.abbreviation || lga.id || lga.lga_id;
-      const lgaName = lga.name || lga.lga_name || `LGA-${lgaId}`;
-      console.log(`\n  LGA ${i + 1}/${rawLGAs.length}: ${lgaName}`);
+      const lgaId = this.extractId(
+        lga, "abbreviation", "id", "lga_id", "code", "value"
+      );
+      const lgaName = this.extractName(
+        lga, "name", "lga_name", "label", "text"
+      ) || `LGA-${lgaId}`;
+      console.log(`\n  LGA ${i + 1}/${rawLGAs.length}: ${lgaName} (ID: ${lgaId})`);
 
       const lgaData = {
         lga_id: lgaId,
@@ -438,8 +480,12 @@ class INECPollingUnitsScraper {
       console.log(`    Found ${rawWards.length} wards`);
 
       const wardTasks = rawWards.map((ward) => async () => {
-        const wardId = ward.id || ward.ward_id || ward.abbreviation;
-        const wardName = ward.name || ward.ward_name || `Ward-${wardId}`;
+        const wardId = this.extractId(
+          ward, "id", "ward_id", "abbreviation", "code", "value"
+        );
+        const wardName = this.extractName(
+          ward, "name", "ward_name", "label", "text"
+        ) || `Ward-${wardId}`;
 
         const rawPUs = await this.fetchPollingUnits(stateId, lgaId, wardId);
 
@@ -617,17 +663,20 @@ class INECPollingUnitsScraper {
 
     let statesToScrape = rawStates;
     if (filterState) {
-      statesToScrape = rawStates.filter(
-        (s) =>
-          (s.s_name || s.name || "").toLowerCase() ===
-            filterState.toLowerCase() ||
-          (s.code || "").toString() === filterState.toString()
-      );
+      const filter = filterState.toLowerCase();
+      statesToScrape = rawStates.filter((s) => {
+        const name = this.extractName(s, "s_name", "name", "state_name", "label") || "";
+        const id = this.extractId(s, "code", "id", "state_id", "s_id", "value");
+        return name.toLowerCase() === filter ||
+          (id !== undefined && id.toString() === filterState.toString());
+      });
       if (statesToScrape.length === 0) {
         console.log(`State "${filterState}" not found. Available states:`);
-        rawStates.forEach((s) =>
-          console.log(`  - ${s.s_name || s.name} (ID: ${s.code})`)
-        );
+        rawStates.forEach((s) => {
+          const name = this.extractName(s, "s_name", "name", "state_name", "label");
+          const id = this.extractId(s, "code", "id", "state_id", "s_id", "value");
+          console.log(`  - ${name} (ID: ${id})`);
+        });
         process.exit(1);
       }
     }
@@ -636,7 +685,9 @@ class INECPollingUnitsScraper {
     const stateResults = [];
 
     for (const state of statesToScrape) {
-      const stateName = state.s_name || state.name || state.state_name;
+      const stateName = this.extractName(
+        state, "s_name", "name", "state_name", "label"
+      ) || "Unknown";
 
       if (!filterState && progress.completedStates.includes(stateName)) {
         console.log(`\nSkipping ${stateName} (already completed)`);
