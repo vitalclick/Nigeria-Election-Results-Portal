@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, claude/**]
+
+jobs:
+  worker:
+    name: Worker (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        working-directory: worker
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Lint
+        working-directory: worker
+        run: ruff check app tests
+      - name: Tests
+        working-directory: worker
+        run: pytest -q
+
+  scraper:
+    name: IReV scraper (Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        working-directory: scrapers/irev-results
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Tests
+        working-directory: scrapers/irev-results
+        run: node --test test/*.js
+
+  web:
+    name: Web (Next.js)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package.json
+      - name: Install
+        working-directory: web
+        run: npm install
+      - name: Typecheck
+        working-directory: web
+        run: npm run typecheck
+      - name: Lint
+        working-directory: web
+        run: npm run lint --if-present
+
+  db:
+    name: Database migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: openballot
+          POSTGRES_PASSWORD: openballot
+          POSTGRES_DB: openballot
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd="pg_isready -U openballot"
+          --health-interval=5s --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply migrations
+        env:
+          PGPASSWORD: openballot
+        run: |
+          for f in db/migrations/*.sql; do
+            echo "Applying $f"
+            psql -h localhost -U openballot -d openballot -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: Apply seed
+        env:
+          PGPASSWORD: openballot
+        run: |
+          for f in db/seed/*.sql; do
+            echo "Seeding $f"
+            psql -h localhost -U openballot -d openballot -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: Smoke test schema
+        env:
+          PGPASSWORD: openballot
+        run: |
+          psql -h localhost -U openballot -d openballot -v ON_ERROR_STOP=1 -c "SELECT COUNT(*) FROM polling_units;"
+          psql -h localhost -U openballot -d openballot -v ON_ERROR_STOP=1 -c "SELECT log_hash FROM audit_log ORDER BY seq LIMIT 1;"

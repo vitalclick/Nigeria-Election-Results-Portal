@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "map": "Maapụ",
+    "discrepancies": "Esemokwu",
+    "agent": "Onyeozi",
+    "admin": "Onye Nlekọta"
+  },
+  "landing": {
+    "eyebrow": "Doro anya. Nke enwere ike ịgbaso. Nke a na-apụghị ịgbanwe.",
+    "title": "Mbọ izizi nke Naịjirịa maka ihe ndị si na ntuli aka ya, nke gbadoro ụkwụ na akwụkwọ.",
+    "lede": "E wuru ya na Fọm EC8A. Otu ndị mmadụ obodo na-edu ya. Ọ na-aza ajụjụ na ọha mmadụ.",
+    "cta_map": "Mepee maapụ ndụ",
+    "cta_disc": "Ndekọ esemokwu",
+    "cta_agent": "Ngwa onyeozi",
+    "feature1_title": "Nkwekọrịta site n'isi mmalite dị iche iche",
+    "feature1_body": "Ihe ndị si na ntuli aka na-apụta mgbe òtù nọọrọ onwe ha kwekọrịtara.",
+    "feature2_title": "Fọm bụ eziokwu",
+    "feature2_body": "Nọmba ọ bụla na-egosi ya ya na EC8A nke e debanyere aha.",
+    "feature3_title": "Nlebanya nke a na-apụghị ịgbanwe",
+    "feature3_body": "A na-ahazi onyonyo niile na SHA-256, ihe omume niile na-ejikọta ya, ma Merkle roots dabere na blockchain."
+  }
+}

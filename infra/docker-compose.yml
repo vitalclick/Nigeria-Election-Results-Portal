@@ -1,0 +1,72 @@
+version: "3.9"
+
+# OpenBallot Nigeria - local development stack.
+# Boots a fully functional environment:
+#   - PostgreSQL 16 with PostGIS for geo queries
+#   - Redis for the ingestion + extraction queue
+#   - MinIO as an S3-compatible store for EC8A evidence
+#   - The FastAPI worker (ingestion / extraction / verification / audit)
+#   - The Next.js web app (public map + agent PWA + admin portal)
+#
+# `docker compose up` reproduces the production data plane minus blockchain
+# anchoring, which is gated behind ANCHOR_ENABLED.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: openballot
+      POSTGRES_PASSWORD: openballot
+      POSTGRES_DB: openballot
+    ports: ["5432:5432"]
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ../db/migrations:/docker-entrypoint-initdb.d/01-migrations:ro
+      - ../db/policies:/docker-entrypoint-initdb.d/02-policies:ro
+      - ../db/seed:/docker-entrypoint-initdb.d/03-seed:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openballot"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports: ["9000:9000", "9001:9001"]
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - miniodata:/data
+
+  worker:
+    build: ../worker
+    depends_on:
+      db:
+        condition: service_healthy
+      redis: { condition: service_started }
+    environment:
+      DATABASE_URL: postgresql://openballot:openballot@db:5432/openballot
+      REDIS_URL: redis://redis:6379/0
+      STORAGE_ENDPOINT: http://minio:9000
+      STORAGE_ACCESS_KEY: minioadmin
+      STORAGE_SECRET_KEY: minioadmin
+      LOG_LEVEL: INFO
+      ENVIRONMENT: development
+    ports: ["8000:8000"]
+
+  web:
+    build: ../web
+    depends_on: [worker]
+    environment:
+      NEXT_PUBLIC_BUILD_SHA: dev
+      NEXT_PUBLIC_WORKER_URL: http://worker:8000
+    ports: ["3000:3000"]
+
+volumes:
+  dbdata:
+  miniodata:

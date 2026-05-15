@@ -1,0 +1,28 @@
+                    GNU AFFERO GENERAL PUBLIC LICENSE
+                       Version 3, 19 November 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+OpenBallot Nigeria is licensed under the GNU Affero General Public
+License v3.0. The full licence text is reproduced at:
+
+  https://www.gnu.org/licenses/agpl-3.0.txt
+
+By contributing to this repository you agree that your contributions are
+licensed under the AGPL-3.0-or-later.
+
+Summary of obligations for redeployment:
+
+  1. You may use, study, modify, and distribute this software freely.
+  2. If you deploy a modified version as a network service that other
+     parties interact with, you MUST make your modified source available
+     to those parties under the same licence.
+  3. You may not relicense this code under a more permissive licence.
+  4. You may not impose additional restrictions beyond those in the AGPL.
+
+This licence was chosen deliberately. It ensures that any government
+body, political party, or commercial entity that deploys a fork of
+OpenBallot must keep their version open and auditable. The transparency
+principle is enforced at the licence level.
