@@ -7,8 +7,6 @@ hash format, GPS geofence, EXIF integrity, duplicate party submissions.
 from datetime import datetime, timezone
 from uuid import uuid4
 
-import pytest
-
 from app.ingestion import IngestionPipeline
 from app.ingestion.pipeline import IngestionContext, ValidationFlag
 from app.models import GPSPoint, IngestionPayload, SubmissionSource

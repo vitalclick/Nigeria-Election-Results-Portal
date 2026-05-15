@@ -8,8 +8,6 @@ The chain must:
 
 from datetime import datetime, timezone
 
-import pytest
-
 from app.audit.chain import GENESIS_HASH, AuditEvent, link_hash, verify_chain
 from app.audit.merkle import merkle_root
 
