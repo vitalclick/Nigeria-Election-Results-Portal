@@ -1,0 +1,153 @@
+# OpenBallot Nigeria - production compose file
+#
+# This file is for the Hetzner-hosted worker (and optionally web) stack.
+# It deliberately does NOT include:
+#
+#   * Postgres - we use Supabase managed.
+#   * MinIO    - we use Cloudflare R2.
+#   * Redis    - run on its own Hetzner box (or upgrade to a managed
+#                provider). Local-to-the-worker Redis is fine for small
+#                deployments; we keep it here as `redis` but pin it to
+#                its own restart policy and resource limits.
+#
+# Secrets land in /etc/openballot/worker.env (chmod 600). They are
+# referenced via `env_file:` so they never appear in `docker inspect`
+# output or in any process listing.
+#
+# Image tags are pinned to immutable SHAs in production. The :latest
+# fallback below is only for the first deploy before CI starts publishing
+# tagged images.
+
+services:
+  worker:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    environment:
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+    ports:
+      - "127.0.0.1:8000:8000"   # behind the load balancer / Caddy reverse proxy
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "3.5"
+          memory: 14G
+        reservations:
+          cpus: "1.0"
+          memory: 4G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - openballot
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --save
+      - "60 1000"
+      - --maxmemory
+      - "1gb"
+      - --maxmemory-policy
+      - "allkeys-lru"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1.5G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    networks:
+      - openballot
+
+  # Optional - only include if web is self-hosted on Hetzner.
+  # On Vercel, skip this service.
+  web:
+    image: ghcr.io/vitalclick/openballot-web:${WEB_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/web.env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+    networks:
+      - openballot
+    profiles:
+      - self-hosted-web
+
+  # Reverse proxy + automatic TLS. Caddy talks Let's Encrypt on its
+  # own; we never have to install certbot manually.
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      worker:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    networks:
+      - openballot
+
+volumes:
+  redis-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  openballot:
+    driver: bridge
