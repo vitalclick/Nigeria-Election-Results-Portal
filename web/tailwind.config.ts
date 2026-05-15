@@ -9,6 +9,7 @@ const config: Config = {
         status: {
           nodata: '#e5e7eb',
           single: '#f6c453',
+          inec_published: '#64748b',
           consensus: '#22c55e',
           discrepancy: '#f97316',
           confirmed: '#2563eb',

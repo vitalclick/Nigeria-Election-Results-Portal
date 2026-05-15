@@ -27,6 +27,21 @@ jobs:
         working-directory: worker
         run: pytest -q
 
+  scraper:
+    name: IReV scraper (Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        working-directory: scrapers/irev-results
+        run: npm install --no-audit --no-fund --ignore-scripts
+      - name: Tests
+        working-directory: scrapers/irev-results
+        run: node --test test/*.js
+
   web:
     name: Web (Next.js)
     runs-on: ubuntu-latest

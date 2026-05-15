@@ -3,6 +3,24 @@
 This document is a one-pager for funders evaluating OpenBallot Nigeria.
 It points at the code that backs each claim in the pitch.
 
+## The launch dataset: 2023 general election, live
+
+OpenBallot launches with the **full 2023 Nigerian general election** as
+its live demonstration. We scrape all five 2023 ballots from INEC IReV -
+presidential, senate, reps, governorship, state house - mirror every EC8A
+image to our own storage with SHA-256, and serve them on the public map
+under the dedicated `inec_published` state.
+
+That is **~800,000 real polling-unit submissions**, each with the actual
+signed EC8A image, each chained into the tamper-evident audit log, each
+verifiable by anyone who downloads our public hash manifest. When 2027
+campaigning begins, party agents and observers start adding submissions
+on top of the same units; any disagreement immediately surfaces on the
+map as `inec_conflict` without us writing another line of code.
+
+Scraper lives at `scrapers/irev-results/` (Node 20, resumable, polite
+concurrency, ~3 days wall time per ballot).
+
 ## "We have actually built something"
 
 | Claim | Where the code lives | What you can run today |
@@ -16,7 +34,8 @@ It points at the code that backs each claim in the pitch.
 | Five-language i18n | `web/messages/{en,ha,yo,ig,pcm}.json` | Switch the language selector on any page. |
 | Embeddable widget | `web/app/embed/map/page.tsx` + relaxed `X-Frame-Options` | `<iframe src="/embed/map?election=2027-presidential">` works. |
 | One-command local stack | `infra/docker-compose.yml` | `docker compose up` boots web + worker + Postgres + PostGIS + Redis + MinIO. |
-| Continuous integration | `.github/workflows/ci.yml` | Worker tests + web typecheck + DB migration smoke test on every push. |
+| 2023 IReV results scraper | `scrapers/irev-results/` | `node scrape.js --state Lagos` ingests Lagos PUs from IReV with SHA-256 + audit chain. 5 parser tests covering all observed IReV JSON shapes. |
+| Continuous integration | `.github/workflows/ci.yml` | Worker tests + scraper tests + web typecheck + DB migration smoke test on every push. |
 
 ## "Trust does not depend on trusting us"
 

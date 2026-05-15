@@ -190,7 +190,21 @@ def compute_consensus(
     non_inec_sources = [k for k in by_source if not k.startswith("inec_irev")]
     inec_present = "inec_irev" in by_source
 
-    # Single source case
+    # INEC IReV is the only source for this PU. Distinct from `single_source`
+    # because INEC is the official publisher; this state is the default for
+    # the 2023 historical dataset and similar concluded elections.
+    if inec_present and not non_inec_sources:
+        return VerificationOutcome(
+            election_id=election_id,
+            pu_code=pu_code,
+            status=VerificationStatus.INEC_PUBLISHED,
+            submission_count=len(accepted),
+            source_count=len(by_source),
+            consensus_data=by_source["inec_irev"][0].extracted_data,
+            computed_at=datetime.now(timezone.utc),
+        )
+
+    # Single non-INEC source (one party agent or one observer).
     if len(non_inec_sources) < min_sources and not inec_present:
         return VerificationOutcome(
             election_id=election_id,

@@ -13,6 +13,7 @@ export type ElectionType =
 export type VerificationStatus =
   | 'no_data'
   | 'single_source'
+  | 'inec_published'
   | 'consensus'
   | 'discrepancy'
   | 'inec_confirmed'
@@ -86,6 +87,7 @@ export interface DiscrepancyRecord {
 export const STATUS_COLOURS: Record<VerificationStatus, string> = {
   no_data: '#e5e7eb',
   single_source: '#f6c453',
+  inec_published: '#64748b',   // slate - "INEC has published; awaiting independent verification"
   consensus: '#22c55e',
   discrepancy: '#f97316',
   inec_confirmed: '#2563eb',

@@ -128,6 +128,20 @@ def test_observer_counts_as_independent_source():
     assert out.status == VerificationStatus.CONSENSUS
 
 
+def test_inec_only_is_inec_published_not_single_source():
+    """The 2023 historical dataset has INEC IReV as the only source. That
+    must render as `inec_published`, not `single_source` (which means a
+    single party/observer with no INEC presence)."""
+    votes = {"APC": 142, "PDP": 89, "LP": 203}
+    out = compute_consensus(
+        [_sub(SubmissionSource.INEC_IREV, None, votes)],
+        election_id="2023-presidential",
+        pu_code="25-11-04-007",
+    )
+    assert out.status == VerificationStatus.INEC_PUBLISHED
+    assert out.consensus_data.candidate_votes == votes
+
+
 def test_inec_confirmed():
     votes = {"APC": 142, "PDP": 89, "LP": 203}
     out = compute_consensus(

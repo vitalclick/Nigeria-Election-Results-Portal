@@ -16,6 +16,7 @@ import { STATUS_COLOURS, type PollingUnitDetail, type VerificationStatus } from 
 const STATUS_LABEL: Record<VerificationStatus, string> = {
   no_data: 'No data',
   single_source: 'Single source',
+  inec_published: 'INEC published',
   consensus: 'Consensus',
   discrepancy: 'Discrepancy',
   inec_confirmed: 'INEC confirmed',
@@ -93,6 +94,7 @@ function FilterBar({
     'all',
     'no_data',
     'single_source',
+    'inec_published',
     'consensus',
     'discrepancy',
     'inec_confirmed',

@@ -34,6 +34,7 @@ class SubmissionSource(str, Enum):
 class VerificationStatus(str, Enum):
     NO_DATA = "no_data"
     SINGLE_SOURCE = "single_source"
+    INEC_PUBLISHED = "inec_published"   # INEC IReV is the only source
     CONSENSUS = "consensus"
     DISCREPANCY = "discrepancy"
     INEC_CONFIRMED = "inec_confirmed"

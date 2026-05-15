@@ -29,15 +29,19 @@ const STATUSES: VerificationStatus[] = [
 
 function pickStatus(seed: number): VerificationStatus {
   // weight toward consensus so the demo map looks healthy
+  // Weighted toward the 2023 demo dataset: mostly `inec_published` (the
+  // historical IReV-only state), with a sprinkling of multi-source states
+  // illustrating what the platform looks like during a live 2027 election.
   const weighted: VerificationStatus[] = [
+    'inec_published',
+    'inec_published',
+    'inec_published',
+    'inec_published',
+    'inec_published',
     'no_data',
     'single_source',
-    'single_source',
     'consensus',
     'consensus',
-    'consensus',
-    'consensus',
-    'inec_confirmed',
     'inec_confirmed',
     'discrepancy',
     'inec_conflict',
@@ -76,7 +80,7 @@ export function mockPollingUnits(): PollingUnitDetail[] {
         submission_count: status === 'no_data' ? 0 : 1 + (seed % 3),
         source_count: status === 'no_data' ? 0 : 1 + (seed % 3),
         consensus_data:
-          status === 'no_data' || status === 'single_source'
+          status === 'no_data'
             ? null
             : {
                 pu_code: `${state}-${i.toString().padStart(4, '0')}`,
