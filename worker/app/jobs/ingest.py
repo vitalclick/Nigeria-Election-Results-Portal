@@ -28,6 +28,11 @@ from ..anomaly import AnomalyEngine
 from ..config import settings
 from ..db import pool
 from ..extraction import build_engine
+from ..observability import (
+    EXTRACTION_CONFIDENCE_HISTOGRAM,
+    ANOMALY_COUNTER,
+    observe_extraction,
+)
 from ..models import (
     ExtractedEC8A,
     SubmissionRecord,
@@ -58,7 +63,12 @@ class IngestionJobHandler:
         submission_id = UUID(job.submission_id)
         try:
             await self._mark_processing(submission_id)
-            extraction = await self.extractor.run(job.image_url, job.pu_code)
+            backend_label = "engine"
+            with observe_extraction(backend_label):
+                extraction = await self.extractor.run(job.image_url, job.pu_code)
+            EXTRACTION_CONFIDENCE_HISTOGRAM.labels(
+                backend=extraction.backend_used
+            ).observe(extraction.confidence_score)
             await self._mark_extracted(submission_id, extraction)
             verification_status = await self._recompute_verification(
                 job.election_id, job.pu_code
@@ -237,4 +247,8 @@ class IngestionJobHandler:
             election_id=election_id,
             submission_id=submission_id,
         )
+        for h in hits:
+            ANOMALY_COUNTER.labels(
+                type=h.anomaly_type.value, severity=str(int(h.severity))
+            ).inc()
         return len(hits)

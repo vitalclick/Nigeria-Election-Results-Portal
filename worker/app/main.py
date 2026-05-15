@@ -34,13 +34,23 @@ from .jobs import enqueue_ingestion
 from .jobs.queue import close_queue, get_queue
 from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
+from .observability import (
+    INFLIGHT_GAUGE,
+    INGESTION_COUNTER,
+    INGESTION_REJECTED_COUNTER,
+    QUEUE_DEPTH_GAUGE,
+    configure_logging,
+    init_sentry,
+    metrics_response,
+)
 
 log = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logging.basicConfig(level=settings().log_level)
+    configure_logging()
+    init_sentry(environment=settings().environment)
     await init_pool()
     await get_queue()       # prime the Redis connection for /v1/ingest
     log.info("worker.startup", extra={"env": settings().environment})
@@ -69,6 +79,24 @@ _anomaly = AnomalyEngine()
 @app.get("/v1/health")
 async def health() -> dict[str, str]:
     return {"status": "ok", "env": settings().environment}
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus scrape endpoint. Returns text-format metrics.
+    Public on the application network; restrict at the load balancer
+    or via firewall if you don't want operational metrics exposed.
+
+    Refreshes the queue-depth + in-flight gauges from Redis at scrape
+    time so the dashboard reflects current state."""
+    try:
+        queue = await get_queue()
+        QUEUE_DEPTH_GAUGE.set(await queue.depth())
+        INFLIGHT_GAUGE.set(await queue.inflight_count())
+    except Exception:
+        # Metric refresh failure must not block the scrape.
+        pass
+    return metrics_response()
 
 
 @app.post("/v1/ingest")
@@ -117,12 +145,16 @@ async def ingest(payload: IngestionPayload) -> dict:
     result = _pipeline.run(payload, ctx)
 
     if not result.accepted:
+        reason = next(iter(result.flags), result.rejected_reason or "unknown")
+        INGESTION_REJECTED_COUNTER.labels(reason=reason).inc()
         return {
             "accepted": False,
             "submission_id": str(result.submission_id),
             "reason": result.rejected_reason,
             "flags": result.flags,
         }
+
+    INGESTION_COUNTER.labels(source_type=payload.source_type.value).inc()
 
     # Async ingestion: persist the submission row with processing_status
     # 'queued' immediately, then enqueue a background job that runs the

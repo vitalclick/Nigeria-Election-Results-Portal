@@ -21,6 +21,7 @@ from pydantic import BaseModel, Field
 
 from ..config import settings
 from ..db import pool
+from ..observability import AUTH_OTP_COUNTER
 from . import (
     OTPService,
     device_fingerprint_hash,
@@ -110,6 +111,7 @@ async def request_otp(body: RequestOtpIn, request: Request):
             ip_max=s.otp_max_requests_per_ip_per_hour,
         )
         if not decision.allow:
+            AUTH_OTP_COUNTER.labels(outcome="throttled").inc()
             raise HTTPException(
                 status_code=429,
                 detail={
@@ -155,6 +157,7 @@ async def request_otp(body: RequestOtpIn, request: Request):
     if not result.ok:
         log.warning("sms.failed", extra={"phone": phone, "error": result.error})
 
+    AUTH_OTP_COUNTER.labels(outcome="requested").inc()
     return RequestOtpOut(status="sent", expires_in_seconds=s.otp_ttl_seconds)
 
 
@@ -218,6 +221,7 @@ async def verify_otp(body: VerifyOtpIn, request: Request):
             {"reason": reason, "otp_id": str(rec.id)},
         )
         if not ok:
+            AUTH_OTP_COUNTER.labels(outcome="failed").inc()
             raise HTTPException(status_code=400, detail={"code": reason})
 
         # Find the agent record. We don't auto-register from auth-time;
@@ -288,6 +292,7 @@ async def verify_otp(body: VerifyOtpIn, request: Request):
             presented_dev_hash,
         )
 
+    AUTH_OTP_COUNTER.labels(outcome="verified").inc()
     token = issue_agent_token(
         secret=s.agent_jwt_secret,
         agent_id=str(agent["id"]),

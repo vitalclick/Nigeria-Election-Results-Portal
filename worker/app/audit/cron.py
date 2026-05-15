@@ -20,6 +20,8 @@ from __future__ import annotations
 import logging
 
 from ..db import pool
+from ..observability import ANCHOR_COUNTER
+from .ethereum_client import GasPriceTooHigh
 from .merkle import merkle_root
 
 log = logging.getLogger(__name__)
@@ -97,7 +99,16 @@ async def submit_pending(client) -> int:
             tx_hash, block_number = await client.send_data_tx(
                 data_hex="0x" + row["merkle_root"]
             )
+            ANCHOR_COUNTER.labels(outcome="confirmed").inc()
+        except GasPriceTooHigh as e:
+            ANCHOR_COUNTER.labels(outcome="gas_too_high").inc()
+            log.warning(
+                "audit.anchor.gas_too_high",
+                extra={"anchor_id": str(row["id"]), "error": str(e)},
+            )
+            continue
         except Exception as e:
+            ANCHOR_COUNTER.labels(outcome="failed").inc()
             log.warning(
                 "audit.anchor.submit_failed",
                 extra={"anchor_id": str(row["id"]), "error": str(e)},

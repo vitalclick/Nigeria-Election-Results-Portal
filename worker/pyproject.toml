@@ -23,7 +23,9 @@ dependencies = [
   "phonenumbers>=8.13",
   "google-cloud-documentai>=2.24",
   "openai>=1.30",
-  "eth-account>=0.11"
+  "eth-account>=0.11",
+  "sentry-sdk[fastapi]>=2.0",
+  "prometheus-client>=0.20"
 ]
 
 [project.optional-dependencies]
