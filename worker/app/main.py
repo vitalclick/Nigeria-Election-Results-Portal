@@ -18,7 +18,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 
+from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
+from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
 from .config import settings
 from .db import close_pool, init_pool, pool
@@ -205,3 +207,22 @@ async def audit_verify(limit: int = 1000) -> dict:
     ]
     ok, broken = verify_chain(events)
     return {"ok": ok, "events_checked": len(events), "first_broken_seq": broken}
+
+
+@app.post("/v1/audit/anchor")
+async def audit_anchor_run() -> dict:
+    """Manual trigger for the anchor cron.
+
+    Operator-callable so we have a 'kick the anchor' button when the
+    scheduled cron run misses. Idempotent (see app.audit.cron docs).
+    Returns 503 when anchoring is disabled or unconfigured.
+    """
+    client = build_eth_client()
+    if client is None:
+        raise HTTPException(
+            status_code=503,
+            detail={"code": "anchor_disabled",
+                    "message": "ANCHOR_ENABLED=false or RPC/key missing"},
+        )
+    result = await anchor_cron.run_once(client)
+    return result
