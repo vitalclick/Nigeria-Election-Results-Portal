@@ -22,8 +22,7 @@ from .audit.chain import AuditEvent, verify_chain
 from .auth.router import router as auth_router
 from .config import settings
 from .db import close_pool, init_pool, pool
-from .extraction import ExtractionEngine
-from .extraction.engine import StubExtractor
+from .extraction import build_engine
 from .ingestion import IngestionPipeline
 from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
@@ -49,11 +48,10 @@ app = FastAPI(
 app.include_router(auth_router)
 
 _pipeline = IngestionPipeline()
-_extractor = ExtractionEngine(
-    primary=StubExtractor(name="document-ai-stub", confidence=0.97),
-    secondary=StubExtractor(name="gpt4o-vision-stub", confidence=0.92),
-    confidence_floor=settings().extraction_confidence_floor,
-)
+# The factory picks Document AI + GPT-4o adapters when credentials are
+# configured; otherwise it returns paired stubs. Either way the engine's
+# protocol is identical from the ingest endpoint's perspective.
+_extractor = build_engine()
 
 
 @app.get("/v1/health")

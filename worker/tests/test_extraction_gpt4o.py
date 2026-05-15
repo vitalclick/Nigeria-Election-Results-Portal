@@ -1,0 +1,144 @@
+"""Tests for the GPT-4o Vision extractor.
+
+We mock httpx so the tests run hermetically. The mocked response shape
+matches OpenAI's chat completion JSON exactly so we are exercising the
+real parsing path.
+"""
+
+from __future__ import annotations
+
+import json
+from unittest.mock import AsyncMock, patch
+
+import pytest
+
+from app.extraction.gpt4o_vision import GPT4oVisionExtractor
+
+
+def _mock_openai_response(content: dict) -> dict:
+    return {
+        "choices": [
+            {
+                "message": {"role": "assistant", "content": json.dumps(content)},
+                "finish_reason": "stop",
+            }
+        ],
+        "model": "gpt-4o",
+    }
+
+
+@pytest.fixture
+def extractor():
+    return GPT4oVisionExtractor(api_key="test-key", model="gpt-4o")
+
+
+@pytest.fixture
+def good_response_json():
+    return {
+        "pu_code": "25-11-04-007",
+        "registered_voters": 500,
+        "accredited_voters": 450,
+        "candidate_votes": {"APC": 142, "PDP": 89, "LP": 203},
+        "total_valid_votes": 434,
+        "rejected_ballots": 12,
+        "total_votes_cast": 446,
+        "presiding_officer_signed": True,
+        "agent_signatures_detected": 4,
+        "official_stamp_present": True,
+        "confidence": {
+            "pu_code": 0.99,
+            "registered_voters": 0.95,
+            "accredited_voters": 0.94,
+            "candidate_votes": 0.92,
+            "total_valid_votes": 0.93,
+            "rejected_ballots": 0.91,
+            "total_votes_cast": 0.92,
+            "signatures": 0.88,
+        },
+    }
+
+
+async def test_extract_happy_path(extractor, good_response_json):
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: _mock_openai_response(good_response_json)
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        result = await extractor.extract("https://example.com/ec8a.jpg", "25-11-04-007")
+
+    assert result.backend_used == "gpt4o_vision"
+    assert result.extracted.pu_code == "25-11-04-007"
+    assert result.extracted.candidate_votes == {"APC": 142, "PDP": 89, "LP": 203}
+    assert result.extracted.total_valid_votes == 434
+    assert result.arithmetic.consistent is True
+    # Average of all per-field confidences ≈ 0.93
+    assert 0.85 < result.confidence_score < 0.99
+
+
+async def test_extract_uppercases_party_codes(extractor, good_response_json):
+    good_response_json["candidate_votes"] = {"apc": 142, " pdp ": 89, "Lp": 203}
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: _mock_openai_response(good_response_json)
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        result = await extractor.extract("https://example.com/ec8a.jpg", "x")
+
+    assert set(result.extracted.candidate_votes.keys()) == {"APC", "PDP", "LP"}
+
+
+async def test_extract_rejects_not_an_ec8a(extractor):
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: _mock_openai_response({"error": "not_an_ec8a"})
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        with pytest.raises(RuntimeError, match="not an EC8A"):
+            await extractor.extract("https://example.com/random.jpg", "x")
+
+
+async def test_extract_raises_on_no_candidates(extractor, good_response_json):
+    good_response_json["candidate_votes"] = {}
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: _mock_openai_response(good_response_json)
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        with pytest.raises(RuntimeError, match="no candidate votes"):
+            await extractor.extract("https://example.com/ec8a.jpg", "x")
+
+
+async def test_extract_raises_on_non_json_content(extractor):
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: {
+        "choices": [{"message": {"content": "definitely not json"}}]
+    }
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        with pytest.raises(RuntimeError, match="non-JSON"):
+            await extractor.extract("https://example.com/ec8a.jpg", "x")
+
+
+async def test_extract_raises_on_http_error(extractor):
+    mock_response = AsyncMock()
+    mock_response.status_code = 500
+    mock_response.text = "internal server error"
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        with pytest.raises(RuntimeError, match="HTTP 500"):
+            await extractor.extract("https://example.com/ec8a.jpg", "x")
+
+
+async def test_extract_arithmetic_inconsistent_flagged(extractor, good_response_json):
+    # Total valid votes deliberately wrong; arithmetic check should fail.
+    good_response_json["total_valid_votes"] = 999
+    mock_response = AsyncMock()
+    mock_response.status_code = 200
+    mock_response.json = lambda: _mock_openai_response(good_response_json)
+
+    with patch("httpx.AsyncClient.post", return_value=mock_response):
+        result = await extractor.extract("https://example.com/ec8a.jpg", "x")
+
+    assert result.arithmetic.consistent is False
+    assert "candidate_votes_sum_neq_total_valid" in result.arithmetic.failed_checks
