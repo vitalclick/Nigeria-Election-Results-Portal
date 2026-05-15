@@ -22,6 +22,7 @@ from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
 from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
+from .admin.router import router as admin_router
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
@@ -48,6 +49,7 @@ app = FastAPI(
     docs_url="/docs",
 )
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 _pipeline = IngestionPipeline()
 # The factory picks Document AI + GPT-4o adapters when credentials are
