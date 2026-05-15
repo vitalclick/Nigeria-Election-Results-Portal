@@ -1,0 +1,222 @@
+# OpenBallot Nigeria - production compose file
+#
+# This file is for the Hetzner-hosted worker (and optionally web) stack.
+# It deliberately does NOT include:
+#
+#   * Postgres - we use Supabase managed.
+#   * MinIO    - we use Cloudflare R2.
+#   * Redis    - run on its own Hetzner box (or upgrade to a managed
+#                provider). Local-to-the-worker Redis is fine for small
+#                deployments; we keep it here as `redis` but pin it to
+#                its own restart policy and resource limits.
+#
+# Secrets land in /etc/openballot/worker.env (chmod 600). They are
+# referenced via `env_file:` so they never appear in `docker inspect`
+# output or in any process listing.
+#
+# Image tags are pinned to immutable SHAs in production. The :latest
+# fallback below is only for the first deploy before CI starts publishing
+# tagged images.
+
+services:
+  worker:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    environment:
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+    ports:
+      - "127.0.0.1:8000:8000"   # behind the load balancer / Caddy reverse proxy
+    depends_on:
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "3.5"
+          memory: 14G
+        reservations:
+          cpus: "1.0"
+          memory: 4G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - openballot
+
+  # One-shot DB migrator. Runs to completion on every stack-up,
+  # acquires the advisory lock, applies any pending migrations, and
+  # exits 0. Other services depend on it via
+  # service_completed_successfully so a stuck migration fails the
+  # deploy loudly rather than letting the app boot against the wrong
+  # schema.
+  migrate:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    env_file:
+      - /etc/openballot/worker.env
+    command: ["python", "-m", "cli.migrate"]
+    restart: 'no'
+    networks:
+      - openballot
+
+  # Crashed-worker recovery cron. Every 5 minutes, walks any submission
+  # stuck in processing_status='processing' for >30 min and re-queues
+  # it to Redis. Submissions stuck >4 hours get marked failed with a
+  # recovery_giveup audit event so they don't pile up forever.
+  recovery:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    # Re-run the recovery script every 300 seconds. Cheap when there's
+    # nothing to do (one SELECT, returns immediately).
+    command:
+      - /bin/sh
+      - -c
+      - 'while true; do python -m cli.recovery; sleep 300; done'
+    depends_on:
+      redis: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    networks:
+      - openballot
+
+  # Background job consumer. Same image as `worker`; runs the CLI entry
+  # instead of uvicorn. Production should run 4-8 replicas scaled by
+  # queue depth during election peak.
+  jobworker:
+    image: ghcr.io/vitalclick/openballot-worker:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/worker.env
+    environment:
+      ENVIRONMENT: production
+      LOG_LEVEL: INFO
+    command: ["python", "-m", "cli.run_worker"]
+    depends_on:
+      redis: { condition: service_healthy }
+      worker: { condition: service_started }
+      migrate: { condition: service_completed_successfully }
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 8G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - openballot
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --save
+      - "60 1000"
+      - --maxmemory
+      - "1gb"
+      - --maxmemory-policy
+      - "allkeys-lru"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1.5G
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    networks:
+      - openballot
+
+  # Optional - only include if web is self-hosted on Hetzner.
+  # On Vercel, skip this service.
+  web:
+    image: ghcr.io/vitalclick/openballot-web:${WEB_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - /etc/openballot/web.env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+    networks:
+      - openballot
+    profiles:
+      - self-hosted-web
+
+  # Reverse proxy + automatic TLS. Caddy talks Let's Encrypt on its
+  # own; we never have to install certbot manually.
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      worker:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    networks:
+      - openballot
+
+volumes:
+  redis-data:
+  caddy-data:
+  caddy-config:
+
+networks:
+  openballot:
+    driver: bridge

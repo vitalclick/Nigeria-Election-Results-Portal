@@ -30,8 +30,17 @@ export function Header({ locale }: { locale: Locale }) {
           <Link href={`/${locale}/discrepancies`} className="px-2 py-1 hover:underline">
             {t('discrepancies')}
           </Link>
+          <Link href={`/${locale}/anomalies`} className="px-2 py-1 hover:underline">
+            {t('anomalies')}
+          </Link>
           <Link href={`/${locale}/agent`} className="px-2 py-1 hover:underline hidden sm:inline">
             {t('agent')}
+          </Link>
+          <Link
+            href={`/${locale}/observer-register`}
+            className="px-2 py-1 hover:underline hidden md:inline"
+          >
+            {t('observer')}
           </Link>
           <Link href={`/${locale}/admin`} className="px-2 py-1 hover:underline hidden sm:inline">
             {t('admin')}

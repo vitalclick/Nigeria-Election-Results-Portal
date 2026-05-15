@@ -2,7 +2,9 @@
   "nav": {
     "map": "Map",
     "discrepancies": "Discrepancies",
+    "anomalies": "Anomalies",
     "agent": "Agent",
+    "observer": "Observer",
     "admin": "Admin"
   },
   "landing": {

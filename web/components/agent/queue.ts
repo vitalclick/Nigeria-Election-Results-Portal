@@ -1,12 +1,22 @@
 // Offline-first submission queue.
 //
 // Submissions are persisted to IndexedDB the moment the user taps "Submit".
-// A background drainer (registered in the service worker in production)
-// retries uploads with exponential backoff until each one lands.
+// A background drainer retries uploads with exponential backoff until each
+// submission lands. The drainer is wired into AgentFlow's mount lifecycle
+// so it ticks every few seconds when the page is open; a service-worker-
+// registered drainer takes over when the tab is closed (production
+// only; dev mode skips the SW per next.config.mjs).
 //
-// The same SHA-256 the worker validates is computed here, so a submission's
-// hash is bound to the bytes the agent captured - not whatever bytes the
-// upload pipeline happens to receive.
+// Each successful drain runs:
+//   1. presignUpload    /v1/uploads/presign          (worker)
+//   2. uploadBytes      direct browser -> R2 PUT
+//   3. submitIngestion  /v1/ingest                   (worker, 202)
+// On any step's failure we leave the row in the queue with exponential
+// backoff. The SHA-256 is computed once at queue-time and travels with
+// the bytes, so a re-attempt uses the same hash that the presign was
+// bound to.
+
+import { presignUpload, submitIngestion, uploadBytes } from '@/lib/uploads';
 
 const DB_NAME = 'openballot-queue';
 const STORE = 'submissions';
@@ -23,8 +33,13 @@ export interface QueuedSubmission {
   image_bytes: number;
   gps: { lat: number; lng: number; acc: number } | null;
   captured_at: string;
+  client_submission_uuid: string;
   retries?: number;
   next_attempt_at?: number;
+  // After a successful upload + ingest, we keep the row briefly with
+  // the submission_id so the UI can poll status before it's purged.
+  submission_id?: string;
+  last_status?: 'queued' | 'processing' | 'extracted' | 'failed';
 }
 
 function open(): Promise<IDBDatabase> {
@@ -62,38 +77,114 @@ export const OfflineQueue = {
     });
   },
 
-  async drainOnce(send: (s: QueuedSubmission) => Promise<boolean>): Promise<number> {
+  /** Run one drain pass. Calls `onProgress` with each row's outcome so
+   *  the UI can surface "uploading...", "submission accepted",
+   *  "failed: ..." without coupling to the queue internals. */
+  async drainOnce(onProgress?: (msg: DrainMessage) => void): Promise<number> {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return 0;
+    }
     const db = await open();
-    const tx = db.transaction(STORE, 'readwrite');
-    const store = tx.objectStore(STORE);
     const all = await new Promise<QueuedSubmission[]>((res, rej) => {
-      const r = store.getAll();
+      const tx = db.transaction(STORE, 'readonly');
+      const r = tx.objectStore(STORE).getAll();
       r.onsuccess = () => res(r.result as QueuedSubmission[]);
       r.onerror = () => rej(r.error);
     });
     let sent = 0;
     const now = Date.now();
     for (const s of all) {
+      if (s.submission_id) continue;                  // already sent; let it age out
       if ((s.next_attempt_at ?? 0) > now) continue;
+
       try {
-        const ok = await send(s);
-        if (ok) {
-          store.delete(s.id!);
-          sent += 1;
-        } else {
-          const retries = (s.retries ?? 0) + 1;
-          const backoff = Math.min(60_000, 2 ** retries * 1000);
-          store.put({ ...s, retries, next_attempt_at: now + backoff });
-        }
-      } catch {
+        onProgress?.({ kind: 'started', id: s.id! });
+
+        const presigned = await presignUpload({
+          election_id: s.election_id,
+          pu_code: s.pu_code,
+          content_type: s.image_blob.type || 'image/jpeg',
+          content_length: s.image_bytes,
+          sha256_hex: s.image_sha256,
+        });
+        onProgress?.({ kind: 'presigned', id: s.id! });
+
+        await uploadBytes(presigned.upload_url, s.image_blob, s.image_sha256);
+        onProgress?.({ kind: 'uploaded', id: s.id! });
+
+        const ack = await submitIngestion({
+          election_id: s.election_id,
+          pu_code: s.pu_code,
+          source_type: s.source_type,
+          party_code: s.party_code,
+          image_url: presigned.image_url,
+          image_sha256: s.image_sha256,
+          image_bytes: s.image_bytes,
+          gps: s.gps ? { lat: s.gps.lat, lng: s.gps.lng, acc: s.gps.acc } : null,
+          captured_at: s.captured_at,
+          client_submission_uuid: s.client_submission_uuid,
+        });
+        onProgress?.({
+          kind: 'accepted',
+          id: s.id!,
+          submission_id: ack.submission_id,
+          status: ack.processing_status,
+        });
+
+        // Update the row in place with the submission_id; we keep it for
+        // a short while so the UI can poll status, then purge after a
+        // terminal state.
+        await updateRow(db, s.id!, {
+          submission_id: ack.submission_id,
+          last_status: ack.processing_status,
+        });
+        sent += 1;
+      } catch (e: any) {
+        onProgress?.({ kind: 'error', id: s.id!, error: e?.message ?? String(e) });
         const retries = (s.retries ?? 0) + 1;
         const backoff = Math.min(60_000, 2 ** retries * 1000);
-        store.put({ ...s, retries, next_attempt_at: now + backoff });
+        await updateRow(db, s.id!, { retries, next_attempt_at: now + backoff });
       }
     }
     return sent;
   },
+
+  /** Delete a submission row once the UI has acknowledged the
+   *  terminal status (so it stops counting toward queue depth). */
+  async forget(id: number): Promise<void> {
+    const db = await open();
+    return new Promise((res, rej) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      const r = tx.objectStore(STORE).delete(id);
+      r.onsuccess = () => res();
+      r.onerror = () => rej(r.error);
+    });
+  },
 };
+
+export type DrainMessage =
+  | { kind: 'started'; id: number }
+  | { kind: 'presigned'; id: number }
+  | { kind: 'uploaded'; id: number }
+  | { kind: 'accepted'; id: number; submission_id: string; status: string }
+  | { kind: 'error'; id: number; error: string };
+
+function updateRow(db: IDBDatabase, id: number, patch: Partial<QueuedSubmission>): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    const store = tx.objectStore(STORE);
+    const getReq = store.get(id);
+    getReq.onsuccess = () => {
+      const row = getReq.result;
+      if (!row) return resolve();
+      const merged = { ...row, ...patch };
+      const putReq = store.put(merged);
+      putReq.onsuccess = () => resolve();
+      putReq.onerror = () => reject(putReq.error);
+    };
+    getReq.onerror = () => reject(getReq.error);
+  });
+}
 
 export async function computeSha256Hex(buf: ArrayBuffer): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', buf);

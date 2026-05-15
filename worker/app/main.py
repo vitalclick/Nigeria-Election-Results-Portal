@@ -13,29 +13,51 @@ caller's perspective.
 
 from __future__ import annotations
 
+import json
 import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 
+from .audit import cron as anchor_cron
 from .audit.chain import AuditEvent, verify_chain
+from .audit.ethereum_client import build_from_settings as build_eth_client
+from .auth.router import router as auth_router
+from .admin.router import router as admin_router
+from .anomaly import AnomalyEngine
+from .observers import observer_router
+from .uploads import uploads_router
 from .config import settings
 from .db import close_pool, init_pool, pool
-from .extraction import ExtractionEngine
-from .extraction.engine import StubExtractor
+from .extraction import build_engine
 from .ingestion import IngestionPipeline
+from .jobs import enqueue_ingestion
+from .jobs.queue import close_queue, get_queue
 from .ingestion.pipeline import IngestionContext
 from .models import IngestionPayload
+from .observability import (
+    INFLIGHT_GAUGE,
+    INGESTION_COUNTER,
+    INGESTION_REJECTED_COUNTER,
+    QUEUE_DEPTH_GAUGE,
+    configure_logging,
+    init_sentry,
+    metrics_response,
+)
 
 log = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logging.basicConfig(level=settings().log_level)
+    configure_logging()
+    init_sentry(environment=settings().environment)
     await init_pool()
+    await get_queue()       # prime the Redis connection for /v1/ingest
     log.info("worker.startup", extra={"env": settings().environment})
     yield
+    await close_queue()
     await close_pool()
 
 
@@ -45,18 +67,40 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/docs",
 )
+app.include_router(auth_router)
+app.include_router(admin_router)
+app.include_router(observer_router)
+app.include_router(uploads_router)
 
 _pipeline = IngestionPipeline()
-_extractor = ExtractionEngine(
-    primary=StubExtractor(name="document-ai-stub", confidence=0.97),
-    secondary=StubExtractor(name="gpt4o-vision-stub", confidence=0.92),
-    confidence_floor=settings().extraction_confidence_floor,
-)
+# The factory picks Document AI + GPT-4o adapters when credentials are
+# configured; otherwise it returns paired stubs. Either way the engine's
+# protocol is identical from the ingest endpoint's perspective.
+_extractor = build_engine()
+_anomaly = AnomalyEngine()
 
 
 @app.get("/v1/health")
 async def health() -> dict[str, str]:
     return {"status": "ok", "env": settings().environment}
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus scrape endpoint. Returns text-format metrics.
+    Public on the application network; restrict at the load balancer
+    or via firewall if you don't want operational metrics exposed.
+
+    Refreshes the queue-depth + in-flight gauges from Redis at scrape
+    time so the dashboard reflects current state."""
+    try:
+        queue = await get_queue()
+        QUEUE_DEPTH_GAUGE.set(await queue.depth())
+        INFLIGHT_GAUGE.set(await queue.inflight_count())
+    except Exception:
+        # Metric refresh failure must not block the scrape.
+        pass
+    return metrics_response()
 
 
 @app.post("/v1/ingest")
@@ -105,6 +149,8 @@ async def ingest(payload: IngestionPayload) -> dict:
     result = _pipeline.run(payload, ctx)
 
     if not result.accepted:
+        reason = next(iter(result.flags), result.rejected_reason or "unknown")
+        INGESTION_REJECTED_COUNTER.labels(reason=reason).inc()
         return {
             "accepted": False,
             "submission_id": str(result.submission_id),
@@ -112,8 +158,13 @@ async def ingest(payload: IngestionPayload) -> dict:
             "flags": result.flags,
         }
 
-    extraction = await _extractor.run(payload.image_url, payload.pu_code)
+    INGESTION_COUNTER.labels(source_type=payload.source_type.value).inc()
 
+    # Async ingestion: persist the submission row with processing_status
+    # 'queued' immediately, then enqueue a background job that runs the
+    # heavy extraction + verification + anomaly + audit work. The HTTP
+    # path returns 202 in milliseconds. The PWA polls /v1/submissions/{id}
+    # or subscribes to the SSE event stream for the final state.
     async with pool().acquire() as conn:
         await conn.execute(
             """
@@ -121,10 +172,10 @@ async def ingest(payload: IngestionPayload) -> dict:
               id, election_id, pu_code, source_type, party_code,
               image_url, image_sha256, image_bytes, exif_metadata,
               gps_lat, gps_lng, gps_distance_metres, captured_at,
-              confidence_score, extracted_data, per_field_confidence,
-              validation_flags, review_status
+              validation_flags, review_status,
+              processing_status, queued_at
             ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12,$13,
-                      $14,$15::jsonb,$16::jsonb,$17::jsonb,$18)
+                      $14::jsonb,$15,'queued',NOW())
             """,
             result.submission_id,
             payload.election_id,
@@ -139,41 +190,78 @@ async def ingest(payload: IngestionPayload) -> dict:
             payload.gps.lng if payload.gps else None,
             result.distance_metres,
             payload.captured_at,
-            extraction.confidence_score,
-            extraction.extracted.model_dump_json(),
-            extraction.per_field_confidence,
             result.flags,
-            "auto_approved"
-            if (
-                extraction.confidence_score >= s.extraction_confidence_floor
-                and extraction.arithmetic.consistent
-            )
-            else "pending_review",
+            "pending_review",
         )
-
         await conn.execute(
             """
             INSERT INTO audit_log (event_type, entity_type, entity_id, event_data)
             VALUES ('submission.created', 'ec8a_submission', $1, $2::jsonb)
             """,
             str(result.submission_id),
-            {
+            json.dumps({
                 "election_id": payload.election_id,
                 "pu_code": payload.pu_code,
                 "image_sha256": payload.image_sha256,
                 "source": payload.source_type.value,
                 "party": payload.party_code,
-            },
+            }),
         )
 
-    return {
-        "accepted": True,
-        "submission_id": str(result.submission_id),
-        "confidence": extraction.confidence_score,
-        "arithmetic_consistent": extraction.arithmetic.consistent,
-        "extractor": extraction.backend_used,
-        "flags": result.flags,
-    }
+    queue = await get_queue()
+    await enqueue_ingestion(
+        queue,
+        submission_id=result.submission_id,
+        election_id=payload.election_id,
+        pu_code=payload.pu_code,
+        image_url=payload.image_url,
+        image_sha256=payload.image_sha256,
+    )
+
+    return JSONResponse(
+        status_code=202,
+        content={
+            "accepted": True,
+            "submission_id": str(result.submission_id),
+            "processing_status": "queued",
+            "flags": result.flags,
+            "poll_url": f"/v1/submissions/{result.submission_id}",
+        },
+    )
+
+
+@app.get("/v1/submissions/{submission_id}")
+async def get_submission_status(submission_id: str) -> dict:
+    """Poll the lifecycle state of a submission. Used by the PWA between
+    upload and the final extraction state; also exposed publicly so any
+    client can confirm a submission landed.
+    """
+    async with pool().acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT id, election_id, pu_code, source_type, party_code,
+                   image_url, image_sha256, processing_status, processing_error,
+                   queued_at, extraction_started_at, extraction_completed_at,
+                   confidence_score, review_status
+              FROM ec8a_submissions
+             WHERE id = $1
+            """,
+            submission_id,
+        )
+        if row is None:
+            raise HTTPException(status_code=404, detail={"code": "not_found"})
+        return {
+            "id": str(row["id"]),
+            "election_id": row["election_id"],
+            "pu_code": row["pu_code"],
+            "processing_status": row["processing_status"],
+            "processing_error": row["processing_error"],
+            "review_status": row["review_status"],
+            "confidence_score": float(row["confidence_score"]) if row["confidence_score"] else None,
+            "queued_at": row["queued_at"].isoformat() if row["queued_at"] else None,
+            "extraction_started_at": row["extraction_started_at"].isoformat() if row["extraction_started_at"] else None,
+            "extraction_completed_at": row["extraction_completed_at"].isoformat() if row["extraction_completed_at"] else None,
+        }
 
 
 @app.get("/v1/audit/verify")
@@ -205,3 +293,42 @@ async def audit_verify(limit: int = 1000) -> dict:
     ]
     ok, broken = verify_chain(events)
     return {"ok": ok, "events_checked": len(events), "first_broken_seq": broken}
+
+
+@app.post("/v1/anomaly/sweep")
+async def anomaly_sweep(election_id: str = "2027-presidential") -> dict:
+    """Run the batch anomaly sweep over an election.
+
+    Refreshes the peer-distribution materialised views, then runs the
+    statistical and historical detectors. Idempotent: re-runs only emit
+    rows for newly-anomalous PUs (the table has a unique index on
+    (election_id, pu_code, anomaly_type, submission_id)).
+    """
+    async with pool().acquire() as conn:
+        await conn.execute("SELECT refresh_anomaly_baselines()")
+    stat_inserted = await _anomaly.run_statistical_sweep(election_id)
+    hist_inserted = await _anomaly.run_historical_sweep(election_id)
+    return {
+        "election_id": election_id,
+        "statistical_inserted": stat_inserted,
+        "historical_inserted": hist_inserted,
+    }
+
+
+@app.post("/v1/audit/anchor")
+async def audit_anchor_run() -> dict:
+    """Manual trigger for the anchor cron.
+
+    Operator-callable so we have a 'kick the anchor' button when the
+    scheduled cron run misses. Idempotent (see app.audit.cron docs).
+    Returns 503 when anchoring is disabled or unconfigured.
+    """
+    client = build_eth_client()
+    if client is None:
+        raise HTTPException(
+            status_code=503,
+            detail={"code": "anchor_disabled",
+                    "message": "ANCHOR_ENABLED=false or RPC/key missing"},
+        )
+    result = await anchor_cron.run_once(client)
+    return result

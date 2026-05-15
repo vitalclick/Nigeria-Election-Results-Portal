@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { MapboxRenderer } from '@/components/MapboxRenderer';
 import { STATUS_COLOURS, type PollingUnitDetail, type VerificationStatus } from '@/lib/types';
 
 // The public results map.
@@ -67,9 +68,11 @@ export function ResultsMap({ electionId }: Props) {
     <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] h-full">
       <div ref={containerRef} className="relative bg-slate-100">
         {mapboxToken ? (
-          <div className="absolute inset-0 grid place-items-center text-slate-500">
-            Mapbox GL render mounts here when NEXT_PUBLIC_MAPBOX_TOKEN is set.
-          </div>
+          <MapboxRenderer
+            electionId={electionId}
+            token={mapboxToken}
+            onSelect={setSelected}
+          />
         ) : (
           <SvgFallback units={filtered} onSelect={setSelected} />
         )}
@@ -198,6 +201,13 @@ function PUDetailPane({ unit }: { unit: PollingUnitDetail | null }) {
         <span className="status-dot" style={{ background: STATUS_COLOURS[unit.status] }} />
         {STATUS_LABEL[unit.status]}
       </div>
+
+      <a
+        href={`/en/pu/${encodeURIComponent(unit.pu_code)}`}
+        className="mt-3 text-xs text-blue-700 hover:underline inline-block"
+      >
+        Open full polling unit detail →
+      </a>
 
       <div className="mt-4 text-sm space-y-2">
         <div className="flex justify-between">

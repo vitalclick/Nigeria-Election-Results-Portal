@@ -1,0 +1,54 @@
+# OpenBallot Nigeria - Caddy reverse proxy configuration
+#
+# Caddy fronts the worker on the Hetzner host. It does:
+#   * automatic TLS via Let's Encrypt (no certbot ceremony)
+#   * HTTP -> HTTPS redirect
+#   * security headers
+#   * health endpoint visible to the LB
+#
+# Public traffic from Cloudflare → Caddy on the Hetzner host's :443.
+# Caddy proxies to the worker container on the internal docker network.
+
+api.openballot.ng {
+    encode gzip zstd
+
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), geolocation=(), microphone=()"
+        # Cloudflare adds its own server header; remove the upstream one.
+        -Server
+    }
+
+    # Caddy uses the X-Forwarded-For from Cloudflare's edge.
+    # Allowlist of Cloudflare IPv4 ranges; we update this from
+    # https://www.cloudflare.com/ips-v4 periodically.
+    @notFromCloudflare not remote_ip 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22
+    respond @notFromCloudflare "Direct origin access blocked. Use https://api.openballot.ng" 403
+
+    # Health endpoint - cheap and unauthenticated for the LB.
+    handle /v1/health {
+        reverse_proxy worker:8000
+    }
+
+    handle {
+        reverse_proxy worker:8000 {
+            health_uri /v1/health
+            health_interval 30s
+            health_timeout 5s
+            transport http {
+                read_timeout 60s
+                write_timeout 60s
+            }
+        }
+    }
+
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 100mb
+            roll_keep 5
+        }
+        format json
+    }
+}
