@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 
 import { AuthError, requestOtp, verifyOtp, type AgentProfile } from '@/lib/auth-client';
+import { pollSubmission, type SubmissionStatus } from '@/lib/uploads';
 
-import { computeSha256Hex, OfflineQueue } from './queue';
+import { computeSha256Hex, OfflineQueue, type DrainMessage } from './queue';
 
 // Five-step flow:
 //   request_otp -> verify_otp -> pu -> capture -> confirm -> done
@@ -50,6 +51,58 @@ export function AgentFlow() {
     const id = setInterval(() => OfflineQueue.depth().then(setQueueDepth), 5_000);
     return () => clearInterval(id);
   }, []);
+
+  // Drainer: every 5 seconds, attempt to upload any queued submissions.
+  // In production a service worker takes over when the page is hidden;
+  // this in-page drainer covers the foreground case.
+  const [drainNote, setDrainNote] = useState<string | null>(null);
+  const [lastAcceptedId, setLastAcceptedId] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        await OfflineQueue.drainOnce((msg: DrainMessage) => {
+          if (cancelled) return;
+          if (msg.kind === 'started') setDrainNote('Requesting upload slot…');
+          else if (msg.kind === 'presigned') setDrainNote('Uploading photo…');
+          else if (msg.kind === 'uploaded') setDrainNote('Submitting record…');
+          else if (msg.kind === 'accepted') {
+            setDrainNote('Submitted. Awaiting extraction…');
+            setLastAcceptedId(msg.submission_id);
+          } else if (msg.kind === 'error') setDrainNote(`Will retry: ${msg.error}`);
+        });
+      } catch {/* swallow; next tick retries */}
+    };
+    tick();
+    const id = setInterval(tick, 5_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
+  // Status poll: once a submission has been accepted, keep checking until
+  // it reaches a terminal state, so the agent sees "extracted" or
+  // "needs review" instead of stopping at "submitted".
+  const [statusForLast, setStatusForLast] = useState<SubmissionStatus | null>(null);
+  useEffect(() => {
+    if (!lastAcceptedId) return;
+    let cancelled = false;
+    const id = setInterval(async () => {
+      try {
+        const s = await pollSubmission(lastAcceptedId);
+        if (cancelled) return;
+        setStatusForLast(s);
+        if (s.processing_status === 'extracted' || s.processing_status === 'failed') {
+          clearInterval(id);
+        }
+      } catch {/* keep trying */}
+    }, 3_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [lastAcceptedId]);
 
   if (step === 'phone') {
     return (
@@ -231,6 +284,10 @@ export function AgentFlow() {
               image_bytes: file.size,
               gps,
               captured_at: new Date().toISOString(),
+              client_submission_uuid:
+                (typeof crypto !== 'undefined' && (crypto as any).randomUUID)
+                  ? (crypto as any).randomUUID()
+                  : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
             });
             setStep('done');
           }}
@@ -246,14 +303,49 @@ export function AgentFlow() {
   }
 
   if (step === 'done') {
+    const live = statusForLast?.processing_status;
+    const finalLabel =
+      live === 'extracted'
+        ? 'Extracted and recorded'
+        : live === 'failed'
+        ? `Extraction failed: ${statusForLast?.processing_error ?? 'unknown error'}`
+        : live === 'processing'
+        ? 'Extracting…'
+        : live === 'queued'
+        ? 'Submitted. Waiting for the extraction worker…'
+        : 'Submitted. Awaiting acknowledgement…';
+
     return (
-      <Shell title="Submitted">
-        <p className="text-sm">
-          Your EC8A is queued. {queueDepth} submission{queueDepth === 1 ? '' : 's'} waiting to upload.
-        </p>
+      <Shell title="Submission status">
+        <p className="text-sm font-medium">{finalLabel}</p>
+        {drainNote && (
+          <p className="text-xs text-slate-500 mt-1">{drainNote}</p>
+        )}
+        {statusForLast && (
+          <dl className="mt-4 space-y-1 text-xs">
+            <Row label="Submission ID" value={statusForLast.id.slice(0, 8) + '…'} mono />
+            {statusForLast.confidence_score != null && (
+              <Row
+                label="Extraction confidence"
+                value={`${(statusForLast.confidence_score * 100).toFixed(0)}%`}
+              />
+            )}
+            {statusForLast.review_status && (
+              <Row label="Review status" value={statusForLast.review_status} />
+            )}
+          </dl>
+        )}
+        {queueDepth > 1 && (
+          <p className="mt-3 text-xs text-slate-500">
+            {queueDepth - 1} earlier submission{queueDepth === 2 ? '' : 's'} still in the
+            offline queue.
+          </p>
+        )}
         <button
           onClick={() => {
             setFile(null);
+            setLastAcceptedId(null);
+            setStatusForLast(null);
             setStep('pu');
           }}
           className="mt-5 w-full border py-3 rounded font-medium"
