@@ -202,6 +202,13 @@ function PUDetailPane({ unit }: { unit: PollingUnitDetail | null }) {
         {STATUS_LABEL[unit.status]}
       </div>
 
+      <a
+        href={`/en/pu/${encodeURIComponent(unit.pu_code)}`}
+        className="mt-3 text-xs text-blue-700 hover:underline inline-block"
+      >
+        Open full polling unit detail →
+      </a>
+
       <div className="mt-4 text-sm space-y-2">
         <div className="flex justify-between">
           <span className="text-slate-500">Submissions</span>
