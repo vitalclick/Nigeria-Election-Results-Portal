@@ -60,6 +60,8 @@ class Settings(BaseSettings):
     twilio_auth_token: str | None = None
     twilio_from: str | None = None
     twilio_enabled: bool = False                # toggle real Twilio in prod
+    whatsapp_from: str | None = None            # e.g. "whatsapp:+234..."
+    whatsapp_template_otp: str | None = None    # Meta-approved template SID
 
     # Operational
     log_level: str = "INFO"

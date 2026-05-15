@@ -26,6 +26,7 @@ from .audit.ethereum_client import build_from_settings as build_eth_client
 from .auth.router import router as auth_router
 from .admin.router import router as admin_router
 from .anomaly import AnomalyEngine
+from .observers import observer_router
 from .config import settings
 from .db import close_pool, init_pool, pool
 from .extraction import build_engine
@@ -67,6 +68,7 @@ app = FastAPI(
 )
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(observer_router)
 
 _pipeline = IngestionPipeline()
 # The factory picks Document AI + GPT-4o adapters when credentials are

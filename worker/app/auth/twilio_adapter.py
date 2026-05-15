@@ -76,9 +76,32 @@ def build_default_adapter(
     account_sid: str | None,
     auth_token: str | None,
     from_number: str | None,
+    whatsapp_from: str | None = None,
+    whatsapp_template: str | None = None,
 ) -> SmsAdapter:
-    """Factory: returns the real adapter when Twilio is configured AND
-    enabled; otherwise NoOp. Keeps test environments hermetic."""
-    if enabled and account_sid and auth_token and from_number:
-        return TwilioAdapter(account_sid, auth_token, from_number)
-    return NoOpAdapter()
+    """Factory.
+
+    Behaviour matrix:
+
+      Twilio NOT enabled              -> NoOp (dev / CI)
+      SMS only configured             -> Twilio SMS
+      WhatsApp ALSO configured        -> WhatsApp-first, SMS fallback
+                                         (~60% cheaper at Nigerian rates)
+
+    Keeps test environments hermetic - the NoOp logs the message to
+    stdout and never touches Twilio.
+    """
+    if not (enabled and account_sid and auth_token and from_number):
+        return NoOpAdapter()
+
+    sms = TwilioAdapter(account_sid, auth_token, from_number)
+
+    if whatsapp_from:
+        from .whatsapp_adapter import TwilioWhatsAppAdapter, WhatsAppFirstAdapter
+
+        whatsapp = TwilioWhatsAppAdapter(
+            account_sid, auth_token, whatsapp_from, whatsapp_template
+        )
+        return WhatsAppFirstAdapter(whatsapp=whatsapp, sms=sms)
+
+    return sms

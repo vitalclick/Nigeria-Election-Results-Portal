@@ -132,6 +132,8 @@ async def import_roster(
             account_sid=s.twilio_account_sid,
             auth_token=s.twilio_auth_token,
             from_number=s.twilio_from,
+            whatsapp_from=s.whatsapp_from,
+            whatsapp_template=s.whatsapp_template_otp,
         )
         for row in rows[: inserted]:   # only those newly inserted
             body = (
