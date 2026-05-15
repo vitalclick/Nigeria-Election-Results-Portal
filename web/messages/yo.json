@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "map": "Maapu",
+    "discrepancies": "Aiyede",
+    "agent": "Aṣoju",
+    "admin": "Alabojuto"
+  },
+  "landing": {
+    "eyebrow": "Ojulowo. Ti a le ṣayẹwo. Ti a ko le yi pada.",
+    "title": "Pẹpẹ akọkọ ti Naijiria fun awọn abajade idibo ti o da lori iwe.",
+    "lede": "A kọ́ ọ lori Fọọmu EC8A. Awọn ẹgbẹ́ awujọ alagbada ni o ń ṣakoso rẹ. O n jẹ́ jiyin si gbogbo eniyan.",
+    "cta_map": "Ṣi maapu laaye",
+    "cta_disc": "Iforukọsilẹ aiyede",
+    "cta_agent": "Ohun elo aṣoju",
+    "feature1_title": "Ifohunṣọkan lati ọpọlọpọ orisun",
+    "feature1_body": "Awọn abajade farahan nigbati awọn ẹgbẹ ominira ati awọn alabojuto ba gbagbọ.",
+    "feature2_title": "Fọọmu ni otitọ",
+    "feature2_body": "Gbogbo nọmba ti a tẹjade ni a fihan pẹlu EC8A ti a ti fọwọsi.",
+    "feature3_title": "Ayẹwo ti ko le yipada",
+    "feature3_body": "Gbogbo aworan ni a fi SHA-256 ṣe, gbogbo iṣẹlẹ ni a so pọ, ati Merkle roots ni a fi sori blockchain."
+  }
+}

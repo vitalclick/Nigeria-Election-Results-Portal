@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "map": "Taswira",
+    "discrepancies": "Saɓani",
+    "agent": "Wakili",
+    "admin": "Manaja"
+  },
+  "landing": {
+    "eyebrow": "A bayyane. A tabbatar. Ba a iya jujjuyawa.",
+    "title": "Dandalin sakamakon zaɓe na farko na Najeriya da ya dogara da takarda.",
+    "lede": "An gina shi a kan Fom EC8A. Civil Society ke jagoranta. Yana da alhakin jama'a.",
+    "cta_map": "Bude taswirar kai tsaye",
+    "cta_disc": "Rajistar saɓani",
+    "cta_agent": "App ɗin wakili",
+    "feature1_title": "Yarjejeniyar tushe da yawa",
+    "feature1_body": "Sakamako yana fitowa lokacin da bangarori masu zaman kansu da masu sa ido suka yarda.",
+    "feature2_title": "Fom ɗin shine gaskiya",
+    "feature2_body": "Kowane lamba an nuna shi tare da EC8A da aka rattaba hannu.",
+    "feature3_title": "Bincike mai tabbaci",
+    "feature3_body": "Kowane hoto ana sa SHA-256, kowane abu ana haɗawa, ana ɗora a kan blockchain."
+  }
+}

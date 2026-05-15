@@ -1,0 +1,182 @@
+// Deterministic mock data used when SUPABASE_URL is not configured.
+// Lets a freshly-cloned repo demo the public map without provisioning
+// any infrastructure - useful for investor demos and CI smoke tests.
+
+import type {
+  DiscrepancyRecord,
+  NationalRollup,
+  PollingUnitDetail,
+  SubmissionView,
+  VerificationStatus,
+} from './types';
+
+const STATES = ['LA', 'KN', 'RI', 'FC'];
+const STATE_NAMES: Record<string, string> = {
+  LA: 'Lagos',
+  KN: 'Kano',
+  RI: 'Rivers',
+  FC: 'FCT',
+};
+
+const STATUSES: VerificationStatus[] = [
+  'no_data',
+  'single_source',
+  'consensus',
+  'discrepancy',
+  'inec_confirmed',
+  'inec_conflict',
+];
+
+function pickStatus(seed: number): VerificationStatus {
+  // weight toward consensus so the demo map looks healthy
+  const weighted: VerificationStatus[] = [
+    'no_data',
+    'single_source',
+    'single_source',
+    'consensus',
+    'consensus',
+    'consensus',
+    'consensus',
+    'inec_confirmed',
+    'inec_confirmed',
+    'discrepancy',
+    'inec_conflict',
+  ];
+  return weighted[seed % weighted.length];
+}
+
+export function mockPollingUnits(): PollingUnitDetail[] {
+  const units: PollingUnitDetail[] = [];
+  let seed = 0;
+  const seedPoints: [string, number, number][] = [
+    ['LA', 3.3515, 6.4969],
+    ['KN', 8.5167, 12.0022],
+    ['RI', 7.0134, 4.8156],
+    ['FC', 7.4868, 9.0563],
+  ];
+  for (const [state, baseLng, baseLat] of seedPoints) {
+    for (let i = 0; i < 60; i++) {
+      seed += 1;
+      const status = pickStatus(seed);
+      const apc = 100 + ((seed * 7) % 200);
+      const pdp = 80 + ((seed * 11) % 180);
+      const lp = 150 + ((seed * 13) % 220);
+      const total = apc + pdp + lp;
+      units.push({
+        pu_code: `${state}-${i.toString().padStart(4, '0')}`,
+        pu_name: `${STATE_NAMES[state]} PU ${i + 1}`,
+        ward_code: `${state}-W${(i % 8) + 1}`,
+        lga_code: `${state}-LGA-${(i % 4) + 1}`,
+        state_code: state,
+        coordinates: {
+          lat: baseLat + ((seed * 0.0017) % 0.5) - 0.25,
+          lng: baseLng + ((seed * 0.0023) % 0.5) - 0.25,
+        },
+        status,
+        submission_count: status === 'no_data' ? 0 : 1 + (seed % 3),
+        source_count: status === 'no_data' ? 0 : 1 + (seed % 3),
+        consensus_data:
+          status === 'no_data' || status === 'single_source'
+            ? null
+            : {
+                pu_code: `${state}-${i.toString().padStart(4, '0')}`,
+                registered_voters: 412,
+                accredited_voters: 287,
+                candidate_votes: { APC: apc, PDP: pdp, LP: lp },
+                total_valid_votes: total,
+                rejected_ballots: 12,
+                total_votes_cast: total + 12,
+                presiding_officer_signed: true,
+                agent_signatures_detected: 3,
+                official_stamp_present: true,
+              },
+        submissions: [],
+      });
+    }
+  }
+  return units;
+}
+
+export function mockNationalRollup(): NationalRollup {
+  const units = mockPollingUnits();
+  const counts = {
+    units_total: units.length,
+    units_reporting: units.filter((u) => u.status !== 'no_data').length,
+    units_consensus: units.filter((u) => u.status === 'consensus').length,
+    units_discrepancy: units.filter((u) => u.status === 'discrepancy').length,
+    units_inec_confirmed: units.filter((u) => u.status === 'inec_confirmed').length,
+    units_inec_conflict: units.filter((u) => u.status === 'inec_conflict').length,
+  };
+  let apc = 0, pdp = 0, lp = 0;
+  for (const u of units) {
+    if (u.consensus_data) {
+      apc += u.consensus_data.candidate_votes.APC ?? 0;
+      pdp += u.consensus_data.candidate_votes.PDP ?? 0;
+      lp += u.consensus_data.candidate_votes.LP ?? 0;
+    }
+  }
+  return {
+    election_id: '2027-presidential',
+    ...counts,
+    party_totals: { APC: apc, PDP: pdp, LP: lp },
+    last_updated: new Date().toISOString(),
+  };
+}
+
+export function mockDiscrepancies(): DiscrepancyRecord[] {
+  const units = mockPollingUnits().filter(
+    (u) => u.status === 'discrepancy' || u.status === 'inec_conflict'
+  );
+  return units.slice(0, 12).map((u, idx) => {
+    const apc = 142 + idx;
+    const apcAlt = u.status === 'inec_conflict' ? apc : apc + 47;
+    const subs: SubmissionView[] = [
+      {
+        submission_id: `s-${u.pu_code}-a`,
+        source: 'party_agent',
+        party: 'APC',
+        image_url: 'https://placehold.co/640x880?text=EC8A+APC',
+        image_sha256: 'a'.repeat(64),
+        extracted: {
+          ...(u.consensus_data ?? ({} as any)),
+          pu_code: u.pu_code,
+          candidate_votes: { APC: apc, PDP: 89, LP: 203 },
+        },
+        submitted_at: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
+        confidence: 0.97,
+      },
+      {
+        submission_id: `s-${u.pu_code}-b`,
+        source: u.status === 'inec_conflict' ? 'inec_irev' : 'party_agent',
+        party: u.status === 'inec_conflict' ? null : 'LP',
+        image_url: 'https://placehold.co/640x880?text=EC8A+B',
+        image_sha256: 'b'.repeat(64),
+        extracted: {
+          ...(u.consensus_data ?? ({} as any)),
+          pu_code: u.pu_code,
+          candidate_votes: { APC: apcAlt, PDP: 89, LP: 203 },
+        },
+        submitted_at: new Date(Date.now() - 1000 * 60 * 8).toISOString(),
+        confidence: 0.93,
+      },
+    ];
+    return {
+      id: `d-${idx}`,
+      election_id: '2027-presidential',
+      pu_code: u.pu_code,
+      pu_name: u.pu_name,
+      state_code: u.state_code,
+      detected_at: new Date(Date.now() - 1000 * 60 * 32).toISOString(),
+      differing_fields: u.status === 'inec_conflict'
+        ? ['candidate_votes.APC', 'total_valid_votes']
+        : ['candidate_votes.APC'],
+      severity: u.status === 'inec_conflict' ? 5 : 3,
+      escalation_status: u.status === 'inec_conflict' ? 'notified' : 'open',
+      submissions: subs,
+    };
+  });
+}
+
+export function isMockMode(): boolean {
+  return !process.env.NEXT_PUBLIC_SUPABASE_URL;
+}

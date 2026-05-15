@@ -1,0 +1,15 @@
+{
+  "name": "openballot-nigeria",
+  "private": true,
+  "version": "0.1.0",
+  "description": "OpenBallot Nigeria - open, multi-source, document-first election results platform.",
+  "workspaces": ["web"],
+  "scripts": {
+    "dev": "npm --workspace web run dev",
+    "build": "npm --workspace web run build",
+    "test:worker": "cd worker && pytest -q",
+    "stack:up": "docker compose -f infra/docker-compose.yml up --build",
+    "stack:down": "docker compose -f infra/docker-compose.yml down -v"
+  },
+  "license": "AGPL-3.0-or-later"
+}

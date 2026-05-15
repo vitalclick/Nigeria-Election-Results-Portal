@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "map": "Map",
+    "discrepancies": "Discrepancies",
+    "agent": "Agent",
+    "admin": "Admin"
+  },
+  "landing": {
+    "eyebrow": "Transparent. Verifiable. Irreversible.",
+    "title": "Nigeria's first open, document-first election results platform.",
+    "lede": "Built on Form EC8A. Powered by civil society. Accountable to the public. Every result on OpenBallot is anchored to the signed physical document, cross-verified across parties and observers, and recorded on a tamper-evident audit chain.",
+    "cta_map": "Open live map",
+    "cta_disc": "Discrepancy register",
+    "cta_agent": "Agent app",
+    "feature1_title": "Multi-source consensus",
+    "feature1_body": "Results emerge when independent parties and observers agree. No single point of failure, no single point of fraud.",
+    "feature2_title": "The form is the truth",
+    "feature2_body": "Every figure published on OpenBallot is shown alongside the signed EC8A it was extracted from. You never see a number without the document behind it.",
+    "feature3_title": "Tamper-evident audit",
+    "feature3_body": "Every image is SHA-256 hashed, every event is chained, and Merkle roots are anchored to a public blockchain every thirty minutes."
+  }
+}

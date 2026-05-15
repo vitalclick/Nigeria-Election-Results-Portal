@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "map": "Map",
+    "discrepancies": "Wahala",
+    "agent": "Agent",
+    "admin": "Admin"
+  },
+  "landing": {
+    "eyebrow": "Clear. Verify am. Nobody fit change am.",
+    "title": "Naija first open, document-first election results platform.",
+    "lede": "We build am on top Form EC8A. Civil society dey run am. E dey answer to the people.",
+    "cta_map": "Open live map",
+    "cta_disc": "Wahala register",
+    "cta_agent": "Agent app",
+    "feature1_title": "Many source consensus",
+    "feature1_body": "Results dey show when different party and observer agree. No single point of fraud.",
+    "feature2_title": "The form na the truth",
+    "feature2_body": "Every number we show, you go see the EC8A wey we take am from.",
+    "feature3_title": "Tamper-proof audit",
+    "feature3_body": "Every picture we hash am, every event we chain am, and we anchor to blockchain every thirty minutes."
+  }
+}
