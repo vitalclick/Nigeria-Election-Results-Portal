@@ -148,7 +148,7 @@ export default function LandingPage({ params }: { params: { locale: string } }) 
                 <li><Link href="/en/map" className="hover:underline">Map</Link></li>
                 <li><Link href="/en/discrepancies" className="hover:underline">Discrepancies</Link></li>
                 <li><Link href="/en/anomalies" className="hover:underline">Anomalies</Link></li>
-                <li><Link href="/status" className="hover:underline">Status</Link></li>
+                <li><Link href="/en/status" className="hover:underline">Status</Link></li>
               </ul>
             </div>
             <div>
@@ -161,7 +161,7 @@ export default function LandingPage({ params }: { params: { locale: string } }) 
             <div>
               <div className="font-semibold text-slate-900">{t('footer_developers')}</div>
               <ul className="mt-2 space-y-1">
-                <li><a href="/docs" className="hover:underline">Public API</a></li>
+                <li><Link href="/en/docs" className="hover:underline">Public API</Link></li>
                 <li><a href="/api/v1/audit/hashes?election_id=2023-presidential" className="hover:underline">Hash manifest</a></li>
                 <li>
                   <a href="https://github.com/vitalclick/OpenBallot" className="hover:underline">

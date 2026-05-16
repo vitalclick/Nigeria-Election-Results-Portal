@@ -1,3 +1,5 @@
+import { unstable_setRequestLocale } from 'next-intl/server';
+
 import { StatusBoard } from '@/components/StatusBoard';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +10,8 @@ export const metadata = {
   description: 'Real-time operational status: API + worker health, queue depth, last audit anchor.',
 };
 
-export default function StatusPage() {
+export default function StatusPage({ params }: { params: { locale: string } }) {
+  unstable_setRequestLocale(params.locale);
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold">System status</h1>
