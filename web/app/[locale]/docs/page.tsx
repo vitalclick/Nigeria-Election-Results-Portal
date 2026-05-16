@@ -1,10 +1,13 @@
+import { unstable_setRequestLocale } from 'next-intl/server';
+
 export const metadata = {
   title: 'Public API · OpenBallot Nigeria',
   description:
     'Public REST API for OpenBallot Nigeria: election rollups, polling-unit detail, discrepancies, anomalies, audit hashes and Mapbox vector tiles.',
 };
 
-export default function DocsPage() {
+export default function DocsPage({ params }: { params: { locale: string } }) {
+  unstable_setRequestLocale(params.locale);
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 text-slate-700">
       <h1 className="text-3xl font-bold text-slate-900">Public API</h1>
