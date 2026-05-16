@@ -810,15 +810,57 @@ async function probe(scraper) {
   console.log(`\nProbing state: ${stateName} (id=${stateId})`);
   dump.first_state = { id: stateId, name: stateName, raw: firstState };
 
-  const lgas = await scraper.fetchLGAs(stateId);
+  // Try several common parameter spellings + value sources. The
+  // historical scraper assumed ?state_id=<numeric_id>; if INEC dropped
+  // numeric IDs from the response (the 2026-05 failure mode) we can
+  // often unblock by sending the state NAME under a different param key.
+  const candidates = [
+    { params: { state_id: stateId }, label: "state_id=<id>" },
+    { params: { state_id: stateName }, label: "state_id=<name>" },
+    { params: { state_name: stateName }, label: "state_name=<name>" },
+    { params: { state: stateName }, label: "state=<name>" },
+    { params: { s_name: stateName }, label: "s_name=<name>" },
+    { params: { code: stateName }, label: "code=<name>" },
+    { params: { state_code: stateName }, label: "state_code=<name>" },
+  ].filter((c) => Object.values(c.params).every((v) => v !== undefined && v !== null));
+
+  dump.lga_probe_attempts = [];
+  let workingLgaParams = null;
+  let lgas = [];
+  for (const attempt of candidates) {
+    console.log(`\n  Trying lgaView.php with ${attempt.label}`);
+    const result = await scraper.fetchWithRetry(
+      config.ENDPOINTS.lgas,
+      attempt.params,
+      `LGAs (${attempt.label})`
+    );
+    dump.lga_probe_attempts.push({
+      params: attempt.params,
+      label: attempt.label,
+      count: result.length,
+      sample: result.slice(0, 2),
+    });
+    if (result.length > 0) {
+      console.log(`  ✓ ${result.label || attempt.label} returned ${result.length} LGAs`);
+      workingLgaParams = attempt;
+      lgas = result;
+      break;
+    }
+  }
+
   dump.lgas_count = lgas.length;
   dump.lgas_sample = lgas.slice(0, 3);
-  console.log(`  LGAs: ${lgas.length}`);
+  dump.working_lga_params = workingLgaParams;
+  console.log(`\n  LGAs: ${lgas.length}` +
+    (workingLgaParams ? ` (via ${workingLgaParams.label})` : ""));
+
   if (lgas.length === 0) {
-    console.log("  ^ This is the failure point - lgaView.php returned empty.");
-    console.log("  Open https://www.inecnigeria.org/polling-units/ in a browser,");
-    console.log("  pick this state from the dropdown, watch DevTools Network tab.");
-    console.log("  Compare the request the page makes vs. the URL above.");
+    console.log("\n  All param variations returned empty - INEC's contract");
+    console.log("  changed beyond simple renaming. Capture from DevTools:");
+    console.log("    1. Open https://www.inecnigeria.org/polling-units/");
+    console.log("    2. F12 -> Network -> Fetch/XHR filter");
+    console.log("    3. Pick 'ABIA' from the state dropdown");
+    console.log("    4. Send me the request URL, method, and request body");
   }
 
   if (lgas.length > 0) {
@@ -826,22 +868,91 @@ async function probe(scraper) {
     const lgaId = scraper.extractId(
       firstLga, "abbreviation", "id", "lga_id", "code", "value", "_key"
     );
-    dump.first_lga = { id: lgaId, raw: firstLga };
-    const wards = await scraper.fetchWards(stateId, lgaId);
+    const lgaName = scraper.extractName(firstLga, "name", "lga_name", "label", "text");
+    dump.first_lga = { id: lgaId, name: lgaName, raw: firstLga };
+
+    // Build ward params by mirroring whatever worked for LGAs, plus
+    // common lga_* spellings.
+    const wardCandidates = [
+      { params: { ...workingLgaParams.params, lga_id: lgaId }, label: "lga_id=<id>" },
+      { params: { ...workingLgaParams.params, lga_id: lgaName }, label: "lga_id=<name>" },
+      { params: { ...workingLgaParams.params, lga_name: lgaName }, label: "lga_name=<name>" },
+      { params: { ...workingLgaParams.params, lga: lgaName }, label: "lga=<name>" },
+      { params: { ...workingLgaParams.params, lga_code: lgaName }, label: "lga_code=<name>" },
+    ].filter((c) => Object.values(c.params).every((v) => v !== undefined && v !== null));
+
+    dump.ward_probe_attempts = [];
+    let workingWardParams = null;
+    let wards = [];
+    for (const attempt of wardCandidates) {
+      console.log(`\n  Trying wardView.php with ${attempt.label}`);
+      const result = await scraper.fetchWithRetry(
+        config.ENDPOINTS.wards,
+        attempt.params,
+        `Wards (${attempt.label})`
+      );
+      dump.ward_probe_attempts.push({
+        params: attempt.params,
+        label: attempt.label,
+        count: result.length,
+        sample: result.slice(0, 2),
+      });
+      if (result.length > 0) {
+        workingWardParams = attempt;
+        wards = result;
+        break;
+      }
+    }
+
     dump.wards_count = wards.length;
     dump.wards_sample = wards.slice(0, 3);
-    console.log(`  Wards in first LGA: ${wards.length}`);
+    dump.working_ward_params = workingWardParams;
+    console.log(`  Wards: ${wards.length}` +
+      (workingWardParams ? ` (via ${workingWardParams.label})` : ""));
 
     if (wards.length > 0) {
       const firstWard = wards[0];
       const wardId = scraper.extractId(
         firstWard, "id", "ward_id", "abbreviation", "code", "value", "_key"
       );
-      dump.first_ward = { id: wardId, raw: firstWard };
-      const pus = await scraper.fetchPollingUnits(stateId, lgaId, wardId);
+      const wardName = scraper.extractName(firstWard, "name", "ward_name");
+      dump.first_ward = { id: wardId, name: wardName, raw: firstWard };
+
+      const puCandidates = [
+        { params: { ...workingWardParams.params, ward_id: wardId }, label: "ward_id=<id>" },
+        { params: { ...workingWardParams.params, ward_id: wardName }, label: "ward_id=<name>" },
+        { params: { ...workingWardParams.params, ward_name: wardName }, label: "ward_name=<name>" },
+        { params: { ...workingWardParams.params, ward: wardName }, label: "ward=<name>" },
+        { params: { ...workingWardParams.params, ward_code: wardName }, label: "ward_code=<name>" },
+      ].filter((c) => Object.values(c.params).every((v) => v !== undefined && v !== null));
+
+      dump.pu_probe_attempts = [];
+      let workingPuParams = null;
+      let pus = [];
+      for (const attempt of puCandidates) {
+        console.log(`\n  Trying pollingView.php with ${attempt.label}`);
+        const result = await scraper.fetchWithRetry(
+          config.ENDPOINTS.pollingUnits,
+          attempt.params,
+          `PUs (${attempt.label})`
+        );
+        dump.pu_probe_attempts.push({
+          params: attempt.params,
+          label: attempt.label,
+          count: result.length,
+          sample: result.slice(0, 2),
+        });
+        if (result.length > 0) {
+          workingPuParams = attempt;
+          pus = result;
+          break;
+        }
+      }
       dump.pus_count = pus.length;
       dump.pus_sample = pus.slice(0, 3);
-      console.log(`  PUs in first ward: ${pus.length}`);
+      dump.working_pu_params = workingPuParams;
+      console.log(`  PUs: ${pus.length}` +
+        (workingPuParams ? ` (via ${workingPuParams.label})` : ""));
     }
   }
 
@@ -849,12 +960,10 @@ async function probe(scraper) {
   const dumpPath = path.join(config.RESULTS_DIR, "probe.json");
   fs.writeFileSync(dumpPath, JSON.stringify(dump, null, 2));
   console.log(`\nDiagnostic dump written to ${dumpPath}`);
-  if ((dump.lgas_count || 0) === 0 || (dump.pus_count || 0) === 0) {
-    console.log(
-      "\nNon-zero state count but empty children -> the endpoint shape or " +
-        "the id field name probably changed. Send probe.json + the DevTools " +
-        "request you captured to update config.js / extractId() field lists."
-    );
+
+  if (dump.working_lga_params && dump.working_ward_params && dump.working_pu_params) {
+    console.log("\n✓ Full chain works. Send me probe.json and I'll patch the");
+    console.log("  scraper's static param names to match.");
   }
 }
 
