@@ -173,34 +173,44 @@ export function ChoroplethMap({ winners, partyByCode }: Props) {
     setZoomScale((z) => Math.min(20, Math.max(1, z * factor)));
   }, []);
 
-  // Drag-to-pan. If the pointer moved more than DRAG_THRESHOLD pixels
-  // between down and up, treat as a drag and suppress the resulting click.
+  // Drag-to-pan. We deliberately delay setPointerCapture until the user
+  // has actually moved past DRAG_THRESHOLD pixels. Capturing on
+  // pointerdown reroutes the subsequent click event away from the path
+  // the user clicked on, which broke the drill-down click handlers.
   const DRAG_THRESHOLD = 5;
   const [dragging, setDragging] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; px: number; py: number; moved: boolean } | null>(null);
+  const dragRef = useRef<{
+    startX: number; startY: number; px: number; py: number;
+    moved: boolean; pointerId: number;
+  } | null>(null);
   const didDragRef = useRef(false);
   const onPointerDown = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    svgRef.current?.setPointerCapture(e.pointerId);
     dragRef.current = {
       startX: e.clientX, startY: e.clientY,
       px: panOffset[0], py: panOffset[1],
-      moved: false,
+      moved: false, pointerId: e.pointerId,
     };
     didDragRef.current = false;
-    setDragging(true);
   }, [panOffset]);
   const onPointerMove = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
     if (!dragRef.current || !svgRef.current) return;
     const dx = e.clientX - dragRef.current.startX;
     const dy = e.clientY - dragRef.current.startY;
-    if (Math.hypot(dx, dy) > DRAG_THRESHOLD) dragRef.current.moved = true;
+    if (Math.hypot(dx, dy) <= DRAG_THRESHOLD) return;
+    if (!dragRef.current.moved) {
+      svgRef.current.setPointerCapture(dragRef.current.pointerId);
+      setDragging(true);
+    }
+    dragRef.current.moved = true;
     const rect = svgRef.current.getBoundingClientRect();
     const [, , vw] = viewBox;
     const scale = vw / rect.width;
     setPanOffset([dragRef.current.px - dx * scale, dragRef.current.py - dy * scale]);
   }, [viewBox]);
   const onPointerUp = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
-    svgRef.current?.releasePointerCapture?.(e.pointerId);
+    if (svgRef.current?.hasPointerCapture?.(e.pointerId)) {
+      svgRef.current.releasePointerCapture(e.pointerId);
+    }
     didDragRef.current = !!dragRef.current?.moved;
     dragRef.current = null;
     setDragging(false);
@@ -329,7 +339,7 @@ export function ChoroplethMap({ winners, partyByCode }: Props) {
       </svg>
 
       {/* Zoom controls */}
-      <div className="absolute bottom-2 left-2 flex flex-col bg-white rounded shadow text-sm overflow-hidden">
+      <div className="absolute bottom-2 right-2 flex flex-col bg-white rounded shadow text-sm overflow-hidden">
         <button
           aria-label="Zoom in"
           className="w-7 h-7 hover:bg-slate-100 border-b"
