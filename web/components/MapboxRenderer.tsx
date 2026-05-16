@@ -105,7 +105,7 @@ export function MapboxRenderer({
           [NIGERIA_BOUNDS[2] + 2, NIGERIA_BOUNDS[3] + 2],
         ],
       });
-      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      map.addControl(new mapboxgl.NavigationControl(), 'top-left');
 
       // Click handlers: registered once, dispatch based on focusRef.
       map.on('click', 'states-fill', (e: any) => {

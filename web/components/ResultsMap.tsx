@@ -221,7 +221,7 @@ function MapPanel({
           onChange={setStatusFilter}
           disabled={focus.level !== 'ward'}
         />
-        <div className="relative flex-1 min-h-[480px] bg-slate-100 rounded-md overflow-hidden border border-slate-200">
+        <div className="relative flex-1 min-h-[480px] overflow-hidden">
           {mapboxToken ? (
             <MapboxRenderer
               electionId={electionId}
@@ -736,6 +736,12 @@ function SvgFallback({
   }, [viewBox]);
 
   return (
+    <div className="relative w-full h-full">
+      <ZoomControls
+        onZoomIn={() => setZoomScale((z) => Math.min(40, z * 1.4))}
+        onZoomOut={() => setZoomScale((z) => Math.max(1, z / 1.4))}
+        onReset={() => { setZoomScale(1); setPanOffset([0, 0]); }}
+      />
     <svg
       ref={svgRef}
       viewBox={viewBox.join(' ')}
@@ -760,14 +766,6 @@ function SvgFallback({
           <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
-      <rect
-        x={NIGERIA_BBOX.lngMin}
-        y={NIGERIA_BBOX.latMin}
-        width={W}
-        height={H}
-        fill="#e6eef5"
-      />
-
       {country && (
         <path
           d={featureToPath(country)}
@@ -861,6 +859,49 @@ function SvgFallback({
         </circle>
       ))}
     </svg>
+    </div>
+  );
+}
+
+function ZoomControls({
+  onZoomIn,
+  onZoomOut,
+  onReset,
+}: {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onReset: () => void;
+}) {
+  return (
+    <div className="absolute top-3 left-3 z-10 flex flex-col bg-white rounded-md shadow border border-slate-200 overflow-hidden">
+      <button
+        type="button"
+        onClick={onZoomIn}
+        className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 text-slate-700 text-lg leading-none border-b border-slate-200"
+        aria-label="Zoom in"
+        title="Zoom in"
+      >
+        +
+      </button>
+      <button
+        type="button"
+        onClick={onZoomOut}
+        className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 text-slate-700 text-lg leading-none border-b border-slate-200"
+        aria-label="Zoom out"
+        title="Zoom out"
+      >
+        −
+      </button>
+      <button
+        type="button"
+        onClick={onReset}
+        className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 text-slate-600 text-sm leading-none"
+        aria-label="Reset view"
+        title="Reset view"
+      >
+        ⟲
+      </button>
+    </div>
   );
 }
 
