@@ -121,7 +121,7 @@ function FiltersPanel({
 }) {
   return (
     <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
-      <FilterCard step="1" colour="bg-sky-600" label="Select Election Year">
+      <FilterCard step="1" colour="bg-ng-600" label="Select Election Year">
         <select
           className="w-full border rounded px-2 py-1 text-sm bg-white"
           value={year}
@@ -132,7 +132,7 @@ function FiltersPanel({
           ))}
         </select>
       </FilterCard>
-      <FilterCard step="2" colour="bg-orange-500" label="Select Election">
+      <FilterCard step="2" colour="bg-ng-800" label="Select Election">
         <select
           className="w-full border rounded px-2 py-1 text-sm bg-white"
           value={election}
@@ -194,8 +194,8 @@ function CompletionRibbon({
         <svg viewBox="0 0 200 130" className="absolute inset-0 w-full h-full">
           <path
             d="M 20 5 L 180 5 L 180 95 L 100 125 L 20 95 Z"
-            fill="#1e3a8a"
-            stroke="#1e40af"
+            fill="#008753"
+            stroke="#006a40"
             strokeWidth="2"
           />
         </svg>
@@ -225,13 +225,13 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Valid / Spoilt Votes</div>
       <div className="flex items-center justify-center gap-6">
         <svg viewBox="0 0 160 160" className="w-32 h-32">
-          <circle cx="80" cy="80" r={r} fill="none" stroke="#f59e0b" strokeWidth="22" />
+          <circle cx="80" cy="80" r={r} fill="none" stroke="#d97706" strokeWidth="22" />
           <circle
             cx="80"
             cy="80"
             r={r}
             fill="none"
-            stroke="#0ea5e9"
+            stroke="#008753"
             strokeWidth="22"
             strokeDasharray={`${validLen} ${c - validLen}`}
             strokeDashoffset={c / 4}
@@ -239,8 +239,8 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
           />
         </svg>
         <div className="text-xs space-y-2">
-          <Legend dot="#0ea5e9" label={`Valid Votes ${validPct.toFixed(2)}%`} />
-          <Legend dot="#f59e0b" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
+          <Legend dot="#008753" label={`Valid Votes ${validPct.toFixed(2)}%`} />
+          <Legend dot="#d97706" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
           <div className="pt-2 text-slate-500">
             {valid.toLocaleString()} valid<br />
             {rejected.toLocaleString()} rejected
@@ -265,8 +265,8 @@ function TurnoutCard({ pct }: { pct: number }) {
     <div className="border rounded-lg bg-white p-5">
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Voter Turnout</div>
       <div className="flex flex-col items-center justify-center h-32">
-        <div className="border-4 border-slate-200 rounded-lg px-6 py-4">
-          <div className="text-3xl font-semibold text-sky-600 text-center">{pct.toFixed(2)}%</div>
+        <div className="border-4 border-ng-100 rounded-lg px-6 py-4 bg-ng-50">
+          <div className="text-3xl font-semibold text-ng-700 text-center">{pct.toFixed(2)}%</div>
         </div>
       </div>
     </div>
