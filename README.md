@@ -798,6 +798,20 @@ Mock mode is triggered by the absence of `NEXT_PUBLIC_SUPABASE_URL` (see `isMock
 3. Ingest EC8A images via the agent app, the scrapers in `scrapers/`, or by inserting submission rows directly. Images are uploaded to Supabase Storage; `image_url` on each submission must resolve to that stored object.
 4. Restart `npm run dev`. The `/api/v1/discrepancies` endpoint will now read from the `v_discrepancy_register` view instead of `mockDiscrepancies()`, and the Mapbox renderer will activate once `NEXT_PUBLIC_MAPBOX_TOKEN` is also set.
 
+### Map Data
+
+The SVG fallback map (rendered when `NEXT_PUBLIC_MAPBOX_TOKEN` is unset) draws Nigeria's country outline and the 36 state + FCT boundaries from `web/public/nigeria.geo.json`. That file is extracted from [Natural Earth](https://www.naturalearthdata.com/) (public domain) — country outline from the 1:50m admin-0 layer, state boundaries from the 1:10m admin-1 layer, with coordinates rounded to 4 decimal places (~11 m precision) for compactness. It is ~116 KB raw / ~37 KB gzipped.
+
+To regenerate from upstream Natural Earth (e.g. to pick up corrected borders):
+
+```bash
+curl -sL https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson -o /tmp/admin0.geojson
+curl -sL https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_admin_1_states_provinces.geojson -o /tmp/admin1.geojson
+# Filter to Nigeria features, round coords, merge — see commit history for the exact jq + node pipeline.
+```
+
+When the real Mapbox renderer is active, country/state geometry is served as vector tiles by `/api/v1/tiles` and this static GeoJSON is not used.
+
 ### Code of Conduct
 
 OpenBallot Nigeria is committed to a welcoming, inclusive contributor community. All contributors are expected to adhere to our [Code of Conduct](/CODE_OF_CONDUCT.md).
