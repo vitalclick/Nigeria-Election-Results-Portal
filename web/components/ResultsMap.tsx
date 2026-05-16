@@ -2,6 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { feature as topoFeature } from 'topojson-client';
+import type { Topology, GeometryCollection } from 'topojson-specification';
 
 import { AggregateSymbols } from '@/components/AggregateSymbols';
 import { MapboxRenderer } from '@/components/MapboxRenderer';
@@ -470,6 +472,9 @@ function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionA
             <span>{STATUS_LABEL[s]}</span>
           </div>
         ))}
+        <div className="mt-2 pt-1 border-t border-slate-100 text-[9px] text-slate-400">
+          Boundaries © GRID3 (CC BY 4.0)
+        </div>
       </div>
     );
   }
@@ -522,6 +527,10 @@ function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionA
           <span className="inline-block w-3 h-3 rounded-full border-2 ml-2" style={{ borderColor: '#f97316' }} />
           Discrepancy
         </div>
+      </div>
+      {/* CC BY 4.0 attribution for the boundary dataset. */}
+      <div className="text-[9px] text-slate-400 pt-1 border-t border-slate-100">
+        Boundaries © GRID3 (CC BY 4.0)
       </div>
     </div>
   );
@@ -646,26 +655,74 @@ function SvgFallback({
   const [panOffset, setPanOffset] = useState<[number, number]>([0, 0]);
   const svgRef = useRef<SVGSVGElement | null>(null);
 
+  // Single TopoJSON file produced by scripts/build_nigeria_topojson.sh:
+  // states are dissolved *from* the LGA layer, so the state border is
+  // exactly the union of the LGA borders (no double-stroke, no gaps).
+  // Shared LGA borders are encoded once as TopoJSON arcs.
   useEffect(() => {
     let cancelled = false;
-    fetch('/nigeria.geo.json')
+    fetch('/nigeria.topo.json')
       .then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (!cancelled && j) setGeo(j as GeoCollection); })
-      .catch(() => {/* fall back to bare background */});
-    return () => { cancelled = true; };
-  }, []);
-
-  // Lazy-load LGA polygons on first state drill-down. Same dataset
-  // /en/results uses, so the two pages now render identical geometry.
-  useEffect(() => {
-    if (focus.level === 'country' || lgaGeo) return;
-    let cancelled = false;
-    fetch('/nigeria-lgas.geo.json')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => { if (!cancelled && j) setLgaGeo(j as LgaCollection); })
+      .then((topo: Topology | null) => {
+        if (cancelled || !topo) return;
+        // Convert each named object back into a GeoJSON FeatureCollection.
+        // Casts: topojson-specification types are loose; we know the
+        // properties shape because we control the build script.
+        const statesObj = topo.objects.states as GeometryCollection<
+          { state_code: string; state_name: string }
+        > | undefined;
+        const lgasObj = topo.objects.lgas as GeometryCollection<
+          { name: string; state_code: string; state_name: string }
+        > | undefined;
+        if (statesObj) {
+          const fc = topoFeature(topo, statesObj) as unknown as {
+            features: Array<{
+              properties: { state_code: string; state_name: string };
+              geometry: Geom;
+            }>;
+          };
+          // Adapt to the existing render code, which keys off
+          // `properties.iso` (state_code prefixed with NG-) and
+          // `properties.name`. Synthesised here so the rest of the
+          // component doesn't change.
+          setGeo({
+            type: 'FeatureCollection',
+            features: fc.features.map((f) => ({
+              type: 'Feature',
+              geometry: f.geometry,
+              properties: {
+                name: f.properties.state_name,
+                kind: 'state',
+                iso: `NG-${f.properties.state_code}`,
+              },
+            })),
+          });
+        }
+        if (lgasObj) {
+          const fc = topoFeature(topo, lgasObj) as unknown as {
+            features: Array<{
+              properties: { name: string; state_code: string; state_name: string };
+              geometry: Geom;
+            }>;
+          };
+          setLgaGeo({
+            type: 'FeatureCollection',
+            features: fc.features.map((f) => ({
+              type: 'Feature',
+              geometry: f.geometry,
+              properties: {
+                name: f.properties.name,
+                kind: 'lga',
+                state_code: f.properties.state_code,
+                state_name: f.properties.state_name,
+              },
+            })),
+          });
+        }
+      })
       .catch(() => {/* tolerate missing file */});
     return () => { cancelled = true; };
-  }, [focus.level, lgaGeo]);
+  }, []);
 
   // Reset manual zoom/pan whenever the user drills in or out.
   useEffect(() => { setZoomScale(1); setPanOffset([0, 0]); }, [focus]);
