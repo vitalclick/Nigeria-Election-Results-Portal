@@ -1,13 +1,13 @@
 {
-  "scraped_at": "2026-05-16T14:07:17.643Z",
+  "scraped_at": "2026-05-16T18:54:38.631Z",
   "base_url": "https://www.inecnigeria.org/wp-content/themes/rishi/custom/views",
   "totals": {
-    "states": 1,
-    "lgas": 17,
-    "wards": 184,
-    "polling_units": 4041
+    "states": 37,
+    "lgas": 774,
+    "wards": 8799,
+    "polling_units": 174175
   },
-  "duration_seconds": 70,
+  "duration_seconds": 104,
   "failures": 0,
   "failure_details": [],
   "states": [
@@ -16,6 +16,222 @@
       "lgas": 17,
       "wards": 184,
       "pollingUnits": 4041
+    },
+    {
+      "filename": "adamawa.json",
+      "lgas": 21,
+      "wards": 226,
+      "pollingUnits": 3991
+    },
+    {
+      "filename": "akwa-ibom.json",
+      "lgas": 31,
+      "wards": 329,
+      "pollingUnits": 4095
+    },
+    {
+      "filename": "anambra.json",
+      "lgas": 21,
+      "wards": 326,
+      "pollingUnits": 5720
+    },
+    {
+      "filename": "bauchi.json",
+      "lgas": 20,
+      "wards": 212,
+      "pollingUnits": 5315
+    },
+    {
+      "filename": "bayelsa.json",
+      "lgas": 8,
+      "wards": 105,
+      "pollingUnits": 2244
+    },
+    {
+      "filename": "benue.json",
+      "lgas": 23,
+      "wards": 276,
+      "pollingUnits": 4960
+    },
+    {
+      "filename": "borno.json",
+      "lgas": 27,
+      "wards": 302,
+      "pollingUnits": 4978
+    },
+    {
+      "filename": "cross-river.json",
+      "lgas": 18,
+      "wards": 193,
+      "pollingUnits": 3281
+    },
+    {
+      "filename": "delta.json",
+      "lgas": 25,
+      "wards": 270,
+      "pollingUnits": 5863
+    },
+    {
+      "filename": "ebonyi.json",
+      "lgas": 13,
+      "wards": 171,
+      "pollingUnits": 2829
+    },
+    {
+      "filename": "edo.json",
+      "lgas": 18,
+      "wards": 192,
+      "pollingUnits": 4519
+    },
+    {
+      "filename": "ekiti.json",
+      "lgas": 16,
+      "wards": 177,
+      "pollingUnits": 2132
+    },
+    {
+      "filename": "enugu.json",
+      "lgas": 17,
+      "wards": 260,
+      "pollingUnits": 4000
+    },
+    {
+      "filename": "gombe.json",
+      "lgas": 11,
+      "wards": 114,
+      "pollingUnits": 2988
+    },
+    {
+      "filename": "imo.json",
+      "lgas": 27,
+      "wards": 305,
+      "pollingUnits": 4692
+    },
+    {
+      "filename": "jigawa.json",
+      "lgas": 27,
+      "wards": 287,
+      "pollingUnits": 4450
+    },
+    {
+      "filename": "kaduna.json",
+      "lgas": 23,
+      "wards": 255,
+      "pollingUnits": 8012
+    },
+    {
+      "filename": "kano.json",
+      "lgas": 44,
+      "wards": 484,
+      "pollingUnits": 11155
+    },
+    {
+      "filename": "katsina.json",
+      "lgas": 34,
+      "wards": 361,
+      "pollingUnits": 6327
+    },
+    {
+      "filename": "kebbi.json",
+      "lgas": 21,
+      "wards": 225,
+      "pollingUnits": 3599
+    },
+    {
+      "filename": "kogi.json",
+      "lgas": 21,
+      "wards": 239,
+      "pollingUnits": 3508
+    },
+    {
+      "filename": "kwara.json",
+      "lgas": 16,
+      "wards": 193,
+      "pollingUnits": 2887
+    },
+    {
+      "filename": "lagos.json",
+      "lgas": 20,
+      "wards": 245,
+      "pollingUnits": 12944
+    },
+    {
+      "filename": "nasarawa.json",
+      "lgas": 13,
+      "wards": 147,
+      "pollingUnits": 3256
+    },
+    {
+      "filename": "niger.json",
+      "lgas": 25,
+      "wards": 274,
+      "pollingUnits": 4812
+    },
+    {
+      "filename": "ogun.json",
+      "lgas": 20,
+      "wards": 236,
+      "pollingUnits": 4983
+    },
+    {
+      "filename": "ondo.json",
+      "lgas": 18,
+      "wards": 203,
+      "pollingUnits": 3904
+    },
+    {
+      "filename": "osun.json",
+      "lgas": 30,
+      "wards": 332,
+      "pollingUnits": 3763
+    },
+    {
+      "filename": "oyo.json",
+      "lgas": 33,
+      "wards": 351,
+      "pollingUnits": 6390
+    },
+    {
+      "filename": "plateau.json",
+      "lgas": 17,
+      "wards": 207,
+      "pollingUnits": 4989
+    },
+    {
+      "filename": "rivers.json",
+      "lgas": 23,
+      "wards": 319,
+      "pollingUnits": 6866
+    },
+    {
+      "filename": "sokoto.json",
+      "lgas": 23,
+      "wards": 244,
+      "pollingUnits": 3991
+    },
+    {
+      "filename": "taraba.json",
+      "lgas": 16,
+      "wards": 168,
+      "pollingUnits": 3577
+    },
+    {
+      "filename": "yobe.json",
+      "lgas": 17,
+      "wards": 178,
+      "pollingUnits": 2823
+    },
+    {
+      "filename": "zamfara.json",
+      "lgas": 14,
+      "wards": 147,
+      "pollingUnits": 3529
+    },
+    {
+      "filename": "fct.json",
+      "lgas": 6,
+      "wards": 62,
+      "pollingUnits": 2762
     }
   ]
 }
