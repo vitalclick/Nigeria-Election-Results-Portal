@@ -152,10 +152,27 @@ export function mockPollingUnits(): PollingUnitDetail[] {
     for (let i = 0; i < 60; i++) {
       seed += 1;
       const status = pickStatus(seed);
-      const apc = 100 + ((seed * 7) % 200);
-      const pdp = 80 + ((seed * 11) % 180);
-      const lp = 150 + ((seed * 13) % 220);
-      const total = apc + pdp + lp;
+      // Per-state vote bias so the choropleth shows a varied map -
+      // loosely mirrors 2023 patterns (LP in Lagos & FCT, NNPP in
+      // Kano, APC in Rivers as a stand-in for a northern-leaning win).
+      const bias: Record<string, Record<string, number>> = {
+        LA: { APC: 0.7, PDP: 0.6, LP: 1.6, NNPP: 0.8 },
+        KN: { APC: 0.9, PDP: 0.7, LP: 0.6, NNPP: 4.5 },
+        RI: { APC: 1.5, PDP: 1.1, LP: 1.0, NNPP: 0.6 },
+        FC: { APC: 0.9, PDP: 0.8, LP: 1.4, NNPP: 0.7 },
+      };
+      const b = bias[state] ?? {};
+      const apc = Math.round((100 + ((seed * 7) % 200)) * (b.APC ?? 1));
+      const pdp = Math.round((80 + ((seed * 11) % 180)) * (b.PDP ?? 1));
+      const lp  = Math.round((150 + ((seed * 13) % 220)) * (b.LP ?? 1));
+      const nnpp = Math.round((10 + ((seed * 17) % 60)) * (b.NNPP ?? 1));
+      const apga = 8 + ((seed * 19) % 40);
+      const adc = 5 + ((seed * 23) % 30);
+      const sdp = 3 + ((seed * 29) % 20);
+      const ypp = 2 + ((seed * 31) % 15);
+      const prp = 2 + ((seed * 37) % 12);
+      const aac = 1 + ((seed * 41) % 10);
+      const total = apc + pdp + lp + nnpp + apga + adc + sdp + ypp + prp + aac;
       const coords = pickPointInState(state, seed);
       units.push({
         pu_code: `${state}-${i.toString().padStart(4, '0')}`,
@@ -174,7 +191,10 @@ export function mockPollingUnits(): PollingUnitDetail[] {
                 pu_code: `${state}-${i.toString().padStart(4, '0')}`,
                 registered_voters: 412,
                 accredited_voters: 287,
-                candidate_votes: { APC: apc, PDP: pdp, LP: lp },
+                candidate_votes: {
+                  APC: apc, PDP: pdp, LP: lp, NNPP: nnpp,
+                  APGA: apga, ADC: adc, SDP: sdp, YPP: ypp, PRP: prp, AAC: aac,
+                },
                 total_valid_votes: total,
                 rejected_ballots: 12,
                 total_votes_cast: total + 12,
@@ -199,19 +219,51 @@ export function mockNationalRollup(): NationalRollup {
     units_inec_confirmed: units.filter((u) => u.status === 'inec_confirmed').length,
     units_inec_conflict: units.filter((u) => u.status === 'inec_conflict').length,
   };
-  let apc = 0, pdp = 0, lp = 0;
+  const totals: Record<string, number> = {};
   for (const u of units) {
-    if (u.consensus_data) {
-      apc += u.consensus_data.candidate_votes.APC ?? 0;
-      pdp += u.consensus_data.candidate_votes.PDP ?? 0;
-      lp += u.consensus_data.candidate_votes.LP ?? 0;
+    if (!u.consensus_data) continue;
+    for (const [code, n] of Object.entries(u.consensus_data.candidate_votes)) {
+      totals[code] = (totals[code] ?? 0) + (n as number);
     }
   }
   return {
     election_id: '2027-presidential',
     ...counts,
-    party_totals: { APC: apc, PDP: pdp, LP: lp },
+    party_totals: totals,
     last_updated: new Date().toISOString(),
+  };
+}
+
+// Per-state party totals. Returns `{ stateCode: { partyCode: votes } }`.
+export function mockStatePartyTotals(): Record<string, Record<string, number>> {
+  const out: Record<string, Record<string, number>> = {};
+  for (const u of mockPollingUnits()) {
+    if (!u.consensus_data) continue;
+    const s = (out[u.state_code] ??= {});
+    for (const [code, n] of Object.entries(u.consensus_data.candidate_votes)) {
+      s[code] = (s[code] ?? 0) + (n as number);
+    }
+  }
+  return out;
+}
+
+// Aggregate registered/accredited voters and rejected ballots across all PUs.
+export function mockVoterTotals(): {
+  registered_voters: number;
+  accredited_voters: number;
+  rejected_ballots: number;
+} {
+  let registered = 0, accredited = 0, rejected = 0;
+  for (const u of mockPollingUnits()) {
+    if (!u.consensus_data) continue;
+    registered += u.consensus_data.registered_voters;
+    accredited += u.consensus_data.accredited_voters;
+    rejected += u.consensus_data.rejected_ballots;
+  }
+  return {
+    registered_voters: registered,
+    accredited_voters: accredited,
+    rejected_ballots: rejected,
   };
 }
 
