@@ -451,8 +451,13 @@ class INECPollingUnitsScraper {
   // ── Scrape a Single State ─────────────────────────────────────────────────
 
   async scrapeState(state) {
+    // INEC's getPollingState.php now returns {s_name: "ABIA"} only
+    // (no numeric IDs) and lgaView.php expects state_id=<NAME>. So
+    // the "id" for downstream calls IS the state name. Keep the
+    // numeric-ID fallback for historical compatibility.
     const stateId = this.extractId(
-      state, "code", "id", "state_id", "s_id", "value", "state_code", "_key"
+      state, "s_name", "name", "state_name", "code", "id", "state_id",
+      "s_id", "value", "state_code", "_key"
     );
     const stateName = this.extractName(
       state, "s_name", "name", "state_name", "state", "label", "text"
@@ -484,11 +489,14 @@ class INECPollingUnitsScraper {
 
     for (let i = 0; i < rawLGAs.length; i++) {
       const lga = rawLGAs[i];
+      // Same shape change as states: lgaView.php returns {lga: "ABA NORTH"}
+      // and wardView.php expects lga_id=<NAME>. Prefer the name as the id.
       const lgaId = this.extractId(
-        lga, "abbreviation", "id", "lga_id", "code", "value", "_key"
+        lga, "lga", "lga_name", "name", "abbreviation", "id", "lga_id",
+        "code", "value", "_key"
       );
       const lgaName = this.extractName(
-        lga, "name", "lga_name", "label", "text"
+        lga, "lga", "name", "lga_name", "label", "text"
       ) || `LGA-${lgaId}`;
       console.log(`\n  LGA ${i + 1}/${rawLGAs.length}: ${lgaName} (ID: ${lgaId})`);
 
@@ -507,28 +515,43 @@ class INECPollingUnitsScraper {
       console.log(`    Found ${rawWards.length} wards`);
 
       const wardTasks = rawWards.map((ward) => async () => {
+        // wardView.php returns {ward: "EZIAMA"}; pollingView.php expects
+        // ward_id=<NAME>. Same name-as-id pattern as states + LGAs.
         const wardId = this.extractId(
-          ward, "id", "ward_id", "abbreviation", "code", "value", "_key"
+          ward, "ward", "ward_name", "name", "id", "ward_id",
+          "abbreviation", "code", "value", "_key"
         );
         const wardName = this.extractName(
-          ward, "name", "ward_name", "label", "text"
+          ward, "ward", "name", "ward_name", "label", "text"
         ) || `Ward-${wardId}`;
 
         const rawPUs = await this.fetchPollingUnits(stateId, lgaId, wardId);
 
-        const pollingUnits = rawPUs.map((pu) => ({
-          pu_id: pu.id || pu.pu_id || pu.polling_unit_id,
-          pu_code: pu.code || pu.pu_code || pu.polling_unit_code || "",
-          pu_name:
-            pu.name ||
-            pu.pu_name ||
-            pu.polling_unit ||
-            pu.polling_unit_name ||
-            "",
-          delim: pu.delimitation || pu.abbreviation || pu.delim || "",
-          registration_area:
-            pu.registration_area || pu.registration_area_name || "",
-        }));
+        // pollingView.php returns
+        //   {id, state, lga, ward, pu, delim, remark}
+        // where `pu` is the human name and `delim` is INEC's
+        // hierarchical code (e.g. "01-01-01-001"). Construct a
+        // globally-unique pu_code by prefixing with the state name
+        // because `delim` repeats across states.
+        const pollingUnits = rawPUs.map((pu) => {
+          const delim = pu.delim || pu.delimitation || pu.abbreviation || "";
+          const constructed = delim ? `${stateName}-${delim}` : "";
+          return {
+            pu_id: pu.id || pu.pu_id || pu.polling_unit_id,
+            pu_code:
+              pu.pu_code || pu.code || pu.polling_unit_code || constructed,
+            pu_name:
+              pu.pu ||
+              pu.name ||
+              pu.pu_name ||
+              pu.polling_unit ||
+              pu.polling_unit_name ||
+              "",
+            delim,
+            registration_area:
+              pu.registration_area || pu.registration_area_name || pu.remark || "",
+          };
+        });
 
         return {
           ward_id: wardId,
