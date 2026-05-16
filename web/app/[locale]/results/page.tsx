@@ -16,7 +16,7 @@ export default function ResultsPage({ params }: { params: { locale: string } }) 
           <p className="text-xs text-slate-500">National and State Elections</p>
         </div>
       </div>
-      <ResultsDashboard electionId="2027-presidential" />
+      <ResultsDashboard defaultElectionId="2027-presidential" />
     </div>
   );
 }

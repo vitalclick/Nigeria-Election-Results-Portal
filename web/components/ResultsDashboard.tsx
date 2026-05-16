@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ChoroplethMap } from '@/components/ChoroplethMap';
 import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
@@ -8,29 +9,67 @@ import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
 // Recreates the public results dashboard layout used by election
 // commissions (loosely modelled after results.elections.org.za).
 //
-// Left rail: year/election/ballot filters (mock-only - currently the
-// only option is the configured election_id). Main column: completion
-// ribbon, valid/spoilt + turnout summaries, quick links, leading-party
-// cards, choropleth, full party-results table.
+// Filter state lives in the URL (?year=&election=&ballot=) so the
+// page is bookmarkable and the selectors auto-navigate on change.
 
-interface Props { electionId: string }
+const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
+  { slug: 'presidential', label: 'Presidential Election' },
+  { slug: 'reps',         label: 'House of Representatives' },
+  { slug: 'senate',       label: 'Senate' },
+  { slug: 'governorship', label: 'Gubernatorial' },
+];
 
-export function ResultsDashboard({ electionId }: Props) {
+const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
+const BALLOT_OPTIONS = ['National', 'State'];
+
+interface Props { defaultElectionId: string }
+
+export function ResultsDashboard({ defaultElectionId }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const defaults = useMemo(() => {
+    const [year, slug] = defaultElectionId.split('-');
+    return {
+      year: Number(year) || 2027,
+      election: slug || 'presidential',
+      ballot: 'National',
+    };
+  }, [defaultElectionId]);
+
+  const year = Number(searchParams.get('year')) || defaults.year;
+  const election = searchParams.get('election') || defaults.election;
+  const ballot = searchParams.get('ballot') || defaults.ballot;
+
+  const electionId = `${year}-${election}`;
+  const setFilter = useCallback(
+    (key: 'year' | 'election' | 'ballot', value: string) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set(key, value);
+      router.replace(`?${next.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
     (async () => {
-      const r = await fetch(`/api/v1/elections/${electionId}/dashboard`, { cache: 'no-store' });
+      const qs = new URLSearchParams({ year: String(year), election, ballot });
+      const r = await fetch(`/api/v1/elections/${electionId}/dashboard?${qs}`, {
+        cache: 'no-store',
+      });
       const j = await r.json();
       if (!cancelled && j.data) setData(j.data as DashboardResponse);
-      setLoading(false);
+      if (!cancelled) setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [electionId]);
+  }, [electionId, year, election, ballot]);
 
-  if (loading) {
+  if (loading && !data) {
     return <div className="p-10 text-slate-500">Loading dashboard…</div>;
   }
   if (!data) {
@@ -41,8 +80,13 @@ export function ResultsDashboard({ electionId }: Props) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 max-w-7xl mx-auto px-4 py-6">
-      <FiltersPanel data={data} />
-      <div className="space-y-6">
+      <FiltersPanel
+        year={year}
+        election={election}
+        ballot={ballot}
+        onChange={setFilter}
+      />
+      <div className={`space-y-6 ${loading ? 'opacity-60 pointer-events-none' : ''}`}>
         <Title data={data} />
         <CompletionRibbon
           pct={completedPct}
@@ -69,28 +113,50 @@ export function ResultsDashboard({ electionId }: Props) {
   );
 }
 
-function FiltersPanel({ data }: { data: DashboardResponse }) {
+function FiltersPanel({
+  year,
+  election,
+  ballot,
+  onChange,
+}: {
+  year: number;
+  election: string;
+  ballot: string;
+  onChange: (key: 'year' | 'election' | 'ballot', value: string) => void;
+}) {
   return (
     <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
       <FilterCard step="1" colour="bg-sky-600" label="Select Election Year">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.election_year}>
-          <option value={data.election_year}>{data.election_year}</option>
-          <option value={2023}>2023</option>
-          <option value={2019}>2019</option>
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={year}
+          onChange={(e) => onChange('year', e.target.value)}
+        >
+          {YEAR_OPTIONS.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
         </select>
       </FilterCard>
       <FilterCard step="2" colour="bg-orange-500" label="Select Election">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.election_name}>
-          <option>{data.election_name}</option>
-          <option>House of Representatives</option>
-          <option>Senate</option>
-          <option>Gubernatorial</option>
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={election}
+          onChange={(e) => onChange('election', e.target.value)}
+        >
+          {ELECTION_OPTIONS.map((o) => (
+            <option key={o.slug} value={o.slug}>{o.label}</option>
+          ))}
         </select>
       </FilterCard>
       <FilterCard step="3" colour="bg-sky-600" label="Select Ballot">
-        <select className="w-full border rounded px-2 py-1 text-sm bg-white" defaultValue={data.ballot}>
-          <option>National</option>
-          <option>State</option>
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={ballot}
+          onChange={(e) => onChange('ballot', e.target.value)}
+        >
+          {BALLOT_OPTIONS.map((b) => (
+            <option key={b} value={b}>{b}</option>
+          ))}
         </select>
       </FilterCard>
     </aside>
