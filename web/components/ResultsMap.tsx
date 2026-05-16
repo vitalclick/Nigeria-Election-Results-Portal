@@ -198,44 +198,50 @@ function MapPanel({
           the full remaining width. */}
       <aside className="flex flex-col gap-3 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto p-3 lg:p-0">
         {children}
-        <StateFinder
-          states={statesIndex}
-          focus={focus}
-          onJump={(s) => setFocus({ level: 'state', state_code: s.code, state_name: s.name })}
-        />
-        <Breadcrumb focus={focus} onFocus={setFocus} />
-        <FilterBar
-          value={statusFilter}
-          onChange={setStatusFilter}
-          disabled={focus.level !== 'ward'}
-        />
-        <div className="border-t bg-white rounded-md shadow-sm">
+        <div className="bg-white rounded-md shadow-sm">
           {selected
             ? <PUDetailPane unit={selected} />
             : <RegionDetailPane focus={focus} region={selectedRegion} aggregates={aggregates} />}
         </div>
       </aside>
-      {/* Map fills the full right column. */}
-      <div className="relative h-full min-h-[480px] bg-slate-100 rounded-md overflow-hidden border border-slate-200">
-        {mapboxToken ? (
-          <MapboxRenderer
-            electionId={electionId}
-            token={mapboxToken}
+      {/* Map column: horizontal control bar (state finder + breadcrumb,
+          then status filter on a second row) above the map itself. */}
+      <div className="flex flex-col gap-2 min-h-0">
+        <div className="bg-white rounded-md shadow-sm border border-slate-200 px-3 py-2 flex flex-wrap items-center gap-3">
+          <StateFinder
+            states={statesIndex}
             focus={focus}
-            onFocus={setFocus}
-            onSelectPU={setSelected}
+            onJump={(s) => setFocus({ level: 'state', state_code: s.code, state_name: s.name })}
           />
-        ) : (
-          <SvgFallback
-            focus={focus}
-            aggregates={aggregates}
-            units={filteredUnits}
-            onFocus={setFocus}
-            onSelectRegion={setSelectedRegion}
-            onSelectPU={setSelected}
-          />
-        )}
-        <Legend level={focus.level} regions={aggregates} />
+          <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+          <Breadcrumb focus={focus} onFocus={setFocus} />
+        </div>
+        <FilterBar
+          value={statusFilter}
+          onChange={setStatusFilter}
+          disabled={focus.level !== 'ward'}
+        />
+        <div className="relative flex-1 min-h-[480px] bg-slate-100 rounded-md overflow-hidden border border-slate-200">
+          {mapboxToken ? (
+            <MapboxRenderer
+              electionId={electionId}
+              token={mapboxToken}
+              focus={focus}
+              onFocus={setFocus}
+              onSelectPU={setSelected}
+            />
+          ) : (
+            <SvgFallback
+              focus={focus}
+              aggregates={aggregates}
+              units={filteredUnits}
+              onFocus={setFocus}
+              onSelectRegion={setSelectedRegion}
+              onSelectPU={setSelected}
+            />
+          )}
+          <Legend level={focus.level} regions={aggregates} />
+        </div>
       </div>
     </div>
   );
@@ -322,8 +328,8 @@ function FilterBar({
     'inec_conflict',
   ];
   return (
-    <div className={`bg-white rounded-md shadow-sm px-2 py-2 flex flex-wrap gap-1 items-center ${disabled ? 'opacity-50' : ''}`}>
-      <span className="w-full text-[10px] uppercase tracking-wider text-slate-500 mb-1 px-1">
+    <div className={`bg-white rounded-md shadow-sm border border-slate-200 px-3 py-2 flex flex-wrap gap-1 items-center ${disabled ? 'opacity-50' : ''}`}>
+      <span className="text-[10px] uppercase tracking-wider text-slate-500 mr-2 whitespace-nowrap">
         Status filter
       </span>
       {opts.map((s) => (
@@ -356,12 +362,12 @@ function StateFinder({
   // focused on a state, otherwise pre-selects the focused state.
   const value = focus.level === 'country' ? '' : focus.state_code;
   return (
-    <div className="bg-white rounded-md shadow-sm px-2 py-2">
-      <label className="block text-[10px] uppercase tracking-wider text-slate-500 mb-1">
+    <div className="flex items-center gap-2">
+      <label className="text-[10px] uppercase tracking-wider text-slate-500 whitespace-nowrap">
         Jump to state
       </label>
       <select
-        className="w-full border border-slate-200 rounded px-2 py-1 text-xs bg-white"
+        className="border border-slate-200 rounded px-2 py-1 text-xs bg-white max-w-[180px]"
         value={value}
         onChange={(e) => {
           const s = states.find((x) => x.code === e.target.value);
@@ -413,7 +419,7 @@ function Breadcrumb({
     trail.push({ label: focus.ward_name, target: focus });
   }
   return (
-    <div className="bg-white rounded-md shadow-sm px-2 py-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-600">
+    <div className="flex flex-wrap items-center gap-1.5 text-xs text-slate-600 flex-1 min-w-0">
       {trail.map((t, i) => (
         <span key={i} className="flex items-center gap-2">
           {i > 0 && <span className="text-slate-300">›</span>}
