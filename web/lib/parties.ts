@@ -2,8 +2,9 @@
 //
 // Colours are chosen to be visually distinct on the state-level
 // choropleth; they are NOT a complete or official rendering of each
-// party's brand palette. Seat counts are computed proportionally so
-// the demo dashboard reads like a House of Representatives result.
+// party's brand palette. Green is deliberately avoided across all
+// parties so it stays reserved for the Nigerian flag / national
+// identity in the rest of the UI.
 
 export interface Party {
   code: string;
@@ -14,13 +15,13 @@ export interface Party {
 export const PARTIES: Party[] = [
   { code: 'APC',     name: 'All Progressives Congress',       color: '#1d4ed8' },
   { code: 'PDP',     name: 'Peoples Democratic Party',        color: '#dc2626' },
-  { code: 'LP',      name: 'Labour Party',                    color: '#16a34a' },
+  { code: 'LP',      name: 'Labour Party',                    color: '#4338ca' },
   { code: 'NNPP',    name: 'New Nigeria Peoples Party',       color: '#ea580c' },
   { code: 'APGA',    name: 'All Progressives Grand Alliance', color: '#7c3aed' },
   { code: 'ADC',     name: 'African Democratic Congress',     color: '#0891b2' },
   { code: 'SDP',     name: 'Social Democratic Party',         color: '#facc15' },
   { code: 'YPP',     name: 'Young Progressive Party',         color: '#db2777' },
-  { code: 'PRP',     name: 'Peoples Redemption Party',        color: '#65a30d' },
+  { code: 'PRP',     name: 'Peoples Redemption Party',        color: '#9a3412' },
   { code: 'AAC',     name: 'African Action Congress',         color: '#475569' },
 ];
 
