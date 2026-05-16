@@ -1,10 +1,8 @@
 {
   "completedStates": [
-    "LAGOS",
     "ABIA",
     "ADAMAWA",
     "AKWA IBOM",
-    "ANAMBRA",
     "BAUCHI",
     "BAYELSA",
     "BENUE",
@@ -24,6 +22,7 @@
     "KEBBI",
     "KOGI",
     "KWARA",
+    "LAGOS",
     "NASARAWA",
     "NIGER",
     "OGUN",
@@ -36,7 +35,8 @@
     "TARABA",
     "YOBE",
     "ZAMFARA",
-    "FCT"
+    "FCT",
+    "ANAMBRA"
   ],
   "inProgress": null
 }
