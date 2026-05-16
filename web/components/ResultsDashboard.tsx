@@ -14,9 +14,10 @@ import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
 
 const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
   { slug: 'presidential', label: 'Presidential Election' },
-  { slug: 'reps',         label: 'House of Representatives' },
   { slug: 'senate',       label: 'Senate' },
+  { slug: 'reps',         label: 'House of Representatives' },
   { slug: 'governorship', label: 'Gubernatorial' },
+  { slug: 'stha',         label: 'State House of Assembly' },
 ];
 
 const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
@@ -103,7 +104,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
         <QuickLinks electionId={data.election_id} />
         <LeadingParties parties={data.parties.slice(0, 3)} totalValid={data.total_valid_votes} />
         <ChoroplethSection winners={data.state_winners} parties={data.parties} />
-        <PartyResultsTable parties={data.parties} />
+        <PartyResultsTable parties={data.parties} seatTotal={data.seat_total} />
         <p className="text-xs text-slate-500 pt-2">
           Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
           <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
@@ -398,7 +399,16 @@ function ChoroplethSection({
   );
 }
 
-function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
+function PartyResultsTable({
+  parties,
+  seatTotal,
+}: {
+  parties: DashboardPartyResult[];
+  seatTotal: number | null;
+}) {
+  // Presidential and gubernatorial races are winner-take-all under
+  // Nigerian law - no seat allocation, so the column is hidden.
+  const showSeats = seatTotal !== null;
   return (
     <div className="border rounded-lg bg-white overflow-x-auto">
       <table className="w-full text-sm">
@@ -407,7 +417,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
             <th className="text-left p-3">Party</th>
             <th className="text-right p-3">Votes</th>
             <th className="text-right p-3">Support</th>
-            <th className="text-right p-3">Seats (360)</th>
+            {showSeats && (
+              <th className="text-right p-3">Seats ({seatTotal})</th>
+            )}
             <th className="text-right p-3 hidden md:table-cell">History</th>
           </tr>
         </thead>
@@ -428,7 +440,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
               </td>
               <td className="p-3 text-right tabular-nums">{p.total_votes.toLocaleString()}</td>
               <td className="p-3 text-right tabular-nums">{p.support_pct.toFixed(2)}%</td>
-              <td className="p-3 text-right tabular-nums">{p.seats}</td>
+              {showSeats && (
+                <td className="p-3 text-right tabular-nums">{p.seats ?? '—'}</td>
+              )}
               <td className="p-3 hidden md:table-cell">
                 <HistoryBars history={p.history} color={p.color} />
               </td>

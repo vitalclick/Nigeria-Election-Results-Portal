@@ -133,7 +133,8 @@ export interface DashboardPartyResult {
   color: string;
   total_votes: number;
   support_pct: number;
-  seats: number;
+  // null for presidential/gubernatorial (winner-take-all, no seat allocation).
+  seats: number | null;
   history: Array<{ year: number; seats: number }>;
 }
 
@@ -142,6 +143,9 @@ export interface DashboardResponse {
   election_name: string;
   election_year: number;
   ballot: string;
+  // Total seats up for grabs (e.g. 360 for House of Reps). null for
+  // presidential/gubernatorial races where the table hides the column.
+  seat_total: number | null;
   units_total: number;
   units_completed: number;
   total_valid_votes: number;

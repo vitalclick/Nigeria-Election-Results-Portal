@@ -6,7 +6,7 @@ import {
   mockStatePartyTotals,
   mockVoterTotals,
 } from '@/lib/mock-data';
-import { PARTIES, TOTAL_REP_SEATS } from '@/lib/parties';
+import { PARTIES, seatTotalForElection } from '@/lib/parties';
 import type { DashboardPartyResult, DashboardResponse } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -34,6 +34,7 @@ const ELECTION_LABELS: Record<string, string> = {
   reps: 'House of Representatives',
   senate: 'Senate',
   governorship: 'Gubernatorial',
+  stha: 'State House of Assembly',
 };
 
 function buildMockDashboard(
@@ -43,6 +44,12 @@ function buildMockDashboard(
   const rollup = mockNationalRollup();
   const voterTotals = mockVoterTotals();
   const stateTotals = mockStatePartyTotals();
+
+  const [parsedYear, parsedSlug] = electionId.split('-');
+  const year = overrides.year ?? Number(parsedYear) ?? 2027;
+  const slug = overrides.election ?? parsedSlug ?? 'presidential';
+  const ballot = overrides.ballot ?? 'National';
+  const seatTotal = seatTotalForElection(slug);
 
   const partyTotals = rollup.party_totals ?? {};
   const totalValid = Object.values(partyTotals).reduce((a, b) => a + b, 0);
@@ -56,7 +63,7 @@ function buildMockDashboard(
       color: p.color,
       total_votes: votes,
       support_pct: support * 100,
-      seats: Math.round(support * TOTAL_REP_SEATS),
+      seats: seatTotal === null ? null : Math.round(support * seatTotal),
       history: HISTORICAL_SEATS[p.code] ?? [],
     };
   }).sort((a, b) => b.total_votes - a.total_votes);
@@ -74,16 +81,12 @@ function buildMockDashboard(
     ? (voterTotals.accredited_voters / voterTotals.registered_voters) * 100
     : 0;
 
-  const [parsedYear, parsedSlug] = electionId.split('-');
-  const year = overrides.year ?? Number(parsedYear) ?? 2027;
-  const slug = overrides.election ?? parsedSlug ?? 'presidential';
-  const ballot = overrides.ballot ?? 'National';
-
   return {
     election_id: electionId,
     election_name: ELECTION_LABELS[slug] ?? 'Presidential Election',
     election_year: year,
     ballot,
+    seat_total: seatTotal,
     units_total: rollup.units_total,
     units_completed: rollup.units_reporting,
     total_valid_votes: totalValid,

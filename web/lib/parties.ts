@@ -28,4 +28,17 @@ export const PARTY_BY_CODE: Record<string, Party> = Object.fromEntries(
   PARTIES.map((p) => [p.code, p])
 );
 
-export const TOTAL_REP_SEATS = 360;
+// Seat counts for each legislative election type. Presidential and
+// gubernatorial elections are winner-take-all so they have no seat
+// allocation - SEATS_BY_ELECTION returns null in those cases.
+export const SEATS_BY_ELECTION: Record<string, number | null> = {
+  presidential: null,
+  governorship: null,
+  senate: 109,         // 3 per state x 36 + 1 for FCT
+  reps: 360,           // House of Representatives
+  stha: 990,           // State Houses of Assembly across all 36 states
+};
+
+export function seatTotalForElection(slug: string): number | null {
+  return SEATS_BY_ELECTION[slug] ?? null;
+}
