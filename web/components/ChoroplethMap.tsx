@@ -365,7 +365,7 @@ export function ChoroplethMap({ winners, partyByCode }: Props) {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 mt-2 text-sm">
         <button
-          className="text-sky-700 hover:underline"
+          className="text-ng-700 hover:underline"
           onClick={() => setFocus({ level: 'country' })}
         >
           Nigeria
@@ -374,7 +374,7 @@ export function ChoroplethMap({ winners, partyByCode }: Props) {
           <>
             <span className="text-slate-400">|</span>
             <button
-              className="text-sky-700 hover:underline"
+              className="text-ng-700 hover:underline"
               onClick={() =>
                 setFocus({
                   level: 'state',

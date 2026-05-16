@@ -14,13 +14,13 @@ import type { DashboardResponse, DashboardPartyResult } from '@/lib/types';
 
 const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
   { slug: 'presidential', label: 'Presidential Election' },
-  { slug: 'reps',         label: 'House of Representatives' },
   { slug: 'senate',       label: 'Senate' },
+  { slug: 'reps',         label: 'House of Representatives' },
   { slug: 'governorship', label: 'Gubernatorial' },
+  { slug: 'stha',         label: 'State House of Assembly' },
 ];
 
 const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
-const BALLOT_OPTIONS = ['National', 'State'];
 
 interface Props { defaultElectionId: string }
 
@@ -33,17 +33,15 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
     return {
       year: Number(year) || 2027,
       election: slug || 'presidential',
-      ballot: 'National',
     };
   }, [defaultElectionId]);
 
   const year = Number(searchParams.get('year')) || defaults.year;
   const election = searchParams.get('election') || defaults.election;
-  const ballot = searchParams.get('ballot') || defaults.ballot;
 
   const electionId = `${year}-${election}`;
   const setFilter = useCallback(
-    (key: 'year' | 'election' | 'ballot', value: string) => {
+    (key: 'year' | 'election', value: string) => {
       const next = new URLSearchParams(searchParams.toString());
       next.set(key, value);
       router.replace(`?${next.toString()}`, { scroll: false });
@@ -58,7 +56,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
     let cancelled = false;
     setLoading(true);
     (async () => {
-      const qs = new URLSearchParams({ year: String(year), election, ballot });
+      const qs = new URLSearchParams({ year: String(year), election });
       const r = await fetch(`/api/v1/elections/${electionId}/dashboard?${qs}`, {
         cache: 'no-store',
       });
@@ -67,7 +65,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
       if (!cancelled) setLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [electionId, year, election, ballot]);
+  }, [electionId, year, election]);
 
   if (loading && !data) {
     return <div className="p-10 text-slate-500">Loading dashboard…</div>;
@@ -83,7 +81,6 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
       <FiltersPanel
         year={year}
         election={election}
-        ballot={ballot}
         onChange={setFilter}
       />
       <div className={`space-y-6 ${loading ? 'opacity-60 pointer-events-none' : ''}`}>
@@ -103,7 +100,7 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
         <QuickLinks electionId={data.election_id} />
         <LeadingParties parties={data.parties.slice(0, 3)} totalValid={data.total_valid_votes} />
         <ChoroplethSection winners={data.state_winners} parties={data.parties} />
-        <PartyResultsTable parties={data.parties} />
+        <PartyResultsTable parties={data.parties} seatTotal={data.seat_total} />
         <p className="text-xs text-slate-500 pt-2">
           Last updated {new Date(data.last_updated).toLocaleString()} ·{' '}
           <a href={`/api/v1/elections/${data.election_id}/dashboard`} className="hover:underline">JSON</a>
@@ -116,17 +113,15 @@ export function ResultsDashboard({ defaultElectionId }: Props) {
 function FiltersPanel({
   year,
   election,
-  ballot,
   onChange,
 }: {
   year: number;
   election: string;
-  ballot: string;
-  onChange: (key: 'year' | 'election' | 'ballot', value: string) => void;
+  onChange: (key: 'year' | 'election', value: string) => void;
 }) {
   return (
     <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start">
-      <FilterCard step="1" colour="bg-sky-600" label="Select Election Year">
+      <FilterCard step="1" colour="bg-ng-600" label="Select Election Year">
         <select
           className="w-full border rounded px-2 py-1 text-sm bg-white"
           value={year}
@@ -137,7 +132,7 @@ function FiltersPanel({
           ))}
         </select>
       </FilterCard>
-      <FilterCard step="2" colour="bg-orange-500" label="Select Election">
+      <FilterCard step="2" colour="bg-ng-800" label="Select Election">
         <select
           className="w-full border rounded px-2 py-1 text-sm bg-white"
           value={election}
@@ -145,17 +140,6 @@ function FiltersPanel({
         >
           {ELECTION_OPTIONS.map((o) => (
             <option key={o.slug} value={o.slug}>{o.label}</option>
-          ))}
-        </select>
-      </FilterCard>
-      <FilterCard step="3" colour="bg-sky-600" label="Select Ballot">
-        <select
-          className="w-full border rounded px-2 py-1 text-sm bg-white"
-          value={ballot}
-          onChange={(e) => onChange('ballot', e.target.value)}
-        >
-          {BALLOT_OPTIONS.map((b) => (
-            <option key={b} value={b}>{b}</option>
           ))}
         </select>
       </FilterCard>
@@ -210,8 +194,8 @@ function CompletionRibbon({
         <svg viewBox="0 0 200 130" className="absolute inset-0 w-full h-full">
           <path
             d="M 20 5 L 180 5 L 180 95 L 100 125 L 20 95 Z"
-            fill="#1e3a8a"
-            stroke="#1e40af"
+            fill="#008753"
+            stroke="#006a40"
             strokeWidth="2"
           />
         </svg>
@@ -241,13 +225,13 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Valid / Spoilt Votes</div>
       <div className="flex items-center justify-center gap-6">
         <svg viewBox="0 0 160 160" className="w-32 h-32">
-          <circle cx="80" cy="80" r={r} fill="none" stroke="#f59e0b" strokeWidth="22" />
+          <circle cx="80" cy="80" r={r} fill="none" stroke="#d97706" strokeWidth="22" />
           <circle
             cx="80"
             cy="80"
             r={r}
             fill="none"
-            stroke="#0ea5e9"
+            stroke="#008753"
             strokeWidth="22"
             strokeDasharray={`${validLen} ${c - validLen}`}
             strokeDashoffset={c / 4}
@@ -255,8 +239,8 @@ function ValidSpoiltCard({ valid, rejected }: { valid: number; rejected: number 
           />
         </svg>
         <div className="text-xs space-y-2">
-          <Legend dot="#0ea5e9" label={`Valid Votes ${validPct.toFixed(2)}%`} />
-          <Legend dot="#f59e0b" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
+          <Legend dot="#008753" label={`Valid Votes ${validPct.toFixed(2)}%`} />
+          <Legend dot="#d97706" label={`Spoilt Votes ${spoiltPct.toFixed(2)}%`} />
           <div className="pt-2 text-slate-500">
             {valid.toLocaleString()} valid<br />
             {rejected.toLocaleString()} rejected
@@ -281,8 +265,8 @@ function TurnoutCard({ pct }: { pct: number }) {
     <div className="border rounded-lg bg-white p-5">
       <div className="text-center text-sm font-medium text-slate-600 mb-3">Voter Turnout</div>
       <div className="flex flex-col items-center justify-center h-32">
-        <div className="border-4 border-slate-200 rounded-lg px-6 py-4">
-          <div className="text-3xl font-semibold text-sky-600 text-center">{pct.toFixed(2)}%</div>
+        <div className="border-4 border-ng-100 rounded-lg px-6 py-4 bg-ng-50">
+          <div className="text-3xl font-semibold text-ng-700 text-center">{pct.toFixed(2)}%</div>
         </div>
       </div>
     </div>
@@ -398,7 +382,16 @@ function ChoroplethSection({
   );
 }
 
-function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
+function PartyResultsTable({
+  parties,
+  seatTotal,
+}: {
+  parties: DashboardPartyResult[];
+  seatTotal: number | null;
+}) {
+  // Presidential and gubernatorial races are winner-take-all under
+  // Nigerian law - no seat allocation, so the column is hidden.
+  const showSeats = seatTotal !== null;
   return (
     <div className="border rounded-lg bg-white overflow-x-auto">
       <table className="w-full text-sm">
@@ -407,7 +400,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
             <th className="text-left p-3">Party</th>
             <th className="text-right p-3">Votes</th>
             <th className="text-right p-3">Support</th>
-            <th className="text-right p-3">Seats (360)</th>
+            {showSeats && (
+              <th className="text-right p-3">Seats ({seatTotal})</th>
+            )}
             <th className="text-right p-3 hidden md:table-cell">History</th>
           </tr>
         </thead>
@@ -428,7 +423,9 @@ function PartyResultsTable({ parties }: { parties: DashboardPartyResult[] }) {
               </td>
               <td className="p-3 text-right tabular-nums">{p.total_votes.toLocaleString()}</td>
               <td className="p-3 text-right tabular-nums">{p.support_pct.toFixed(2)}%</td>
-              <td className="p-3 text-right tabular-nums">{p.seats}</td>
+              {showSeats && (
+                <td className="p-3 text-right tabular-nums">{p.seats ?? '—'}</td>
+              )}
               <td className="p-3 hidden md:table-cell">
                 <HistoryBars history={p.history} color={p.color} />
               </td>
