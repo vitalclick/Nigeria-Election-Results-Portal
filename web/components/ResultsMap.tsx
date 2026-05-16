@@ -1,32 +1,26 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { MapboxRenderer } from '@/components/MapboxRenderer';
 import { STATUS_COLOURS, type PollingUnitDetail, type VerificationStatus } from '@/lib/types';
-import {
-  STATUS_DESCRIPTION,
-  STATUS_LABEL,
-  STATUS_ORDER,
-  TIER_META,
-  TIER_OF,
-  TIER_ORDER,
-  type VerificationTier,
-} from '@/lib/verification';
 
 // Nigeria's geographic bounding box. Coordinates from Natural Earth.
 const NIGERIA_BBOX = { lngMin: 2.5, lngMax: 14.7, latMin: 4.0, latMax: 14.0 };
 
+type Geom =
+  | { type: 'Polygon'; coordinates: number[][][] }
+  | { type: 'MultiPolygon'; coordinates: number[][][][] };
+
 type GeoFeature = {
   type: 'Feature';
   properties: { name: string; kind: 'country' | 'state'; iso?: string };
-  geometry:
-    | { type: 'Polygon'; coordinates: number[][][] }
-    | { type: 'MultiPolygon'; coordinates: number[][][][] };
+  geometry: Geom;
 };
 type GeoCollection = { type: 'FeatureCollection'; features: GeoFeature[] };
 
-// The public result-verification map.
+// The public results map.
 //
 // In production this is a Mapbox GL JS choropleth with polling-unit dot
 // layers. The runtime requires NEXT_PUBLIC_MAPBOX_TOKEN. To keep the
@@ -34,22 +28,65 @@ type GeoCollection = { type: 'FeatureCollection'; features: GeoFeature[] };
 // fresh clone), we render an SVG fallback that draws a real Nigeria
 // outline plus 36 state boundaries + FCT from /public/nigeria.geo.json.
 
-type Filter =
-  | { kind: 'all' }
-  | { kind: 'tier'; tier: VerificationTier }
-  | { kind: 'status'; status: VerificationStatus };
+const STATUS_LABEL: Record<VerificationStatus, string> = {
+  no_data: 'No data',
+  single_source: 'Single source',
+  inec_published: 'INEC published',
+  consensus: 'Consensus',
+  discrepancy: 'Discrepancy',
+  inec_confirmed: 'INEC confirmed',
+  inec_conflict: 'INEC conflict',
+};
 
-interface Props { electionId: string }
+const ELECTION_OPTIONS: Array<{ slug: string; label: string }> = [
+  { slug: 'presidential', label: 'Presidential Election' },
+  { slug: 'senate',       label: 'Senate' },
+  { slug: 'reps',         label: 'House of Representatives' },
+  { slug: 'governorship', label: 'Gubernatorial' },
+  { slug: 'stha',         label: 'State House of Assembly' },
+];
 
-export function ResultsMap({ electionId }: Props) {
+const YEAR_OPTIONS = [2027, 2023, 2019, 2015, 2011];
+
+interface Props { defaultElectionId: string }
+
+export function ResultsMap({ defaultElectionId }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const defaults = useMemo(() => {
+    const [year, slug] = defaultElectionId.split('-');
+    return { year: Number(year) || 2027, election: slug || 'presidential' };
+  }, [defaultElectionId]);
+
+  const year = Number(searchParams.get('year')) || defaults.year;
+  const election = searchParams.get('election') || defaults.election;
+  const electionId = `${year}-${election}`;
+
+  const setFilter = useCallback(
+    (key: 'year' | 'election', value: string) => {
+      const next = new URLSearchParams(searchParams.toString());
+      next.set(key, value);
+      router.replace(`?${next.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-4 h-full">
+      <FiltersPanel year={year} election={election} onChange={setFilter} />
+      <MapPanel electionId={electionId} />
+    </div>
+  );
+}
+
+function MapPanel({ electionId }: { electionId: string }) {
   const [units, setUnits] = useState<PollingUnitDetail[]>([]);
-  const [filter, setFilter] = useState<Filter>({ kind: 'all' });
-  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<VerificationStatus | 'all'>('all');
   const [selected, setSelected] = useState<PollingUnitDetail | null>(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [focusState, setFocusState] = useState<{ code: string; name: string } | null>(null);
   const mapboxToken =
     typeof window === 'undefined' ? undefined : process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,31 +98,15 @@ export function ResultsMap({ electionId }: Props) {
     return () => { cancelled = true; };
   }, [electionId]);
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return units.filter((u) => {
-      if (filter.kind === 'tier' && TIER_OF[u.status] !== filter.tier) return false;
-      if (filter.kind === 'status' && u.status !== filter.status) return false;
-      if (q && !u.pu_code.toLowerCase().includes(q) && !u.pu_name.toLowerCase().includes(q)) {
-        return false;
-      }
-      return true;
-    });
-  }, [units, filter, search]);
-
-  const tierCounts = useMemo(() => {
-    const counts: Record<VerificationTier, number> = {
-      verified: 0, provisional: 0, issue: 0, empty: 0,
-    };
-    for (const u of units) counts[TIER_OF[u.status]]++;
-    return counts;
-  }, [units]);
-
-  const statusCounts = useMemo(() => {
-    const counts: Partial<Record<VerificationStatus, number>> = {};
-    for (const u of units) counts[u.status] = (counts[u.status] ?? 0) + 1;
-    return counts;
-  }, [units]);
+  const filtered = useMemo(
+    () => {
+      let xs = units;
+      if (statusFilter !== 'all') xs = xs.filter((u) => u.status === statusFilter);
+      if (focusState) xs = xs.filter((u) => u.state_code === focusState.code);
+      return xs;
+    },
+    [units, statusFilter, focusState]
+  );
 
   // Realtime: subscribe to verification_status changes via Server-Sent Events.
   useEffect(() => {
@@ -103,28 +124,26 @@ export function ResultsMap({ electionId }: Props) {
   }, [electionId]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] h-full">
-      <div ref={containerRef} className="flex flex-col bg-slate-100 min-h-0">
-        <TierSummary counts={tierCounts} total={units.length} />
-        <FilterBar
-          filter={filter}
-          onChange={setFilter}
-          search={search}
-          onSearch={setSearch}
-          tierCounts={tierCounts}
-          statusCounts={statusCounts}
-          showAdvanced={showAdvanced}
-          onToggleAdvanced={() => setShowAdvanced((v) => !v)}
-        />
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] h-full bg-slate-100 rounded-md overflow-hidden border border-slate-200">
+      <div className="flex flex-col bg-slate-100 min-h-0">
+        <FilterBar value={statusFilter} onChange={setStatusFilter} />
+        <Breadcrumb focusState={focusState} onReset={() => setFocusState(null)} />
         <div className="relative flex-1 min-h-0">
           {mapboxToken ? (
             <MapboxRenderer
               electionId={electionId}
               token={mapboxToken}
               onSelect={setSelected}
+              focusState={focusState}
+              onFocusState={setFocusState}
             />
           ) : (
-            <SvgFallback units={filtered} onSelect={setSelected} />
+            <SvgFallback
+              units={filtered}
+              focusState={focusState}
+              onFocusState={setFocusState}
+              onSelect={setSelected}
+            />
           )}
           <Legend />
         </div>
@@ -136,146 +155,123 @@ export function ResultsMap({ electionId }: Props) {
   );
 }
 
-function TierSummary({
-  counts,
-  total,
+function FiltersPanel({
+  year,
+  election,
+  onChange,
 }: {
-  counts: Record<VerificationTier, number>;
-  total: number;
+  year: number;
+  election: string;
+  onChange: (key: 'year' | 'election', value: string) => void;
 }) {
   return (
-    <div className="px-3 pt-3">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        {TIER_ORDER.map((tier) => {
-          const meta = TIER_META[tier];
-          const n = counts[tier];
-          const pct = total ? (n / total) * 100 : 0;
-          return (
-            <div
-              key={tier}
-              className={`rounded-md border px-3 py-2 ${meta.tone} ${meta.border}`}
-            >
-              <div className="flex items-center justify-between text-[11px] uppercase tracking-wider font-semibold">
-                <span className="flex items-center gap-1.5">
-                  <span aria-hidden className="inline-flex w-4 h-4 items-center justify-center rounded-full bg-white/70 text-[10px] font-bold">
-                    {meta.glyph}
-                  </span>
-                  {meta.label}
-                </span>
-                <span className="tabular-nums opacity-70">{pct.toFixed(0)}%</span>
-              </div>
-              <div className="mt-0.5 text-lg font-semibold tabular-nums">
-                {n.toLocaleString()}
-              </div>
-              <div className="text-[11px] opacity-75 leading-snug">{meta.tagline}</div>
-            </div>
-          );
-        })}
+    <aside className="space-y-3 lg:sticky lg:top-20 lg:self-start p-3 lg:p-0">
+      <FilterCard step="1" colour="bg-ng-600" label="Select Election Year">
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={year}
+          onChange={(e) => onChange('year', e.target.value)}
+        >
+          {YEAR_OPTIONS.map((y) => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+      </FilterCard>
+      <FilterCard step="2" colour="bg-ng-800" label="Select Election">
+        <select
+          className="w-full border rounded px-2 py-1 text-sm bg-white"
+          value={election}
+          onChange={(e) => onChange('election', e.target.value)}
+        >
+          {ELECTION_OPTIONS.map((o) => (
+            <option key={o.slug} value={o.slug}>{o.label}</option>
+          ))}
+        </select>
+      </FilterCard>
+    </aside>
+  );
+}
+
+function FilterCard({
+  step,
+  colour,
+  label,
+  children,
+}: {
+  step: string;
+  colour: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={`${colour} rounded-md p-3 text-white shadow-sm`}>
+      <div className="flex items-center gap-2 text-xs font-medium">
+        <span className="inline-flex w-5 h-5 items-center justify-center rounded-full bg-white text-slate-900 font-bold text-[11px]">
+          {step}
+        </span>
+        <span>{label}</span>
       </div>
+      <div className="mt-2 text-slate-900">{children}</div>
     </div>
   );
 }
 
 function FilterBar({
-  filter,
+  value,
   onChange,
-  search,
-  onSearch,
-  tierCounts,
-  statusCounts,
-  showAdvanced,
-  onToggleAdvanced,
 }: {
-  filter: Filter;
-  onChange: (f: Filter) => void;
-  search: string;
-  onSearch: (v: string) => void;
-  tierCounts: Record<VerificationTier, number>;
-  statusCounts: Partial<Record<VerificationStatus, number>>;
-  showAdvanced: boolean;
-  onToggleAdvanced: () => void;
+  value: VerificationStatus | 'all';
+  onChange: (v: VerificationStatus | 'all') => void;
 }) {
-  const isAll = filter.kind === 'all';
+  const opts: Array<VerificationStatus | 'all'> = [
+    'all',
+    'no_data',
+    'single_source',
+    'inec_published',
+    'consensus',
+    'discrepancy',
+    'inec_confirmed',
+    'inec_conflict',
+  ];
   return (
-    <div className="m-3 mb-2 bg-white rounded-md shadow-sm border border-slate-200">
-      <div className="flex flex-wrap items-center gap-2 px-3 py-2">
-        <span className="text-xs font-medium text-slate-500 mr-1">Show:</span>
+    <div className="m-3 mb-2 bg-white rounded-md shadow px-2 py-1 flex flex-wrap gap-1">
+      {opts.map((s) => (
         <button
-          onClick={() => onChange({ kind: 'all' })}
-          className={`px-2.5 py-1 text-xs rounded-full border ${
-            isAll
-              ? 'bg-slate-900 text-white border-slate-900'
-              : 'border-slate-200 hover:bg-slate-50'
+          key={s}
+          onClick={() => onChange(s)}
+          className={`px-2 py-1 text-xs rounded ${
+            value === s ? 'bg-slate-900 text-white' : 'hover:bg-slate-100'
           }`}
         >
-          All units
+          {s === 'all' ? 'All' : STATUS_LABEL[s as VerificationStatus]}
         </button>
-        {TIER_ORDER.map((tier) => {
-          const meta = TIER_META[tier];
-          const active = filter.kind === 'tier' && filter.tier === tier;
-          return (
-            <button
-              key={tier}
-              onClick={() => onChange({ kind: 'tier', tier })}
-              className={`px-2.5 py-1 text-xs rounded-full border inline-flex items-center gap-1.5 ${
-                active
-                  ? 'bg-slate-900 text-white border-slate-900'
-                  : `${meta.border} ${meta.tone} hover:brightness-95`
-              }`}
-              title={meta.tagline}
-            >
-              <span aria-hidden>{meta.glyph}</span>
-              <span>{meta.label}</span>
-              <span className="tabular-nums opacity-70">{tierCounts[tier]}</span>
-            </button>
-          );
-        })}
+      ))}
+    </div>
+  );
+}
 
-        <div className="ml-auto flex items-center gap-2">
-          <label className="relative">
-            <span className="sr-only">Search polling unit</span>
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => onSearch(e.target.value)}
-              placeholder="Find PU code or name…"
-              className="text-xs border border-slate-200 rounded-md pl-7 pr-2 py-1 w-44 sm:w-56 focus:outline-none focus:ring-1 focus:ring-slate-400"
-            />
-            <span aria-hidden className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-xs">⌕</span>
-          </label>
+function Breadcrumb({
+  focusState,
+  onReset,
+}: {
+  focusState: { code: string; name: string } | null;
+  onReset: () => void;
+}) {
+  return (
+    <div className="mx-3 mb-2 flex items-center gap-2 text-xs text-slate-600">
+      <button onClick={onReset} className="text-ng-700 hover:underline">Nigeria</button>
+      {focusState && (
+        <>
+          <span className="text-slate-400">|</span>
+          <span className="text-slate-800 font-medium">{focusState.name}</span>
           <button
-            onClick={onToggleAdvanced}
-            className="text-xs text-slate-500 hover:text-slate-800"
+            onClick={onReset}
+            className="ml-auto text-slate-500 hover:text-slate-800"
+            aria-label="Zoom out to Nigeria"
           >
-            {showAdvanced ? 'Hide detail' : 'More detail'}
+            ← Back to Nigeria
           </button>
-        </div>
-      </div>
-
-      {showAdvanced && (
-        <div className="border-t border-slate-100 px-3 py-2 flex flex-wrap gap-1">
-          {STATUS_ORDER.map((s) => {
-            const active = filter.kind === 'status' && filter.status === s;
-            const n = statusCounts[s] ?? 0;
-            return (
-              <button
-                key={s}
-                onClick={() => onChange({ kind: 'status', status: s })}
-                className={`px-2 py-1 text-xs rounded inline-flex items-center gap-1.5 ${
-                  active ? 'bg-slate-900 text-white' : 'hover:bg-slate-50'
-                }`}
-                title={STATUS_DESCRIPTION[s]}
-              >
-                <span
-                  className="status-dot"
-                  style={{ background: STATUS_COLOURS[s] }}
-                />
-                <span>{STATUS_LABEL[s]}</span>
-                <span className="tabular-nums opacity-60">{n}</span>
-              </button>
-            );
-          })}
-        </div>
+        </>
       )}
     </div>
   );
@@ -283,61 +279,73 @@ function FilterBar({
 
 function Legend() {
   return (
-    <details
-      className="absolute bottom-3 right-3 bg-white rounded-md shadow-sm border border-slate-200 text-xs max-w-[260px]"
-      // Open by default on first paint - users need to learn the
-      // colour system once and can collapse it after.
-      open
-    >
-      <summary className="px-3 py-2 cursor-pointer font-semibold flex items-center justify-between gap-2">
-        <span>What the colours mean</span>
-        <span className="text-slate-400 text-[10px]">click to collapse</span>
-      </summary>
-      <div className="px-3 pb-3 space-y-2">
-        {TIER_ORDER.map((tier) => {
-          const meta = TIER_META[tier];
-          const statuses = STATUS_ORDER.filter((s) => TIER_OF[s] === tier);
-          return (
-            <div key={tier}>
-              <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
-                <span aria-hidden>{meta.glyph}</span>
-                <span>{meta.label}</span>
-              </div>
-              <div className="mt-1 space-y-0.5">
-                {statuses.map((s) => (
-                  <div key={s} className="flex items-start gap-2" title={STATUS_DESCRIPTION[s]}>
-                    <span
-                      className="status-dot mt-1 shrink-0"
-                      style={{ background: STATUS_COLOURS[s] }}
-                    />
-                    <div className="leading-snug">
-                      <div>{STATUS_LABEL[s]}</div>
-                      <div className="text-slate-500 text-[11px]">{STATUS_DESCRIPTION[s]}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </details>
+    <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs">
+      <div className="font-semibold mb-1">Verification status</div>
+      {(Object.keys(STATUS_COLOURS) as VerificationStatus[]).map((s) => (
+        <div key={s} className="flex items-center gap-2 py-0.5">
+          <span className="status-dot" style={{ background: STATUS_COLOURS[s] }} />
+          <span>{STATUS_LABEL[s]}</span>
+        </div>
+      ))}
+    </div>
   );
+}
+
+// Strip the "NG-" ISO prefix so the GeoJSON iso (e.g. "NG-LA") matches
+// the two-letter state_code on PollingUnitDetail.
+function isoToStateCode(iso?: string): string | null {
+  if (!iso) return null;
+  return iso.startsWith('NG-') ? iso.slice(3) : iso;
+}
+
+const W = 1000, H = 700;
+function toX(lng: number): number {
+  return ((lng - NIGERIA_BBOX.lngMin) / (NIGERIA_BBOX.lngMax - NIGERIA_BBOX.lngMin)) * W;
+}
+function toY(lat: number): number {
+  return H - ((lat - NIGERIA_BBOX.latMin) / (NIGERIA_BBOX.latMax - NIGERIA_BBOX.latMin)) * H;
+}
+function geomBbox(g: Geom): [number, number, number, number] {
+  let lngMin = Infinity, lngMax = -Infinity, latMin = Infinity, latMax = -Infinity;
+  const walk = (v: unknown) => {
+    if (Array.isArray(v)) {
+      if (typeof v[0] === 'number') {
+        const [lng, lat] = v as number[];
+        if (lng < lngMin) lngMin = lng;
+        if (lng > lngMax) lngMax = lng;
+        if (lat < latMin) latMin = lat;
+        if (lat > latMax) latMax = lat;
+      } else (v as unknown[]).forEach(walk);
+    }
+  };
+  walk(g.coordinates);
+  return [lngMin, latMin, lngMax, latMax];
+}
+function bboxToViewBox(
+  [lngMin, latMin, lngMax, latMax]: number[]
+): [number, number, number, number] {
+  const x1 = toX(lngMin), x2 = toX(lngMax);
+  const y1 = toY(latMax),  y2 = toY(latMin);
+  const w = x2 - x1, h = y2 - y1;
+  const pad = Math.max(w, h) * 0.08;
+  return [x1 - pad, y1 - pad, w + pad * 2, h + pad * 2];
 }
 
 function SvgFallback({
   units,
+  focusState,
+  onFocusState,
   onSelect,
 }: {
   units: PollingUnitDetail[];
+  focusState: { code: string; name: string } | null;
+  onFocusState: (s: { code: string; name: string } | null) => void;
   onSelect: (u: PollingUnitDetail) => void;
 }) {
-  const W = 1000, H = 700;
-  const { lngMin, lngMax, latMin, latMax } = NIGERIA_BBOX;
-  const toX = (lng: number) => ((lng - lngMin) / (lngMax - lngMin)) * W;
-  const toY = (lat: number) => H - ((lat - latMin) / (latMax - latMin)) * H;
-
   const [geo, setGeo] = useState<GeoCollection | null>(null);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [panOffset, setPanOffset] = useState<[number, number]>([0, 0]);
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -347,6 +355,9 @@ function SvgFallback({
       .catch(() => {/* fall back to bare background */});
     return () => { cancelled = true; };
   }, []);
+
+  // Reset manual zoom/pan whenever the user drills in or out.
+  useEffect(() => { setZoomScale(1); setPanOffset([0, 0]); }, [focusState]);
 
   const ringToPath = (ring: number[][]) =>
     ring
@@ -359,11 +370,101 @@ function SvgFallback({
     return polys.map((poly) => poly.map(ringToPath).join(' ')).join(' ');
   };
 
-  const states = geo?.features.filter((f) => f.properties.kind === 'state') ?? [];
-  const country = geo?.features.find((f) => f.properties.kind === 'country');
+  const states = useMemo(
+    () => geo?.features.filter((f) => f.properties.kind === 'state') ?? [],
+    [geo]
+  );
+  const country = useMemo(
+    () => geo?.features.find((f) => f.properties.kind === 'country') ?? null,
+    [geo]
+  );
+
+  // viewBox = bbox of country or focused state, modulated by zoom + pan.
+  const viewBox = useMemo<[number, number, number, number]>(() => {
+    let bbox: [number, number, number, number] = [
+      NIGERIA_BBOX.lngMin, NIGERIA_BBOX.latMin, NIGERIA_BBOX.lngMax, NIGERIA_BBOX.latMax,
+    ];
+    if (focusState) {
+      const s = states.find((f) => isoToStateCode(f.properties.iso) === focusState.code);
+      if (s) bbox = geomBbox(s.geometry);
+    }
+    const [vx, vy, vw, vh] = bboxToViewBox(bbox);
+    const cx = vx + vw / 2, cy = vy + vh / 2;
+    const w = vw / zoomScale, h = vh / zoomScale;
+    return [cx - w / 2 + panOffset[0], cy - h / 2 + panOffset[1], w, h];
+  }, [focusState, states, zoomScale, panOffset]);
+
+  // Drag-to-pan with click-vs-drag disambiguation (same approach as
+  // ChoroplethMap - we delay setPointerCapture until after the drag
+  // threshold so the underlying state click still fires on a tap).
+  const DRAG_THRESHOLD = 5;
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef<{
+    startX: number; startY: number; px: number; py: number;
+    moved: boolean; pointerId: number;
+  } | null>(null);
+  const didDragRef = useRef(false);
+
+  const onWheel = useCallback((e: React.WheelEvent<SVGSVGElement>) => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    setZoomScale((z) => Math.min(40, Math.max(1, z * factor)));
+  }, []);
+  const onPointerDown = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+    dragRef.current = {
+      startX: e.clientX, startY: e.clientY,
+      px: panOffset[0], py: panOffset[1],
+      moved: false, pointerId: e.pointerId,
+    };
+    didDragRef.current = false;
+  }, [panOffset]);
+  const onPointerMove = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+    if (!dragRef.current || !svgRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.hypot(dx, dy) <= DRAG_THRESHOLD) return;
+    if (!dragRef.current.moved) {
+      svgRef.current.setPointerCapture(dragRef.current.pointerId);
+      setDragging(true);
+    }
+    dragRef.current.moved = true;
+    const rect = svgRef.current.getBoundingClientRect();
+    const scale = viewBox[2] / rect.width;
+    setPanOffset([dragRef.current.px - dx * scale, dragRef.current.py - dy * scale]);
+  }, [viewBox]);
+  const onPointerUp = useCallback((e: React.PointerEvent<SVGSVGElement>) => {
+    if (svgRef.current?.hasPointerCapture?.(e.pointerId)) {
+      svgRef.current.releasePointerCapture(e.pointerId);
+    }
+    didDragRef.current = !!dragRef.current?.moved;
+    dragRef.current = null;
+    setDragging(false);
+  }, []);
+  const guardedClick = useCallback(
+    <T,>(fn: (arg: T) => void) =>
+      (arg: T) => { if (!didDragRef.current) fn(arg); },
+    []
+  );
+
+  const onStateClick = (f: GeoFeature) => {
+    const code = isoToStateCode(f.properties.iso);
+    if (!code) return;
+    onFocusState({ code, name: f.properties.name });
+  };
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+    <svg
+      ref={svgRef}
+      viewBox={viewBox.join(' ')}
+      className="w-full h-full select-none touch-none"
+      preserveAspectRatio="xMidYMid meet"
+      onWheel={onWheel}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      style={{ cursor: dragging ? 'grabbing' : 'grab' }}
+    >
       <defs>
         <linearGradient id="ng-land" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#f8fbf6" />
@@ -376,7 +477,13 @@ function SvgFallback({
           <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
-      <rect x={0} y={0} width={W} height={H} fill="#e6eef5" />
+      <rect
+        x={NIGERIA_BBOX.lngMin}
+        y={NIGERIA_BBOX.latMin}
+        width={W}
+        height={H}
+        fill="#e6eef5"
+      />
 
       {country && (
         <path
@@ -387,19 +494,27 @@ function SvgFallback({
         />
       )}
 
-      {states.map((s) => (
-        <path
-          key={s.properties.iso ?? s.properties.name}
-          d={featureToPath(s)}
-          fill="none"
-          stroke="#94a3b8"
-          strokeWidth={0.6}
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        >
-          <title>{s.properties.name}</title>
-        </path>
-      ))}
+      {states.map((s) => {
+        const code = isoToStateCode(s.properties.iso);
+        const isFocused = !!focusState && focusState.code === code;
+        const isOtherFocused = !!focusState && !isFocused;
+        return (
+          <path
+            key={s.properties.iso ?? s.properties.name}
+            d={featureToPath(s)}
+            fill={isFocused ? '#dbeafe' : 'transparent'}
+            fillOpacity={isOtherFocused ? 0.1 : 1}
+            stroke={isFocused ? '#1d4ed8' : '#94a3b8'}
+            strokeWidth={isFocused ? 1.4 : 0.6}
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+            style={{ cursor: focusState ? 'default' : 'pointer' }}
+            onClick={focusState ? undefined : guardedClick(() => onStateClick(s))}
+          >
+            <title>{s.properties.name}</title>
+          </path>
+        );
+      })}
 
       {country && (
         <path
@@ -409,6 +524,7 @@ function SvgFallback({
           strokeWidth={1.4}
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
+          pointerEvents="none"
         />
       )}
 
@@ -417,13 +533,13 @@ function SvgFallback({
           key={u.pu_code}
           cx={toX(u.coordinates.lng)}
           cy={toY(u.coordinates.lat)}
-          r={5}
+          r={focusState ? 4 : 5}
           fill={STATUS_COLOURS[u.status]}
           stroke="#0f172a"
           strokeOpacity={0.2}
           strokeWidth={0.5}
           style={{ cursor: 'pointer' }}
-          onClick={() => onSelect(u)}
+          onClick={guardedClick(() => onSelect(u))}
         >
           <title>
             {u.pu_name} — {STATUS_LABEL[u.status]}
@@ -437,24 +553,12 @@ function SvgFallback({
 function PUDetailPane({ unit }: { unit: PollingUnitDetail | null }) {
   if (!unit) {
     return (
-      <div className="p-6 text-sm text-slate-500 space-y-3">
-        <p className="font-medium text-slate-700">No polling unit selected</p>
-        <p>
-          Click a dot on the map to inspect a polling unit. The panel will show its
-          EC8A submissions, extracted figures, and what every source reported.
-        </p>
-        <div className="pt-2 border-t text-xs space-y-1">
-          <p className="font-medium text-slate-700">Tip</p>
-          <p>
-            Filter by <em>Needs review</em> to see only the units where independent
-            sources disagree or conflict with INEC.
-          </p>
-        </div>
+      <div className="p-6 text-sm text-slate-500">
+        Click a state to zoom in, then click a polling unit to see its EC8A submissions,
+        extracted figures, and verification status.
       </div>
     );
   }
-  const tier = TIER_OF[unit.status];
-  const meta = TIER_META[tier];
   return (
     <div className="p-5">
       <div className="text-xs uppercase text-slate-500 tracking-wider">{unit.state_code}</div>
@@ -462,18 +566,12 @@ function PUDetailPane({ unit }: { unit: PollingUnitDetail | null }) {
       <div className="mt-1 text-xs text-slate-500">PU {unit.pu_code}</div>
 
       <div
-        className={`mt-3 inline-flex items-center gap-2 px-2 py-1 rounded text-xs font-medium border ${meta.tone} ${meta.border}`}
+        className="mt-3 inline-flex items-center gap-2 px-2 py-1 rounded text-xs font-medium"
+        style={{ background: STATUS_COLOURS[unit.status] + '33', color: '#0f172a' }}
       >
-        <span aria-hidden>{meta.glyph}</span>
-        <span
-          className="status-dot"
-          style={{ background: STATUS_COLOURS[unit.status] }}
-        />
-        <span>{STATUS_LABEL[unit.status]}</span>
+        <span className="status-dot" style={{ background: STATUS_COLOURS[unit.status] }} />
+        {STATUS_LABEL[unit.status]}
       </div>
-      <p className="mt-2 text-xs text-slate-500 leading-snug">
-        {STATUS_DESCRIPTION[unit.status]}
-      </p>
 
       <a
         href={`/en/pu/${encodeURIComponent(unit.pu_code)}`}

@@ -13,6 +13,10 @@ interface Props {
   electionId: string;
   token: string;
   onSelect: (unit: PollingUnitDetail) => void;
+  /** Currently-focused state, or null when zoomed out to country. */
+  focusState?: { code: string; name: string } | null;
+  /** Called when the user clicks a state on the map (drill-down). */
+  onFocusState?: (s: { code: string; name: string } | null) => void;
 }
 
 const STATUS_INT_TO_NAME: Record<number, VerificationStatus> = {
@@ -32,9 +36,17 @@ const STATUS_INT_TO_NAME: Record<number, VerificationStatus> = {
 // We dynamic-import mapbox-gl because the package touches `window` and
 // `document` at module load - it must not run during SSR.
 
-export function MapboxRenderer({ electionId, token, onSelect }: Props) {
+export function MapboxRenderer({
+  electionId,
+  token,
+  onSelect,
+  focusState,
+  onFocusState,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
+  const onFocusStateRef = useRef(onFocusState);
+  onFocusStateRef.current = onFocusState;
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -115,10 +127,27 @@ export function MapboxRenderer({ electionId, token, onSelect }: Props) {
         } catch {/* offline */}
       });
 
+      // Drill-down: clicking a state polygon flies in and notifies the
+      // parent so it can filter PUs to that state.
+      map.on('click', 'states-fill', (e: any) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        const code = (f.properties.state_code ?? f.properties.code) as string | undefined;
+        const name = (f.properties.state_name ?? f.properties.name ?? code) as string | undefined;
+        if (!code || !name) return;
+        onFocusStateRef.current?.({ code, name });
+      });
+
       map.on('mouseenter', 'polling-units', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
       map.on('mouseleave', 'polling-units', () => {
+        map.getCanvas().style.cursor = '';
+      });
+      map.on('mouseenter', 'states-fill', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'states-fill', () => {
         map.getCanvas().style.cursor = '';
       });
 
@@ -132,5 +161,51 @@ export function MapboxRenderer({ electionId, token, onSelect }: Props) {
     };
   }, [electionId, token, onSelect]);
 
+  // Fly to the focused state's bounds when the parent drills in, or back
+  // to the country bounds when it clears the focus.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const apply = () => {
+      if (!focusState) {
+        map.fitBounds(NIGERIA_BOUNDS as any, { padding: 30, duration: 700 });
+        return;
+      }
+      // Use the tile source's state feature bounds via queryRenderedFeatures
+      // once tiles are loaded. Falls back to a flyTo on the state centroid.
+      const feats = map.querySourceFeatures('openballot', {
+        sourceLayer: 'states',
+        filter: ['==', ['get', 'state_code'], focusState.code],
+      });
+      const bounds = computeBounds(feats);
+      if (bounds) {
+        map.fitBounds(bounds, { padding: 40, duration: 700, maxZoom: 11 });
+      }
+    };
+    if (map.isStyleLoaded()) apply();
+    else map.once('idle', apply);
+  }, [focusState]);
+
   return <div ref={containerRef} className="absolute inset-0" />;
+}
+
+// Walk a list of GeoJSON features and return their combined lng/lat
+// bounds, or null if no usable geometry was found.
+function computeBounds(features: any[]): [[number, number], [number, number]] | null {
+  let lngMin = Infinity, lngMax = -Infinity, latMin = Infinity, latMax = -Infinity;
+  let seen = false;
+  const walk = (v: unknown) => {
+    if (Array.isArray(v)) {
+      if (typeof v[0] === 'number' && typeof v[1] === 'number') {
+        const [lng, lat] = v as number[];
+        if (lng < lngMin) lngMin = lng;
+        if (lng > lngMax) lngMax = lng;
+        if (lat < latMin) latMin = lat;
+        if (lat > latMax) latMax = lat;
+        seen = true;
+      } else (v as unknown[]).forEach(walk);
+    }
+  };
+  for (const f of features) walk(f?.geometry?.coordinates);
+  return seen ? [[lngMin, latMin], [lngMax, latMax]] : null;
 }

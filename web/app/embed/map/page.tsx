@@ -12,7 +12,7 @@ export default function EmbedMap({
   const electionId = searchParams.election ?? '2027-presidential';
   return (
     <div style={{ height: '100vh', width: '100%' }}>
-      <ResultsMap electionId={electionId} />
+      <ResultsMap defaultElectionId={electionId} />
     </div>
   );
 }
