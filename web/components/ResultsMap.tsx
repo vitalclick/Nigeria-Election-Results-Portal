@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { MapboxRenderer } from '@/components/MapboxRenderer';
+import { NIGERIA_BBOX, NIGERIA_BOUNDARY } from '@/lib/nigeria-outline';
 import { STATUS_COLOURS, type PollingUnitDetail, type VerificationStatus } from '@/lib/types';
 
 // The public results map.
@@ -141,21 +142,37 @@ function SvgFallback({
   units: PollingUnitDetail[];
   onSelect: (u: PollingUnitDetail) => void;
 }) {
-  // Map Nigeria's bounding box onto the viewbox.
   const W = 1000, H = 700;
-  const lngMin = 2.5, lngMax = 14.7, latMin = 4, latMax = 14;
+  const { lngMin, lngMax, latMin, latMax } = NIGERIA_BBOX;
   const toX = (lng: number) => ((lng - lngMin) / (lngMax - lngMin)) * W;
   const toY = (lat: number) => H - ((lat - latMin) / (latMax - latMin)) * H;
 
+  const boundaryPoints = NIGERIA_BOUNDARY
+    .map(([lng, lat]) => `${toX(lng).toFixed(1)},${toY(lat).toFixed(1)}`)
+    .join(' ');
+
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full">
-      <rect x={0} y={0} width={W} height={H} fill="#f8fafc" />
-      {/* very rough Nigeria outline so the dots have geographical context */}
-      <path
-        d="M 130 320 L 200 230 L 300 200 L 420 180 L 540 170 L 660 200 L 760 240 L 820 320 L 800 420 L 720 500 L 600 540 L 480 540 L 360 520 L 240 460 L 160 400 Z"
-        fill="#ffffff"
-        stroke="#cbd5e1"
-        strokeWidth={2}
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="ng-land" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f8fbf6" />
+          <stop offset="100%" stopColor="#eef4ea" />
+        </linearGradient>
+        <filter id="ng-shadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+          <feOffset dx="0" dy="1" result="off" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.25" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+      <rect x={0} y={0} width={W} height={H} fill="#e6eef5" />
+      <polygon
+        points={boundaryPoints}
+        fill="url(#ng-land)"
+        stroke="#64748b"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        filter="url(#ng-shadow)"
       />
       {units.map((u) => (
         <circle
