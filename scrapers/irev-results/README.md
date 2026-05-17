@@ -6,6 +6,13 @@ into the OpenBallot platform. Walks the polling-unit registry produced by
 published result + EC8A image, mirrors the image to our storage, and writes
 an `ec8a_submissions` row with `source_type='inec_irev'`.
 
+> ⚠️ **Status (May 2026): API target has moved. Pipeline requires
+> redesign before it can run end-to-end.** See "May 2026 discovery notes"
+> below for what changed and what the next operator picks up. The
+> docs above describe the *intended* end-state; the code currently in
+> this directory was written against the original 2023 IReV API which
+> INEC has since retired.
+
 ## What it produces
 
 Per polling unit, per election:
@@ -172,3 +179,129 @@ The unit tests cover the parser against all three known IReV JSON shapes
 plus the empty/unrecognised cases. End-to-end testing against a real IReV
 deployment is run manually as part of pre-launch validation - not in CI
 - because it depends on INEC's live infrastructure.
+
+## May 2026 discovery notes — the API has moved and the model changed
+
+A 2026-05-17 session attempted to run this scraper end-to-end and found
+that **none of the URL templates in `lib/endpoint_discovery.js` are
+reachable**. INEC retired the original `lv.irev.inecnigeria.org` host
+after 2023 and rebuilt IReV on a different stack. The new picture:
+
+### Hosts
+
+| Hostname | Status | Role |
+|---|---|---|
+| `lv.irev.inecnigeria.org` | DNS does not resolve | Original 2023 host — gone |
+| `www.inecelectionresults.ng` | Cloudflare → DigitalOcean SPA | Public-facing portal (Angular) |
+| `irev.inecnigeria.org` | Cloudflare → DigitalOcean SPA | Same Angular app under INEC's own domain |
+| `dolphin-app-sleqh.ondigitalocean.app` | **Reachable, this is the live API** | Express + MongoDB backend |
+| `lv001-r.inecelectionresults.ng` | DNS does not resolve | Stale URL still referenced in the SPA bundle |
+| `irev-v2.herokuapp.com` | Legacy — Heroku, likely stale | Pilot environment from earlier vintage |
+
+EC8A image storage:
+- `ecollation-result-docs.s3.eu-west-2.amazonaws.com` — collated docs
+- `etransmission-result-docs.s3.eu-west-2.amazonaws.com` — raw EC8A scans (the canonical evidence per ADR-0001)
+
+### Confirmed working API endpoints (May 2026)
+
+Base: `https://dolphin-app-sleqh.ondigitalocean.app/api/v1/`
+
+```
+GET /                     -> { status: "success", request_time: <epoch_ms> }
+GET /elections            -> { success: true, data: [{...election...}] }   paginated, newest first
+GET /states               -> { success: true, states: [{...state...}] }    37 entries
+```
+
+Schema fragments observed in responses:
+
+```
+Election:
+  _id              MongoDB ObjectId           e.g. "6549830e8f260c2694ceab91"
+  election_id      integer                    e.g. 2793, 1486   <-- this is the lookup key
+  full_name        human label                 e.g. "Governorship election - 2023-11-11 - BAYELSA"
+  election_date    ISO date
+  election_type_id integer                    1=Presidential, 2=Gov, 3=Senate, 4=Reps,
+                                              5=Assembly, 6=Chairman, 7=Councillor
+  state_id         integer                    1..37, IReV-internal (NOT INEC alpha)
+  state            embedded state document    has .name ("BAYELSA") and .code ("06")
+  domain_id        integer                    state/LGA/ward/constituency id (depends on election scope)
+  domain_type      string                     "App\\Models\\State" | "App\\Models\\Lga" | "App\\Models\\Ward" | etc.
+  domain           embedded domain document
+
+State:
+  _id              MongoDB ObjectId
+  state_id         integer                    1..37
+  name             string                     "FCT", "RIVERS"
+  code             string                     "37", "32" -- INEC NUMERIC, not the alpha codes we use
+```
+
+### Confirmed broken — paths that returned 404
+
+```
+/api/v1/results
+/api/v1/polling-units/{pu_code}
+/api/v1/elections/{slug}/polling-units/{pu_code}
+```
+
+…plus every template in the current `CANDIDATE_TEMPLATES` array.
+
+### Why the model mismatch matters
+
+This scraper was designed PU-first: walk every PU in
+`Polling-Units/results/*.json` and for each PU fetch all its elections.
+The live IReV API is election-first: pick an `election_id`, then traverse
+through `state_id → lga_id → ward_id → polling_unit_id` (all
+IReV-internal integers, not our INEC delim codes), then fetch the result
+for a single `(election_id, pu_id)` pair.
+
+Switching to that model requires:
+
+1. **Find the 2023 Presidential `election_id`.** It is buried far back
+   in `/api/v1/elections`; the response is reverse-chronological and
+   pagination defaults likely cap at 100. Filter by `election_type_id=1`
+   if the API supports a query string (untested), or paginate.
+2. **Find the traversal endpoints.** Plausible patterns to probe (none
+   verified yet):
+   - `/api/v1/elections/{election_id}/states`
+   - `/api/v1/elections/{election_id}/states/{state_id}/lgas`
+   - `/api/v1/elections/{election_id}/.../polling-units`
+   - `/api/v1/elections/{election_id}/polling-units/{pu_id}/result`
+   The reliable way to find these is to open
+   <https://irev.inecnigeria.org/> in a browser, open DevTools → Network
+   → Fetch/XHR, and click through to a polling unit result. Each click
+   reveals the exact path.
+3. **Build a mapping from INEC delim codes to IReV internal IDs.** Our
+   geo loader (scripts/load_polling_units.py) keys on INEC's delim
+   ("25-11-04-007"). IReV stores its own MongoDB ObjectIds and integer
+   IDs per state/LGA/ward/PU. The mapping table needs to be populated
+   once via a discovery pass that traverses IReV's hierarchy and joins
+   by name. Probably a new table `irev_pu_mapping (inec_pu_code,
+   irev_pu_id, irev_object_id, confidence)`.
+4. **Rewrite `lib/irev_client.js` and `scrape.js`** around the election-
+   first traversal. The existing `parse.js` is likely still useful for
+   the per-PU result payload (assuming the result shape hasn't changed
+   much) but won't be exercisable until step 3 produces a real PU ID.
+5. **Update `lib/endpoint_discovery.js` `CANDIDATE_TEMPLATES`** with the
+   actually-discovered templates from step 2.
+
+### Pending verification
+
+- Whether INEC has put authentication or rate limiting in front of
+  `dolphin-app-sleqh.ondigitalocean.app` for high-volume traversal
+  (the diagnostic curls returned 200 with no apparent throttling, but
+  walking 174,175 PUs is a different volume profile).
+- Whether the EC8A image URLs returned by the per-PU result endpoint
+  reference the S3 buckets above directly or go through a signed-URL
+  proxy.
+- Whether the 2023 Presidential election rows include the `parties[]`
+  list inline (newer elections in `/api/v1/elections` show
+  `parties: []` empty) or need a separate endpoint.
+
+### Where to pick up
+
+Open <https://irev.inecnigeria.org/> in a browser, DevTools → Network
+→ Fetch/XHR, click Presidential → 2023 → any state → any LGA → any
+ward → any PU. The 5-6 XHR requests that fire are the exact API paths
+this scraper needs. Update `lib/endpoint_discovery.js`
+`CANDIDATE_TEMPLATES` and the new `IREV_BASE` default in `config.js`,
+then proceed with the redesign per the steps above.

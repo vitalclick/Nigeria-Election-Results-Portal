@@ -4,9 +4,15 @@
 //
 // INEC's IReV portal exposes per-election PHP/JSON endpoints. The exact base
 // URL and path scheme have shifted across deployments since 2023, so all
-// endpoints are configurable via environment variables. The defaults below
-// reflect the schema that was live at the time of the 2023 general election;
-// operators should override IREV_BASE if INEC moves the API.
+// endpoints are configurable via environment variables.
+//
+// 2026-05-17: the live API is at https://dolphin-app-sleqh.ondigitalocean.app/
+// (the original lv.irev.inecnigeria.org host was retired post-2023). The
+// default below has been updated, but the URL templates in
+// lib/endpoint_discovery.js are stale - they were written for the 2023 API
+// and do not match the current DigitalOcean / MongoDB / Express backend.
+// See README.md "May 2026 discovery notes" for what's known and the
+// redesign required to make the scraper work end-to-end again.
 
 const path = require('path');
 
@@ -22,7 +28,10 @@ const ELECTION_TYPE_TO_IREV_ID = {
 
 module.exports = {
   // ─── HTTP ────────────────────────────────────────────────────────────────
-  irevBase: process.env.IREV_BASE || 'https://lv.irev.inecnigeria.org',
+  // Default updated 2026-05-17 to the live DigitalOcean origin. The
+  // Cloudflare-fronted hostnames (irev.inecnigeria.org, www.inec
+  // electionresults.ng) serve only the Angular SPA shell, not the API.
+  irevBase: process.env.IREV_BASE || 'https://dolphin-app-sleqh.ondigitalocean.app',
   userAgent: 'OpenBallotNG-IReVScraper/0.1 (+https://openballot.ng)',
   // Be very conservative on a public-good archive scrape. INEC infrastructure
   // is a national resource; we do not pound it.
