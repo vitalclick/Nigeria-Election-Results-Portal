@@ -97,11 +97,16 @@ def normalise(value: str | None) -> str:
 # ---------------------------------------------------------------------------
 
 # GRID3 / OCHA COD-AB property names vary across vintages; try them all.
+# GRID3 v2 (post-2025 republish) uses lowercase short keys: state, lga,
+# ward, statecode (already a 2-letter alpha matching INEC convention),
+# plus *_alt_names columns we can fall back on for fuzzy matching.
 SOURCE_PROPS = {
-    "ward_name": ("ADM3_EN", "ward_name", "WARD_NAME", "name", "NAME"),
-    "lga_name":  ("ADM2_EN", "lga_name", "LGA_NAME"),
-    "state_name": ("ADM1_EN", "state_name", "STATE_NAME"),
-    "ward_id":   ("ADM3_PCODE", "ward_pcode", "WARD_PCODE", "pcode", "id"),
+    "ward_name":      ("ward", "ADM3_EN", "ward_name", "WARD_NAME", "name", "NAME"),
+    "ward_alt_names": ("ward_alt_names",),
+    "lga_name":       ("lga", "ADM2_EN", "lga_name", "LGA_NAME"),
+    "state_name":     ("state", "ADM1_EN", "state_name", "STATE_NAME"),
+    "state_code":     ("statecode", "state_code", "STATE_CODE"),
+    "ward_id":        ("OBJECTID", "ADM3_PCODE", "ward_pcode", "WARD_PCODE", "pcode", "id"),
 }
 
 
@@ -186,10 +191,17 @@ def load_overrides(path: Path) -> dict[str, str]:
 # ---------------------------------------------------------------------------
 
 def _bucket_by_lga(wards: list[InecWard]) -> dict[tuple[str, str], list[InecWard]]:
+    """Bucket wards by (state_key, normalised lga_name) where state_key is
+    either the 2-letter INEC code (preferred, exact) or the normalised
+    state name (fallback). The same bucket is accessible via both keys
+    so source features can match on either."""
     buckets: dict[tuple[str, str], list[InecWard]] = {}
     for w in wards:
-        key = (normalise(w.state_name), normalise(w.lga_name))
-        buckets.setdefault(key, []).append(w)
+        for state_key in (w.state_code.upper(), normalise(w.state_name)):
+            if not state_key:
+                continue
+            key = (state_key, normalise(w.lga_name))
+            buckets.setdefault(key, []).append(w)
     return buckets
 
 
@@ -207,7 +219,9 @@ def reconcile(
         src_state = _first(props, SOURCE_PROPS["state_name"]) or ""
         src_lga   = _first(props, SOURCE_PROPS["lga_name"])   or ""
         src_ward  = _first(props, SOURCE_PROPS["ward_name"])  or ""
-        src_id    = _first(props, SOURCE_PROPS["ward_id"])    or f"{src_state}|{src_lga}|{src_ward}"
+        src_state_code = _first(props, SOURCE_PROPS["state_code"]) or ""
+        src_alt   = _first(props, SOURCE_PROPS["ward_alt_names"]) or ""
+        src_id    = _first(props, SOURCE_PROPS["ward_id"]) or f"{src_state}|{src_lga}|{src_ward}"
 
         # 1. Overrides win.
         if src_id in overrides:
@@ -216,17 +230,25 @@ def reconcile(
                 matches.append(Match(src_id, src_state, src_lga, src_ward, target, 1.0, "override"))
                 continue
 
-        n_state = normalise(src_state)
+        # Prefer the 2-letter state code when GRID3 supplies one (v2
+        # has a `statecode` column that matches INEC convention 1:1);
+        # fall back to normalised state name for older COD-AB vintages.
+        state_key = src_state_code.strip().upper() or normalise(src_state)
         n_lga   = normalise(src_lga)
         n_ward  = normalise(src_ward)
 
-        bucket = by_lga.get((n_state, n_lga))
+        bucket = by_lga.get((state_key, n_lga))
         if not bucket:
             matches.append(Match(src_id, src_state, src_lga, src_ward, None, 0.0, "no_lga"))
             continue
 
-        # 2. Exact ward match within the LGA bucket.
-        exact = [w for w in bucket if normalise(w.ward_name) == n_ward]
+        # 2. Exact ward match within the LGA bucket. Also try comma-
+        # separated alt names (GRID3 v2 ward_alt_names column).
+        candidates = {n_ward}
+        for alt in src_alt.split(",") if src_alt else ():
+            candidates.add(normalise(alt))
+        candidates.discard("")
+        exact = [w for w in bucket if normalise(w.ward_name) in candidates]
         if len(exact) == 1:
             matches.append(Match(src_id, src_state, src_lga, src_ward, exact[0].ward_code, 1.0, "exact"))
             continue
@@ -234,12 +256,17 @@ def reconcile(
             matches.append(Match(src_id, src_state, src_lga, src_ward, None, 0.0, "ambiguous"))
             continue
 
-        # 3. Fuzzy fallback within the same LGA.
+        # 3. Fuzzy fallback within the same LGA - try every candidate
+        # (primary ward + alt names) against every INEC ward, keep the
+        # best ratio.
         best: tuple[float, InecWard] | None = None
-        for w in bucket:
-            ratio = SequenceMatcher(None, n_ward, normalise(w.ward_name)).ratio()
-            if best is None or ratio > best[0]:
-                best = (ratio, w)
+        for cand in candidates:
+            if not cand:
+                continue
+            for w in bucket:
+                ratio = SequenceMatcher(None, cand, normalise(w.ward_name)).ratio()
+                if best is None or ratio > best[0]:
+                    best = (ratio, w)
         if best and best[0] >= FUZZY_ACCEPT:
             matches.append(Match(src_id, src_state, src_lga, src_ward, best[1].ward_code, round(best[0], 3), "fuzzy"))
         elif best and best[0] >= FUZZY_REVIEW:
