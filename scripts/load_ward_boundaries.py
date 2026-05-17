@@ -138,7 +138,7 @@ def main(geojson_path: str) -> int:
                 INSERT INTO ward_boundaries (
                   ward_code, geog, source, source_ward_id, match_confidence
                 ) VALUES (
-                  %s, ST_GeogFromGeoJSON(%s), %s, %s, %s
+                  %s, ST_GeomFromGeoJSON(%s)::geography, %s, %s, %s
                 )
                 ON CONFLICT (ward_code) DO UPDATE
                   SET geog = EXCLUDED.geog,
