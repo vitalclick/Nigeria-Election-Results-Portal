@@ -43,6 +43,11 @@ RETURNS TABLE (
   ORDER BY w.name;
 $$;
 
-GRANT EXECUTE ON FUNCTION fn_lga_ward_polygons(TEXT) TO anon, authenticated, service_role;
+-- No explicit GRANT to anon/authenticated/service_role: the public read
+-- API calls this via supabaseAdmin() (service_role key), which already
+-- has unrestricted access. Matches the convention used by the
+-- fn_*_aggregates functions in 0013_region_aggregates.sql, and keeps
+-- the migration runnable on vanilla Postgres in CI (where those
+-- Supabase-specific roles don't exist).
 
 COMMIT;
