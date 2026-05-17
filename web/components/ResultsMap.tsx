@@ -227,7 +227,25 @@ function MapPanel({
     const params = new URLSearchParams({ ward: focus.ward_code });
     fetch(`/api/v1/elections/${electionId}/units?${params.toString()}`)
       .then((r) => r.json())
-      .then((j) => { if (!cancelled) setUnits(j.data ?? []); })
+      .then((j) => {
+        if (cancelled) return;
+        // v_pu_live_status returns lat/lng as flat columns; the
+        // PollingUnitDetail type expects { coordinates: { lat, lng } }.
+        // Map here so every downstream renderer can rely on the
+        // nested shape without optional-chaining everywhere. PUs
+        // whose geog is NULL on the INEC roster (currently all of
+        // them — INEC doesn't publish coordinates) come through as
+        // (0, 0); the renderer handles that gracefully.
+        const rows = Array.isArray(j.data) ? j.data : [];
+        const mapped = rows.map((row: PollingUnitDetail & { lat?: number | null; lng?: number | null }) => ({
+          ...row,
+          coordinates: row.coordinates ?? {
+            lat: row.lat ?? 0,
+            lng: row.lng ?? 0,
+          },
+        }));
+        setUnits(mapped as PollingUnitDetail[]);
+      })
       .catch(() => { if (!cancelled) setUnits([]); });
     return () => { cancelled = true; };
   }, [electionId, focus]);
