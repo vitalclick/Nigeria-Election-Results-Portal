@@ -10,11 +10,33 @@
 //
 // Conservative: at most one probe per template, then move on. We do not
 // hammer the portal.
+//
+// 2026-05-17 — discovery findings.
+//
+// The live API base is the DigitalOcean origin:
+//   https://dolphin-app-sleqh.ondigitalocean.app/api/v1/
+// (the Angular SPA at irev.inecnigeria.org calls this directly).
+//
+// Confirmed reachable endpoints:
+//   GET /                     -> heartbeat
+//   GET /elections            -> paginated list, reverse-chronological
+//   GET /states               -> 37 entries with INEC numeric codes
+//
+// EVERY template below currently 404s against the new API. The new
+// model is election-first (look up election_id integer, then traverse
+// state_id -> lga_id -> ward_id -> pu_id), not PU-first. See the
+// "May 2026 discovery notes" section in README.md for the redesign
+// path. New CANDIDATE_TEMPLATES will need to be filled in once the
+// browser-DevTools probe of irev.inecnigeria.org reveals the real
+// per-election traversal paths.
 
 const config = require('../config');
 const { getJSON } = require('./http');
 
 const CANDIDATE_TEMPLATES = [
+  // None of these match the live API as of 2026-05-17. Left in place
+  // for historical reference; the discovery script will report all as
+  // 404 until the redesign updates this list.
   '/api/v1/elections/{election_id}/polling-units/{pu_code}',
   '/api/v1/elections/{election_id}/results/{pu_code}',
   '/api/elections/{election_id}/results/{pu_code}',
