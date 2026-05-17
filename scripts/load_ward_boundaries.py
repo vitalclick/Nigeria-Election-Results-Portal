@@ -63,7 +63,20 @@ def main(geojson_path: str) -> int:
     report_path = Path(os.environ.get("WARD_LOAD_REPORT", "data/ward_boundaries/load_report.csv"))
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    conn = psycopg2.connect(url)
+    # Connection helper: TCP keepalives stop the Supabase pooler from
+    # treating quiet gaps as dead sockets during a multi-thousand-row
+    # load; connect_timeout caps stalled DNS / TCP handshake.
+    def _connect():
+        return psycopg2.connect(
+            url,
+            keepalives=1,
+            keepalives_idle=30,
+            keepalives_interval=10,
+            keepalives_count=5,
+            connect_timeout=15,
+        )
+
+    conn = _connect()
     conn.autocommit = False
     cur = conn.cursor()
 
@@ -92,6 +105,48 @@ def main(geojson_path: str) -> int:
     # iter_source_features yields the same ordering as the property
     # extraction inside reconcile() so we can reuse the same id key.
     from reconcile_ward_names import _first, SOURCE_PROPS
+
+    INSERT_SQL = """
+        INSERT INTO ward_boundaries (
+          ward_code, geog, source, source_ward_id, match_confidence
+        ) VALUES (
+          %s, ST_GeomFromGeoJSON(%s)::geography, %s, %s, %s
+        )
+        ON CONFLICT (ward_code) DO UPDATE
+          SET geog = EXCLUDED.geog,
+              source = EXCLUDED.source,
+              source_ward_id = EXCLUDED.source_ward_id,
+              match_confidence = EXCLUDED.match_confidence,
+              loaded_at = NOW()
+    """
+    COMMIT_EVERY = 200
+
+    def _exec_with_retry(params: tuple) -> None:
+        """INSERT with reconnect-on-drop. Upserts are idempotent (ON
+        CONFLICT DO UPDATE), so a retry after a connection drop is
+        safe even when the prior attempt may have partially landed."""
+        nonlocal conn, cur
+        for attempt in range(1, 5):
+            try:
+                cur.execute(INSERT_SQL, params)
+                return
+            except (psycopg2.OperationalError, psycopg2.InterfaceError) as e:
+                if attempt == 4:
+                    raise
+                backoff = 2 ** (attempt - 1)
+                print(
+                    f"  connection error on attempt {attempt}/4"
+                    f" ({type(e).__name__}); reconnecting in {backoff}s",
+                    file=sys.stderr,
+                )
+                try: cur.close()
+                except Exception: pass
+                try: conn.close()
+                except Exception: pass
+                import time; time.sleep(backoff)
+                conn = _connect()
+                conn.autocommit = False
+                cur = conn.cursor()
 
     with report_path.open("w", newline="") as report_f:
         report = csv.writer(report_f)
@@ -133,23 +188,13 @@ def main(geojson_path: str) -> int:
                 ])
                 continue
 
-            cur.execute(
-                """
-                INSERT INTO ward_boundaries (
-                  ward_code, geog, source, source_ward_id, match_confidence
-                ) VALUES (
-                  %s, ST_GeomFromGeoJSON(%s)::geography, %s, %s, %s
-                )
-                ON CONFLICT (ward_code) DO UPDATE
-                  SET geog = EXCLUDED.geog,
-                      source = EXCLUDED.source,
-                      source_ward_id = EXCLUDED.source_ward_id,
-                      match_confidence = EXCLUDED.match_confidence,
-                      loaded_at = NOW()
-                """,
-                (m.inec_ward_code, geo_json, src.name, m.source_ward_id, m.confidence),
+            _exec_with_retry(
+                (m.inec_ward_code, geo_json, src.name, m.source_ward_id, m.confidence)
             )
             loaded += 1
+            if loaded % COMMIT_EVERY == 0:
+                conn.commit()
+                print(f"  ... {loaded} loaded", file=sys.stderr)
             report.writerow([
                 m.source_ward_id, m.source_state, m.source_lga, m.source_ward,
                 m.inec_ward_code, f"{m.confidence:.3f}", m.reason, "loaded",
