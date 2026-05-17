@@ -96,17 +96,23 @@ def normalise(value: str | None) -> str:
 # Inputs
 # ---------------------------------------------------------------------------
 
-# GRID3 / OCHA COD-AB property names vary across vintages; try them all.
-# GRID3 v2 (post-2025 republish) uses lowercase short keys: state, lga,
-# ward, statecode (already a 2-letter alpha matching INEC convention),
-# plus *_alt_names columns we can fall back on for fuzzy matching.
+# Source property names vary across vintages; try them all.
+# Known schemas:
+#   * OCHA COD-AB:  ADM1_EN / ADM2_EN / ADM3_EN / ADM3_PCODE
+#   * GRID3 v1.0 (Dec 2020):  statename / lganame / wardname + statecode
+#                             + wardcode (GRID3 internal, e.g. "RVSNDN06")
+#   * GRID3 v2.0 (Apr 2026):  state / lga / ward + statecode
+#                             + ward_alt_names + OBJECTID
+# `statecode` is a 2-letter alpha that matches our INEC state.code 1:1
+# across both GRID3 vintages, so when present we use it as a hard join.
 SOURCE_PROPS = {
-    "ward_name":      ("ward", "ADM3_EN", "ward_name", "WARD_NAME", "name", "NAME"),
+    "ward_name":      ("ward", "wardname", "ADM3_EN", "ward_name", "WARD_NAME", "name", "NAME"),
     "ward_alt_names": ("ward_alt_names",),
-    "lga_name":       ("lga", "ADM2_EN", "lga_name", "LGA_NAME"),
-    "state_name":     ("state", "ADM1_EN", "state_name", "STATE_NAME"),
+    "lga_name":       ("lga", "lganame", "ADM2_EN", "lga_name", "LGA_NAME"),
+    "state_name":     ("state", "statename", "ADM1_EN", "state_name", "STATE_NAME"),
     "state_code":     ("statecode", "state_code", "STATE_CODE"),
-    "ward_id":        ("OBJECTID", "ADM3_PCODE", "ward_pcode", "WARD_PCODE", "pcode", "id"),
+    "ward_id":        ("OBJECTID", "wardcode", "globalid", "FID", "ADM3_PCODE",
+                       "ward_pcode", "WARD_PCODE", "pcode", "id"),
 }
 
 
