@@ -22,8 +22,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 21,Adamawa,Fufore,Yadim,AD-02-11,1.000,exact,loaded
 22,Adamawa,Ganye,Bakari Goso,AD-03-01,1.000,exact,loaded
 23,Adamawa,Ganye,Gamu,AD-03-02,1.000,exact,loaded
-24,Adamawa,Ganye,Ganye 1,AD-03-03,0.857,needs_review,skipped_low_confidence
-25,Adamawa,Ganye,Ganye 2,AD-03-03,0.857,needs_review,skipped_low_confidence
+24,Adamawa,Ganye,Ganye 1,AD-03-03,0.857,needs_review,loaded
+25,Adamawa,Ganye,Ganye 2,AD-03-03,0.857,needs_review,loaded
 26,Adamawa,Ganye,Gurumpawo,AD-03-05,1.000,exact,loaded
 27,Adamawa,Ganye,Jaggu,AD-03-06,1.000,exact,loaded
 28,Adamawa,Ganye,Sangassumi,AD-03-07,1.000,exact,loaded
@@ -33,8 +33,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 32,Adamawa,Girei,Dakri,AD-04-01,1.000,exact,loaded
 33,Adamawa,Girei,Damare,AD-04-02,1.000,exact,loaded
 34,Adamawa,Girei,Gereng,AD-04-05,1.000,exact,loaded
-35,Adamawa,Girei,Girei 1,AD-04-03,0.857,needs_review,skipped_low_confidence
-36,Adamawa,Girei,Girei 2,AD-04-03,0.857,needs_review,skipped_low_confidence
+35,Adamawa,Girei,Girei 1,AD-04-03,0.857,needs_review,loaded
+36,Adamawa,Girei,Girei 2,AD-04-03,0.857,needs_review,loaded
 37,Adamawa,Girei,Jera Bakari,AD-04-06,1.000,exact,loaded
 38,Adamawa,Girei,Jera Bonyo,AD-04-07,1.000,exact,loaded
 39,Adamawa,Girei,Modire,AD-04-08,1.000,exact,loaded
@@ -73,10 +73,10 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 72,Adamawa,Hong,Thilbang,AD-07-11,1.000,exact,loaded
 73,Adamawa,Hong,Uba,AD-07-12,1.000,exact,loaded
 74,Adamawa,Jada,Danaba,AD-08-01,1.000,exact,loaded
-75,Adamawa,Jada,Jada 1,AD-08-02,0.833,needs_review,skipped_low_confidence
-76,Adamawa,Jada,Jada 2,AD-08-02,0.833,needs_review,skipped_low_confidence
-77,Adamawa,Jada,Koma 1,AD-08-04,0.833,needs_review,skipped_low_confidence
-78,Adamawa,Jada,Koma 2,AD-08-04,0.833,needs_review,skipped_low_confidence
+75,Adamawa,Jada,Jada 1,AD-08-02,0.833,needs_review,loaded
+76,Adamawa,Jada,Jada 2,AD-08-02,0.833,needs_review,loaded
+77,Adamawa,Jada,Koma 1,AD-08-04,0.833,needs_review,loaded
+78,Adamawa,Jada,Koma 2,AD-08-04,0.833,needs_review,loaded
 79,Adamawa,Jada,Leko,,0.444,no_ward,skipped_no_match
 80,Adamawa,Jada,Mapeo,AD-08-07,1.000,exact,loaded
 81,Adamawa,Jada,Mayo Kalaye,AD-08-08,1.000,exact,loaded
@@ -130,8 +130,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 129,Adamawa,Michika,Garta,AD-13-03,1.000,exact,loaded
 130,Adamawa,Michika,Jigalambu,AD-13-04,1.000,exact,loaded
 131,Adamawa,Michika,Madzi,AD-13-05,1.000,exact,loaded
-132,Adamawa,Michika,Michika 1,AD-13-06,0.889,needs_review,skipped_low_confidence
-133,Adamawa,Michika,Michika 2,AD-13-06,0.889,needs_review,skipped_low_confidence
+132,Adamawa,Michika,Michika 1,AD-13-06,0.889,needs_review,loaded
+133,Adamawa,Michika,Michika 2,AD-13-06,0.889,needs_review,loaded
 134,Adamawa,Michika,Moda/Dlaka,AD-13-09,1.000,exact,loaded
 135,Adamawa,Michika,Munkavachitta,AD-13-10,1.000,exact,loaded
 136,Adamawa,Michika,Ninkisi/Wuro Ngiki,AD-13-08,1.000,exact,loaded
@@ -167,8 +167,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 166,Adamawa,Numan,Gamadiyo,AD-16-03,1.000,exact,loaded
 167,Adamawa,Numan,Imburu,AD-16-04,1.000,exact,loaded
 168,Adamawa,Numan,Kodomti,AD-16-05,1.000,exact,loaded
-169,Adamawa,Numan,Numan 1,AD-16-06,0.857,needs_review,skipped_low_confidence
-170,Adamawa,Numan,Numan 2,AD-16-06,0.857,needs_review,skipped_low_confidence
+169,Adamawa,Numan,Numan 1,AD-16-06,0.857,needs_review,loaded
+170,Adamawa,Numan,Numan 2,AD-16-06,0.857,needs_review,loaded
 171,Adamawa,Numan,Numan 3,AD-16-08,0.941,fuzzy,loaded
 172,Adamawa,Numan,Sabon Pegi,AD-16-09,1.000,exact,loaded
 173,Adamawa,Numan,Vulpi,AD-16-10,1.000,exact,loaded
@@ -193,16 +193,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 192,Adamawa,Song,Suktu,AD-18-07,1.000,exact,loaded
 193,Adamawa,Song,Waltandi,AD-18-10,1.000,exact,loaded
 194,Adamawa,Song,Zumo,AD-18-11,1.000,exact,loaded
-195,Adamawa,Toungo,Dawo 1,AD-19-01,0.833,needs_review,skipped_low_confidence
-196,Adamawa,Toungo,Dawo 2,AD-19-01,0.833,needs_review,skipped_low_confidence
+195,Adamawa,Toungo,Dawo 1,AD-19-01,0.833,needs_review,loaded
+196,Adamawa,Toungo,Dawo 2,AD-19-01,0.833,needs_review,loaded
 197,Adamawa,Toungo,Gumti,AD-19-03,1.000,exact,loaded
-198,Adamawa,Toungo,Kiri 1,AD-19-04,0.833,needs_review,skipped_low_confidence
-199,Adamawa,Toungo,Kiri 2,AD-19-04,0.833,needs_review,skipped_low_confidence
+198,Adamawa,Toungo,Kiri 1,AD-19-04,0.833,needs_review,loaded
+199,Adamawa,Toungo,Kiri 2,AD-19-04,0.833,needs_review,loaded
 200,Adamawa,Toungo,Kogin Baba 1,AD-19-06,0.923,fuzzy,loaded
 201,Adamawa,Toungo,Kogin Baba 2,AD-19-06,0.923,fuzzy,loaded
-202,Adamawa,Toungo,Toungo 1,AD-19-08,0.875,needs_review,skipped_low_confidence
-203,Adamawa,Toungo,Toungo 2,AD-19-08,0.875,needs_review,skipped_low_confidence
-204,Adamawa,Toungo,Toungo 3,AD-19-08,0.875,needs_review,skipped_low_confidence
+202,Adamawa,Toungo,Toungo 1,AD-19-08,0.875,needs_review,loaded
+203,Adamawa,Toungo,Toungo 2,AD-19-08,0.875,needs_review,loaded
+204,Adamawa,Toungo,Toungo 3,AD-19-08,0.875,needs_review,loaded
 205,Adamawa,Yola North,Ajiya,AD-20-02,1.000,exact,loaded
 206,Adamawa,Yola North,Alkalawa,AD-20-01,1.000,exact,loaded
 207,Adamawa,Yola North,Doubeli,AD-20-03,1.000,exact,loaded
@@ -233,16 +233,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 232,Bauchi,Alkaleri,Futuk West,,0.667,no_ward,skipped_no_match
 233,Bauchi,Alkaleri,Gar,BA-01-03,1.000,exact,loaded
 234,Bauchi,Alkaleri,Gwana,,0.727,no_ward,skipped_no_match
-235,Bauchi,Alkaleri,Gwaram A,BA-01-04,0.857,needs_review,skipped_low_confidence
-236,Bauchi,Alkaleri,Gwaram B,BA-01-04,0.857,needs_review,skipped_low_confidence
-237,Bauchi,Alkaleri,Kungibar,BA-01-06,0.800,needs_review,skipped_low_confidence
+235,Bauchi,Alkaleri,Gwaram A,BA-01-04,0.857,needs_review,loaded
+236,Bauchi,Alkaleri,Gwaram B,BA-01-04,0.857,needs_review,loaded
+237,Bauchi,Alkaleri,Kungibar,BA-01-06,0.800,needs_review,loaded
 238,Bauchi,Alkaleri,Lim Kundak,,0.455,no_ward,skipped_no_match
 239,Bauchi,Alkaleri,Maimadi,BA-01-05,1.000,exact,loaded
 240,Bauchi,Alkaleri,Mansur,BA-01-11,1.000,exact,loaded
 241,Bauchi,Alkaleri,Pali East,,0.615,no_ward,skipped_no_match
 242,Bauchi,Alkaleri,Pali West,,0.615,no_ward,skipped_no_match
-243,Bauchi,Alkaleri,Yalo 1,BA-01-10,0.800,needs_review,skipped_low_confidence
-244,Bauchi,Alkaleri,Yalo 2,BA-01-10,0.800,needs_review,skipped_low_confidence
+243,Bauchi,Alkaleri,Yalo 1,BA-01-10,0.800,needs_review,loaded
+244,Bauchi,Alkaleri,Yalo 2,BA-01-10,0.800,needs_review,loaded
 245,Bauchi,Alkaleri,Yuli,BA-01-08,1.000,exact,loaded
 246,Bauchi,Bauchi,Birshi,BA-02-07,1.000,exact,loaded
 247,Bauchi,Bauchi,Dan Amar A,,0.609,no_ward,skipped_no_match
@@ -267,7 +267,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 266,Bauchi,Bogoro,Badagari,,0.375,no_ward,skipped_no_match
 267,Bauchi,Bogoro,Bar,,0.400,no_ward,skipped_no_match
 268,Bauchi,Bogoro,Bogoro,,0.000,ambiguous,skipped_no_match
-269,Bauchi,Bogoro,Boi,BA-03-05,0.857,needs_review,skipped_low_confidence
+269,Bauchi,Bogoro,Boi,BA-03-07,0.857,needs_review,loaded
 270,Bauchi,Bogoro,Bugun,,0.308,no_ward,skipped_no_match
 271,Bauchi,Bogoro,Dazara,,0.333,no_ward,skipped_no_match
 272,Bauchi,Bogoro,Dutsen Lawan,,0.444,no_ward,skipped_no_match
@@ -277,22 +277,22 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 276,Bauchi,Bogoro,Lusa,,0.000,ambiguous,skipped_no_match
 277,Bauchi,Bogoro,Mwari,,0.182,no_ward,skipped_no_match
 278,Bauchi,Bogoro,Project,,0.400,no_ward,skipped_no_match
-279,Bauchi,Damban,Dagauda,,0.000,no_lga,skipped_no_match
-280,Bauchi,Damban,Dambam A,,0.000,no_lga,skipped_no_match
-281,Bauchi,Damban,Dambam B,,0.000,no_lga,skipped_no_match
-282,Bauchi,Damban,Fagam,,0.000,no_lga,skipped_no_match
-283,Bauchi,Damban,Fagarau,,0.000,no_lga,skipped_no_match
-284,Bauchi,Damban,Gargawa,,0.000,no_lga,skipped_no_match
-285,Bauchi,Damban,Garuza,,0.000,no_lga,skipped_no_match
-286,Bauchi,Damban,Guribana,,0.000,no_lga,skipped_no_match
-287,Bauchi,Damban,Jalam,,0.000,no_lga,skipped_no_match
-288,Bauchi,Damban,Janda,,0.000,no_lga,skipped_no_match
-289,Bauchi,Damban,Minchika,,0.000,no_lga,skipped_no_match
-290,Bauchi,Damban,Muzuwa,,0.000,no_lga,skipped_no_match
-291,Bauchi,Damban,Yame,,0.000,no_lga,skipped_no_match
-292,Bauchi,Damban,Yanda,,0.000,no_lga,skipped_no_match
-293,Bauchi,Damban,Yayari,,0.000,no_lga,skipped_no_match
-294,Bauchi,Damban,Zaura,,0.000,no_lga,skipped_no_match
+279,Bauchi,Damban,Dagauda,BA-04-06,0.833,lga_fuzzy_exact_ward,loaded
+280,Bauchi,Damban,Dambam A,BA-04-03,0.714,needs_review,skipped_low_confidence
+281,Bauchi,Damban,Dambam B,BA-04-03,0.714,needs_review,skipped_low_confidence
+282,Bauchi,Damban,Fagam,,0.417,no_ward,skipped_no_match
+283,Bauchi,Damban,Fagarau,,0.513,no_ward,skipped_no_match
+284,Bauchi,Damban,Gargawa,BA-04-07,0.833,lga_fuzzy_exact_ward,loaded
+285,Bauchi,Damban,Garuza,BA-04-01,0.833,lga_fuzzy_exact_ward,loaded
+286,Bauchi,Damban,Guribana,BA-04-02,0.833,lga_fuzzy_exact_ward,loaded
+287,Bauchi,Damban,Jalam,,0.000,ambiguous,skipped_no_match
+288,Bauchi,Damban,Janda,BA-04-04,0.667,needs_review,skipped_low_confidence
+289,Bauchi,Damban,Minchika,,0.256,no_ward,skipped_no_match
+290,Bauchi,Damban,Muzuwa,,0.417,no_ward,skipped_no_match
+291,Bauchi,Damban,Yame,BA-04-05,0.833,lga_fuzzy_exact_ward,loaded
+292,Bauchi,Damban,Yanda,BA-04-04,0.833,lga_fuzzy_exact_ward,loaded
+293,Bauchi,Damban,Yayari,,0.455,no_ward,skipped_no_match
+294,Bauchi,Damban,Zaura,BA-04-08,0.833,lga_fuzzy_exact_ward,loaded
 295,Bauchi,Darazo,Darazo East,,0.706,no_ward,skipped_no_match
 296,Bauchi,Darazo,Darazo West,,0.706,no_ward,skipped_no_match
 297,Bauchi,Darazo,Gabarin East,,0.737,no_ward,skipped_no_match
@@ -341,17 +341,17 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 340,Bauchi,Gamawa,Udubo Central,,0.556,no_ward,skipped_no_match
 341,Bauchi,Gamawa,Udubo North East,,0.476,no_ward,skipped_no_match
 342,Bauchi,Gamawa,Zindiwa,BA-07-11,1.000,exact,loaded
-343,Bauchi,Ganjuwa,Ganjuwa A,BA-08-01,0.875,needs_review,skipped_low_confidence
-344,Bauchi,Ganjuwa,Ganjuwa B,BA-08-01,0.875,needs_review,skipped_low_confidence
-345,Bauchi,Ganjuwa,Gungura A,BA-08-02,0.875,needs_review,skipped_low_confidence
-346,Bauchi,Ganjuwa,Gungura B,BA-08-02,0.875,needs_review,skipped_low_confidence
+343,Bauchi,Ganjuwa,Ganjuwa A,BA-08-01,0.875,needs_review,loaded
+344,Bauchi,Ganjuwa,Ganjuwa B,BA-08-01,0.875,needs_review,loaded
+345,Bauchi,Ganjuwa,Gungura A,BA-08-02,0.875,needs_review,loaded
+346,Bauchi,Ganjuwa,Gungura B,BA-08-02,0.875,needs_review,loaded
 347,Bauchi,Ganjuwa,Kafin Madaki A,BA-08-03,0.923,fuzzy,loaded
 348,Bauchi,Ganjuwa,Kafin Madaki B,BA-08-03,0.923,fuzzy,loaded
-349,Bauchi,Ganjuwa,Kariya A,BA-08-04,0.857,needs_review,skipped_low_confidence
-350,Bauchi,Ganjuwa,Kariya B,BA-08-04,0.857,needs_review,skipped_low_confidence
-351,Bauchi,Ganjuwa,Kubi A,BA-08-05,0.800,needs_review,skipped_low_confidence
+349,Bauchi,Ganjuwa,Kariya A,BA-08-04,0.857,needs_review,loaded
+350,Bauchi,Ganjuwa,Kariya B,BA-08-04,0.857,needs_review,loaded
+351,Bauchi,Ganjuwa,Kubi A,BA-08-05,0.800,needs_review,loaded
 352,Bauchi,Ganjuwa,Kubi B,,0.667,no_ward,skipped_no_match
-353,Bauchi,Ganjuwa,Miya A,BA-08-07,0.800,needs_review,skipped_low_confidence
+353,Bauchi,Ganjuwa,Miya A,BA-08-07,0.800,needs_review,loaded
 354,Bauchi,Ganjuwa,Miya B,,0.667,no_ward,skipped_no_match
 355,Bauchi,Ganjuwa,Miya C,,0.667,no_ward,skipped_no_match
 356,Bauchi,Ganjuwa,Nassarawa A,BA-08-09,1.000,exact,loaded
@@ -360,8 +360,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 359,Bauchi,Giade,Chinkani,BA-09-01,1.000,exact,loaded
 360,Bauchi,Giade,Doguwa,,0.000,ambiguous,skipped_no_match
 361,Bauchi,Giade,Faguji,,0.400,no_ward,skipped_no_match
-362,Bauchi,Giade,Giade A,BA-09-05,0.833,needs_review,skipped_low_confidence
-363,Bauchi,Giade,Giade B,BA-09-05,0.833,needs_review,skipped_low_confidence
+362,Bauchi,Giade,Giade A,BA-09-05,0.833,needs_review,loaded
+363,Bauchi,Giade,Giade B,BA-09-05,0.833,needs_review,loaded
 364,Bauchi,Giade,Isawa,BA-09-06,1.000,exact,loaded
 365,Bauchi,Giade,Jugudu,,0.364,no_ward,skipped_no_match
 366,Bauchi,Giade,Kurba,,0.364,no_ward,skipped_no_match
@@ -459,8 +459,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 458,Bauchi,Ningi,Kudu Yamma,BA-15-06,1.000,exact,loaded
 459,Bauchi,Ningi,Kurmi,BA-15-11,1.000,exact,loaded
 460,Bauchi,Ningi,Kyata,,0.625,no_ward,skipped_no_match
-461,Bauchi,Ningi,Nasaru A,BA-15-03,0.857,needs_review,skipped_low_confidence
-462,Bauchi,Ningi,Nasaru B,BA-15-03,0.857,needs_review,skipped_low_confidence
+461,Bauchi,Ningi,Nasaru A,BA-15-03,0.857,needs_review,loaded
+462,Bauchi,Ningi,Nasaru B,BA-15-03,0.857,needs_review,loaded
 463,Bauchi,Ningi,Ningi East,,0.667,no_ward,skipped_no_match
 464,Bauchi,Ningi,Ningi West,,0.667,no_ward,skipped_no_match
 465,Bauchi,Ningi,Sama,BA-15-09,1.000,exact,loaded
@@ -471,29 +471,29 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 470,Bauchi,Shira,Beli,BA-16-06,1.000,exact,loaded
 471,Bauchi,Shira,Bukul,,0.556,no_ward,skipped_no_match
 472,Bauchi,Shira,Dango,,0.600,no_ward,skipped_no_match
-473,Bauchi,Shira,Disina A,BA-16-04,0.857,needs_review,skipped_low_confidence
-474,Bauchi,Shira,Disina B,BA-16-04,0.857,needs_review,skipped_low_confidence
-475,Bauchi,Shira,Faggo A,BA-16-05,0.833,needs_review,skipped_low_confidence
-476,Bauchi,Shira,Faggo B,BA-16-05,0.833,needs_review,skipped_low_confidence
+473,Bauchi,Shira,Disina A,BA-16-04,0.857,needs_review,loaded
+474,Bauchi,Shira,Disina B,BA-16-04,0.857,needs_review,loaded
+475,Bauchi,Shira,Faggo A,BA-16-05,0.833,needs_review,loaded
+476,Bauchi,Shira,Faggo B,BA-16-05,0.833,needs_review,loaded
 477,Bauchi,Shira,Gagidiba,,0.667,no_ward,skipped_no_match
-478,Bauchi,Shira,Kilbori A,BA-16-07,0.875,needs_review,skipped_low_confidence
-479,Bauchi,Shira,Kilbori B,BA-16-07,0.875,needs_review,skipped_low_confidence
+478,Bauchi,Shira,Kilbori A,BA-16-07,0.875,needs_review,loaded
+479,Bauchi,Shira,Kilbori B,BA-16-07,0.875,needs_review,loaded
 480,Bauchi,Shira,Sambowal,BA-16-02,1.000,exact,loaded
 481,Bauchi,Shira,Shira,BA-16-08,1.000,exact,loaded
 482,Bauchi,Shira,Tsafi,BA-16-09,1.000,exact,loaded
 483,Bauchi,Shira,Tumfafi,BA-16-10,1.000,exact,loaded
 484,Bauchi,Shira,Yana,,0.400,no_ward,skipped_no_match
 485,Bauchi,Shira,Zubo,BA-16-11,1.000,exact,loaded
-486,Bauchi,Tafawa-Balewa,Bula A,BA-17-08,0.800,needs_review,skipped_low_confidence
-487,Bauchi,Tafawa-Balewa,Bula B,BA-17-08,0.800,needs_review,skipped_low_confidence
-488,Bauchi,Tafawa-Balewa,Bununu A,BA-17-11,0.857,needs_review,skipped_low_confidence
-489,Bauchi,Tafawa-Balewa,Bununu B,BA-17-11,0.857,needs_review,skipped_low_confidence
+486,Bauchi,Tafawa-Balewa,Bula A,BA-17-08,0.800,needs_review,loaded
+487,Bauchi,Tafawa-Balewa,Bula B,BA-17-08,0.800,needs_review,loaded
+488,Bauchi,Tafawa-Balewa,Bununu A,BA-17-11,0.857,needs_review,loaded
+489,Bauchi,Tafawa-Balewa,Bununu B,BA-17-11,0.857,needs_review,loaded
 490,Bauchi,Tafawa-Balewa,Dajin,BA-17-09,1.000,exact,loaded
-491,Bauchi,Tafawa-Balewa,Dull A,BA-17-10,0.800,needs_review,skipped_low_confidence
-492,Bauchi,Tafawa-Balewa,Dull B,BA-17-10,0.800,needs_review,skipped_low_confidence
+491,Bauchi,Tafawa-Balewa,Dull A,BA-17-10,0.800,needs_review,loaded
+492,Bauchi,Tafawa-Balewa,Dull B,BA-17-10,0.800,needs_review,loaded
 493,Bauchi,Tafawa-Balewa,Kardam A,BA-17-01,1.000,exact,loaded
 494,Bauchi,Tafawa-Balewa,Kardam B,BA-17-02,1.000,exact,loaded
-495,Bauchi,Tafawa-Balewa,Kardam C,BA-17-01,0.875,needs_review,skipped_low_confidence
+495,Bauchi,Tafawa-Balewa,Kardam C,BA-17-01,0.875,needs_review,loaded
 496,Bauchi,Tafawa-Balewa,Lere North,BA-17-03,1.000,exact,loaded
 497,Bauchi,Tafawa-Balewa,Lere South,BA-17-04,1.000,exact,loaded
 498,Bauchi,Tafawa-Balewa,Mball,BA-17-07,1.000,exact,loaded
@@ -520,13 +520,13 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 519,Bauchi,Warji,Baima,,0.000,ambiguous,skipped_no_match
 520,Bauchi,Warji,Dagu,,0.000,ambiguous,skipped_no_match
 521,Bauchi,Warji,Dallaji,,0.375,no_ward,skipped_no_match
-522,Bauchi,Warji,Gabanga A,BA-19-05,0.875,needs_review,skipped_low_confidence
-523,Bauchi,Warji,Gabanga B,BA-19-05,0.875,needs_review,skipped_low_confidence
+522,Bauchi,Warji,Gabanga A,BA-19-05,0.875,needs_review,loaded
+523,Bauchi,Warji,Gabanga B,BA-19-05,0.875,needs_review,loaded
 524,Bauchi,Warji,Katanga,BA-19-06,1.000,exact,loaded
-525,Bauchi,Warji,Ranga A,BA-19-07,0.833,needs_review,skipped_low_confidence
-526,Bauchi,Warji,Ranga B,BA-19-07,0.833,needs_review,skipped_low_confidence
-527,Bauchi,Warji,Tiyin A,BA-19-08,0.833,needs_review,skipped_low_confidence
-528,Bauchi,Warji,Tiyin B,BA-19-08,0.833,needs_review,skipped_low_confidence
+525,Bauchi,Warji,Ranga A,BA-19-07,0.833,needs_review,loaded
+526,Bauchi,Warji,Ranga B,BA-19-07,0.833,needs_review,loaded
+527,Bauchi,Warji,Tiyin A,BA-19-08,0.833,needs_review,loaded
+528,Bauchi,Warji,Tiyin B,BA-19-08,0.833,needs_review,loaded
 529,Bauchi,Warji,Tudun Wada,,0.000,ambiguous,skipped_no_match
 530,Bauchi,Warji,Wando,,0.400,no_ward,skipped_no_match
 531,Bauchi,Warji,Zurgwai,,0.500,no_ward,skipped_no_match
@@ -549,8 +549,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 548,Bauchi,Zaki,Tarbuwa,,0.500,no_ward,skipped_no_match
 549,Bauchi,Zaki,Tashena,BA-20-03,1.000,exact,loaded
 550,Bayelsa,Brass,Brass 1,BY-01-01,1.000,exact,loaded
-551,Bayelsa,Brass,Brass 2,BY-01-01,0.857,needs_review,skipped_low_confidence
-552,Bayelsa,Brass,Brass 3,BY-01-01,0.857,needs_review,skipped_low_confidence
+551,Bayelsa,Brass,Brass 2,BY-01-01,0.857,needs_review,loaded
+552,Bayelsa,Brass,Brass 3,BY-01-01,0.857,needs_review,loaded
 553,Bayelsa,Brass,Cape Formosa,BY-01-06,1.000,exact,loaded
 554,Bayelsa,Brass,Kongho,BY-01-07,1.000,exact,loaded
 555,Bayelsa,Brass,Minibie,BY-01-09,1.000,exact,loaded
@@ -558,8 +558,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 557,Bayelsa,Brass,Oginibiri,BY-01-08,1.000,exact,loaded
 558,Bayelsa,Brass,Okpoama,BY-01-04,1.000,exact,loaded
 559,Bayelsa,Brass,Sangana,BY-01-10,1.000,exact,loaded
-560,Bayelsa,Ekeremor,Iduwini 1,BY-02-11,0.889,needs_review,skipped_low_confidence
-561,Bayelsa,Ekeremor,Iduwini 2,BY-02-11,0.889,needs_review,skipped_low_confidence
+560,Bayelsa,Ekeremor,Iduwini 1,BY-02-11,0.889,needs_review,loaded
+561,Bayelsa,Ekeremor,Iduwini 2,BY-02-11,0.889,needs_review,loaded
 562,Bayelsa,Ekeremor,Oporomor 1,BY-02-06,0.900,fuzzy,loaded
 563,Bayelsa,Ekeremor,Oporomor 2-Ward 7,BY-02-06,0.900,fuzzy,loaded
 564,Bayelsa,Ekeremor,Oporomor 3,BY-02-06,0.900,fuzzy,loaded
@@ -573,9 +573,9 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 572,Bayelsa,Kolokuma/Opokuma,Igbedi,BY-03-11,1.000,exact,loaded
 573,Bayelsa,Kolokuma/Opokuma,Kaiama,BY-03-04,1.000,exact,loaded
 574,Bayelsa,Kolokuma/Opokuma,Kaiama/Olobiri,BY-03-05,1.000,exact,loaded
-575,Bayelsa,Kolokuma/Opokuma,Odi Central,BY-03-02,0.889,needs_review,skipped_low_confidence
+575,Bayelsa,Kolokuma/Opokuma,Odi Central,BY-03-02,0.889,needs_review,loaded
 576,Bayelsa,Kolokuma/Opokuma,Odi North,BY-03-01,0.909,fuzzy,loaded
-577,Bayelsa,Kolokuma/Opokuma,Odi South,BY-03-03,0.833,needs_review,skipped_low_confidence
+577,Bayelsa,Kolokuma/Opokuma,Odi South,BY-03-03,0.833,needs_review,loaded
 578,Bayelsa,Kolokuma/Opokuma,Okoloba,BY-03-10,0.923,fuzzy,loaded
 579,Bayelsa,Kolokuma/Opokuma,Opokuma North,BY-03-07,1.000,exact,loaded
 580,Bayelsa,Kolokuma/Opokuma,Opokuma South,BY-03-08,1.000,exact,loaded
@@ -592,7 +592,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 591,Bayelsa,Nembe,Ogbolomabiri 2,BY-04-02,1.000,exact,loaded
 592,Bayelsa,Nembe,Ogbolomabiri 3,BY-04-03,1.000,exact,loaded
 593,Bayelsa,Nembe,Okoroma 1,BY-04-09,1.000,exact,loaded
-594,Bayelsa,Nembe,Okoroma 2,BY-04-09,0.889,needs_review,skipped_low_confidence
+594,Bayelsa,Nembe,Okoroma 2,BY-04-09,0.889,needs_review,loaded
 595,Bayelsa,Nembe,Oluasiri,BY-04-13,1.000,exact,loaded
 596,Bayelsa,Ogbia,Ayama-Ward 4,BY-05-04,1.000,exact,loaded
 597,Bayelsa,Ogbia,Emeyal-Ward 7,BY-05-07,1.000,exact,loaded
@@ -614,8 +614,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 613,Bayelsa,Sagbama,Asamabiri,BY-06-07,1.000,exact,loaded
 614,Bayelsa,Sagbama,Ebedebiri,BY-06-05,1.000,exact,loaded
 615,Bayelsa,Sagbama,Odoni,BY-06-08,1.000,exact,loaded
-616,Bayelsa,Sagbama,Ofoni 1,BY-06-03,0.857,needs_review,skipped_low_confidence
-617,Bayelsa,Sagbama,Ofoni 2,BY-06-03,0.857,needs_review,skipped_low_confidence
+616,Bayelsa,Sagbama,Ofoni 1,BY-06-03,0.857,needs_review,loaded
+617,Bayelsa,Sagbama,Ofoni 2,BY-06-03,0.857,needs_review,loaded
 618,Bayelsa,Sagbama,Osekwenike,BY-06-14,1.000,exact,loaded
 619,Bayelsa,Sagbama,Ossiama,BY-06-06,1.000,exact,loaded
 620,Bayelsa,Sagbama,Sagbama,BY-06-10,1.000,exact,loaded
@@ -633,26 +633,26 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 632,Bayelsa,Southern Ijaw,Olodiama 1,BY-07-03,0.900,fuzzy,loaded
 633,Bayelsa,Southern Ijaw,Olodiama 2,BY-07-03,0.900,fuzzy,loaded
 634,Bayelsa,Southern Ijaw,Oporoma 1,BY-07-01,1.000,exact,loaded
-635,Bayelsa,Southern Ijaw,Oporoma 2,BY-07-01,0.889,needs_review,skipped_low_confidence
+635,Bayelsa,Southern Ijaw,Oporoma 2,BY-07-01,0.889,needs_review,loaded
 636,Bayelsa,Southern Ijaw,Opuama,BY-07-17,0.769,needs_review,skipped_low_confidence
 637,Bayelsa,Southern Ijaw,Otuan,BY-07-05,1.000,exact,loaded
 638,Bayelsa,Southern Ijaw,Peremabiri,,0.600,no_ward,skipped_no_match
 639,Bayelsa,Southern Ijaw,Ukubie,BY-07-16,1.000,exact,loaded
-640,Bayelsa,Yenegoa,Atissa 1,,0.000,no_lga,skipped_no_match
-641,Bayelsa,Yenegoa,Atissa 2,,0.000,no_lga,skipped_no_match
-642,Bayelsa,Yenegoa,Atissa 3,,0.000,no_lga,skipped_no_match
-643,Bayelsa,Yenegoa,Biseni 1,,0.000,no_lga,skipped_no_match
-644,Bayelsa,Yenegoa,Biseni 2,,0.000,no_lga,skipped_no_match
-645,Bayelsa,Yenegoa,Ekpetiama 1,,0.000,no_lga,skipped_no_match
-646,Bayelsa,Yenegoa,Ekpetiama 2,,0.000,no_lga,skipped_no_match
-647,Bayelsa,Yenegoa,Epie 1,,0.000,no_lga,skipped_no_match
-648,Bayelsa,Yenegoa,Epie 2,,0.000,no_lga,skipped_no_match
-649,Bayelsa,Yenegoa,Epie 3,,0.000,no_lga,skipped_no_match
-650,Bayelsa,Yenegoa,Gbarain 1,,0.000,no_lga,skipped_no_match
-651,Bayelsa,Yenegoa,Gbarain 2,,0.000,no_lga,skipped_no_match
-652,Bayelsa,Yenegoa,Gbarain 3,,0.000,no_lga,skipped_no_match
-653,Bayelsa,Yenegoa,Okordia,,0.000,no_lga,skipped_no_match
-654,Bayelsa,Yenegoa,Zarama,,0.000,no_lga,skipped_no_match
+640,Bayelsa,Yenegoa,Atissa 1,BY-08-01,0.762,needs_review,skipped_low_confidence
+641,Bayelsa,Yenegoa,Atissa 2,BY-08-01,0.762,needs_review,skipped_low_confidence
+642,Bayelsa,Yenegoa,Atissa 3,BY-08-01,0.762,needs_review,skipped_low_confidence
+643,Bayelsa,Yenegoa,Biseni 1,BY-08-12,0.857,lga_fuzzy_exact_ward,loaded
+644,Bayelsa,Yenegoa,Biseni 2,BY-08-12,0.750,needs_review,skipped_low_confidence
+645,Bayelsa,Yenegoa,Ekpetiama 1,BY-08-11,0.820,fuzzy,loaded
+646,Bayelsa,Yenegoa,Ekpetiama 2,BY-08-11,0.857,lga_fuzzy_exact_ward,loaded
+647,Bayelsa,Yenegoa,Epie 1,BY-08-05,0.791,fuzzy,skipped_low_confidence
+648,Bayelsa,Yenegoa,Epie 2,BY-08-04,0.714,needs_review,skipped_low_confidence
+649,Bayelsa,Yenegoa,Epie 3,BY-08-04,0.714,needs_review,skipped_low_confidence
+650,Bayelsa,Yenegoa,Gbarain 1,BY-08-07,0.762,needs_review,skipped_low_confidence
+651,Bayelsa,Yenegoa,Gbarain 2,BY-08-07,0.762,needs_review,skipped_low_confidence
+652,Bayelsa,Yenegoa,Gbarain 3,BY-08-07,0.762,needs_review,skipped_low_confidence
+653,Bayelsa,Yenegoa,Okordia,BY-08-14,0.857,lga_fuzzy_exact_ward,loaded
+654,Bayelsa,Yenegoa,Zarama,BY-08-15,0.857,lga_fuzzy_exact_ward,loaded
 655,Borno,Abadam,Arge,,0.000,no_lga,skipped_no_match
 656,Borno,Abadam,Banowa,,0.000,no_lga,skipped_no_match
 657,Borno,Abadam,Busuna,,0.000,no_lga,skipped_no_match
@@ -663,306 +663,306 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 662,Borno,Abadam,Yau,,0.000,no_lga,skipped_no_match
 663,Borno,Abadam,Yawa,,0.000,no_lga,skipped_no_match
 664,Borno,Abadam,Yitiwa,,0.000,no_lga,skipped_no_match
-665,Borno,Askira/Uba,Askira East,,0.000,no_lga,skipped_no_match
-666,Borno,Askira/Uba,Dille Huyim,,0.000,no_lga,skipped_no_match
-667,Borno,Askira/Uba,Hausari Tampul,,0.000,no_lga,skipped_no_match
-668,Borno,Askira/Uba,Hausari Zadawa,,0.000,no_lga,skipped_no_match
-669,Borno,Askira/Uba,Lassa,,0.000,no_lga,skipped_no_match
-670,Borno,Askira/Uba,Mussa,,0.000,no_lga,skipped_no_match
-671,Borno,Askira/Uba,Ngohi,,0.000,no_lga,skipped_no_match
-672,Borno,Askira/Uba,Ngulde,,0.000,no_lga,skipped_no_match
-673,Borno,Askira/Uba,Ngurthavu Kopa,,0.000,no_lga,skipped_no_match
-674,Borno,Askira/Uba,Rumirgo Chul,,0.000,no_lga,skipped_no_match
-675,Borno,Askira/Uba,Uba,,0.000,no_lga,skipped_no_match
-676,Borno,Askira/Uba,Uvu Uda,,0.000,no_lga,skipped_no_match
-677,Borno,Askira/Uba,Wamdeo Giwi,,0.000,no_lga,skipped_no_match
-678,Borno,Bama,Abbaram,,0.000,no_lga,skipped_no_match
-679,Borno,Bama,Amchaka,,0.000,no_lga,skipped_no_match
-680,Borno,Bama,Andara,,0.000,no_lga,skipped_no_match
-681,Borno,Bama,Banki,,0.000,no_lga,skipped_no_match
-682,Borno,Bama,Bogomari,,0.000,no_lga,skipped_no_match
-683,Borno,Bama,Dipchari,,0.000,no_lga,skipped_no_match
-684,Borno,Bama,Goniri,,0.000,no_lga,skipped_no_match
-685,Borno,Bama,Gulumba,,0.000,no_lga,skipped_no_match
-686,Borno,Bama,Kasugula,,0.000,no_lga,skipped_no_match
-687,Borno,Bama,Kumshe,,0.000,no_lga,skipped_no_match
-688,Borno,Bama,Shehuri,,0.000,no_lga,skipped_no_match
-689,Borno,Bama,Soye,,0.000,no_lga,skipped_no_match
-690,Borno,Bama,Yabiri,,0.000,no_lga,skipped_no_match
-691,Borno,Bama,Zageri,,0.000,no_lga,skipped_no_match
-692,Borno,Bayo,Balbaya,,0.000,no_lga,skipped_no_match
-693,Borno,Bayo,Briyel,,0.000,no_lga,skipped_no_match
-694,Borno,Bayo,Fikayel,,0.000,no_lga,skipped_no_match
-695,Borno,Bayo,Gamdadi,,0.000,no_lga,skipped_no_match
-696,Borno,Bayo,Jaradali,,0.000,no_lga,skipped_no_match
-697,Borno,Bayo,Jaragol,,0.000,no_lga,skipped_no_match
-698,Borno,Bayo,Limanti,,0.000,no_lga,skipped_no_match
-699,Borno,Bayo,Telii,,0.000,no_lga,skipped_no_match
-700,Borno,Bayo,Wuyo,,0.000,no_lga,skipped_no_match
-701,Borno,Bayo,Zara,,0.000,no_lga,skipped_no_match
-702,Borno,Biu,Buratai,,0.000,no_lga,skipped_no_match
-703,Borno,Biu,Dugja,,0.000,no_lga,skipped_no_match
-704,Borno,Biu,Galdimari,,0.000,no_lga,skipped_no_match
-705,Borno,Biu,Garubula,,0.000,no_lga,skipped_no_match
-706,Borno,Biu,Gunda,,0.000,no_lga,skipped_no_match
-707,Borno,Biu,Gur,,0.000,no_lga,skipped_no_match
-708,Borno,Biu,Mandaragirau,,0.000,no_lga,skipped_no_match
-709,Borno,Biu,Miringa,,0.000,no_lga,skipped_no_match
-710,Borno,Biu,Silumthla,,0.000,no_lga,skipped_no_match
-711,Borno,Biu,Yawi,,0.000,no_lga,skipped_no_match
-712,Borno,Biu,Zarawuyaki,,0.000,no_lga,skipped_no_match
-713,Borno,Chibok,Garu,,0.000,no_lga,skipped_no_match
-714,Borno,Chibok,Gatamarwa,,0.000,no_lga,skipped_no_match
-715,Borno,Chibok,Kautakari,,0.000,no_lga,skipped_no_match
-716,Borno,Chibok,Korongillum,,0.000,no_lga,skipped_no_match
-717,Borno,Chibok,Kurbumbulla,,0.000,no_lga,skipped_no_match
-718,Borno,Chibok,Likama,,0.000,no_lga,skipped_no_match
-719,Borno,Chibok,Mbalala,,0.000,no_lga,skipped_no_match
-720,Borno,Chibok,Mboakwa,,0.000,no_lga,skipped_no_match
-721,Borno,Chibok,Pemi,,0.000,no_lga,skipped_no_match
-722,Borno,Chibok,Shikarkir,,0.000,no_lga,skipped_no_match
-723,Borno,Chibok,Whuntaku,,0.000,no_lga,skipped_no_match
-724,Borno,Damboa,Ajigin A,,0.000,no_lga,skipped_no_match
-725,Borno,Damboa,Ajigin B,,0.000,no_lga,skipped_no_match
-726,Borno,Damboa,Azir Multe,,0.000,no_lga,skipped_no_match
-727,Borno,Damboa,Bego Yerwa,,0.000,no_lga,skipped_no_match
-728,Borno,Damboa,Damboa,,0.000,no_lga,skipped_no_match
-729,Borno,Damboa,Gumsuri,,0.000,no_lga,skipped_no_match
-730,Borno,Damboa,Kafa Mafi,,0.000,no_lga,skipped_no_match
-731,Borno,Damboa,Mulgoi Kobchi,,0.000,no_lga,skipped_no_match
-732,Borno,Damboa,Nzuba Wayaram,,0.000,no_lga,skipped_no_match
-733,Borno,Damboa,Wawa Korede,,0.000,no_lga,skipped_no_match
-734,Borno,Dikwa,Afuye,,0.000,no_lga,skipped_no_match
-735,Borno,Dikwa,Boboshe,,0.000,no_lga,skipped_no_match
-736,Borno,Dikwa,Dikwa,,0.000,no_lga,skipped_no_match
-737,Borno,Dikwa,Gajibo,,0.000,no_lga,skipped_no_match
-738,Borno,Dikwa,Magarta,,0.000,no_lga,skipped_no_match
-739,Borno,Dikwa,Mala Maja,,0.000,no_lga,skipped_no_match
-740,Borno,Dikwa,Mudu Kaza,,0.000,no_lga,skipped_no_match
-741,Borno,Dikwa,Muliye,,0.000,no_lga,skipped_no_match
-742,Borno,Dikwa,Ngudoram,,0.000,no_lga,skipped_no_match
-743,Borno,Dikwa,Ufaye,,0.000,no_lga,skipped_no_match
-744,Borno,Gubio,Ardimini,,0.000,no_lga,skipped_no_match
-745,Borno,Gubio,Dabira,,0.000,no_lga,skipped_no_match
-746,Borno,Gubio,Felo,,0.000,no_lga,skipped_no_match
-747,Borno,Gubio,Gamawo,,0.000,no_lga,skipped_no_match
-748,Borno,Gubio,Gazabure,,0.000,no_lga,skipped_no_match
-749,Borno,Gubio,Gubio I,,0.000,no_lga,skipped_no_match
-750,Borno,Gubio,Gubio II,,0.000,no_lga,skipped_no_match
-751,Borno,Gubio,Kingowa,,0.000,no_lga,skipped_no_match
-752,Borno,Gubio,Ngetra,,0.000,no_lga,skipped_no_match
-753,Borno,Gubio,Zowo,,0.000,no_lga,skipped_no_match
-754,Borno,Guzamala,Aduwa,,0.000,no_lga,skipped_no_match
-755,Borno,Guzamala,Gudumbali East,,0.000,no_lga,skipped_no_match
-756,Borno,Guzamala,Gudumbali West,,0.000,no_lga,skipped_no_match
-757,Borno,Guzamala,Guworam,,0.000,no_lga,skipped_no_match
-758,Borno,Guzamala,Guzamala East,,0.000,no_lga,skipped_no_match
-759,Borno,Guzamala,Guzamala West,,0.000,no_lga,skipped_no_match
-760,Borno,Guzamala,Kingarwa,,0.000,no_lga,skipped_no_match
-761,Borno,Guzamala,Mairari,,0.000,no_lga,skipped_no_match
-762,Borno,Guzamala,Moduri,,0.000,no_lga,skipped_no_match
-763,Borno,Guzamala,Wamiri,,0.000,no_lga,skipped_no_match
-764,Borno,Gwoza,Ashigashiya,,0.000,no_lga,skipped_no_match
-765,Borno,Gwoza,Bita Izge,,0.000,no_lga,skipped_no_match
-766,Borno,Gwoza,Bulabulin,,0.000,no_lga,skipped_no_match
-767,Borno,Gwoza,Chikide Jahode,,0.000,no_lga,skipped_no_match
-768,Borno,Gwoza,Gava Agapalwa,,0.000,no_lga,skipped_no_match
-769,Borno,Gwoza,Guduf A & B,,0.000,no_lga,skipped_no_match
-770,Borno,Gwoza,Hambagda Limankara Jaje,,0.000,no_lga,skipped_no_match
-771,Borno,Gwoza,Hausari,,0.000,no_lga,skipped_no_match
-772,Borno,Gwoza,Kirawa Jimin,,0.000,no_lga,skipped_no_match
-773,Borno,Gwoza,Kuranabasa,,0.000,no_lga,skipped_no_match
-774,Borno,Gwoza,Ngoshe,,0.000,no_lga,skipped_no_match
-775,Borno,Gwoza,Pulka Bokko,,0.000,no_lga,skipped_no_match
-776,Borno,Gwoza,Wala Warabe Dure,,0.000,no_lga,skipped_no_match
-777,Borno,Hawul,Bilingwi,,0.000,no_lga,skipped_no_match
-778,Borno,Hawul,Grim Damchoba,,0.000,no_lga,skipped_no_match
-779,Borno,Hawul,Gwanzang,,0.000,no_lga,skipped_no_match
-780,Borno,Hawul,Hizhi Bwala,,0.000,no_lga,skipped_no_match
-781,Borno,Hawul,Kidda,,0.000,no_lga,skipped_no_match
-782,Borno,Hawul,Kwajaffa,,0.000,no_lga,skipped_no_match
-783,Borno,Hawul,Kwaya Bura,,0.000,no_lga,skipped_no_match
-784,Borno,Hawul,Marama Kidang,,0.000,no_lga,skipped_no_match
-785,Borno,Hawul,Pama Waitam,,0.000,no_lga,skipped_no_match
-786,Borno,Hawul,Puba Vidau,,0.000,no_lga,skipped_no_match
-787,Borno,Hawul,Sakwa Hema,,0.000,no_lga,skipped_no_match
-788,Borno,Hawul,Shaffa,,0.000,no_lga,skipped_no_match
-789,Borno,Jere,Alau,,0.000,no_lga,skipped_no_match
-790,Borno,Jere,Dala,,0.000,no_lga,skipped_no_match
-791,Borno,Jere,Dusuman,,0.000,no_lga,skipped_no_match
-792,Borno,Jere,Galtimari,,0.000,no_lga,skipped_no_match
-793,Borno,Jere,Gomari,,0.000,no_lga,skipped_no_match
-794,Borno,Jere,Gongulong,,0.000,no_lga,skipped_no_match
-795,Borno,Jere,Khaddamari,,0.000,no_lga,skipped_no_match
-796,Borno,Jere,Maimusari,,0.000,no_lga,skipped_no_match
-797,Borno,Jere,Mairi,,0.000,no_lga,skipped_no_match
-798,Borno,Jere,Mashamari,,0.000,no_lga,skipped_no_match
-799,Borno,Jere,Old Maiduguri,,0.000,no_lga,skipped_no_match
-800,Borno,Jere,Tuba,,0.000,no_lga,skipped_no_match
-801,Borno,Kaga,Benisheikh,,0.000,no_lga,skipped_no_match
-802,Borno,Kaga,Borgozo,,0.000,no_lga,skipped_no_match
-803,Borno,Kaga,Dogoma Jalori,,0.000,no_lga,skipped_no_match
-804,Borno,Kaga,Dongo,,0.000,no_lga,skipped_no_match
-805,Borno,Kaga,Foi,,0.000,no_lga,skipped_no_match
-806,Borno,Kaga,Galangi,,0.000,no_lga,skipped_no_match
-807,Borno,Kaga,Guwo,,0.000,no_lga,skipped_no_match
-808,Borno,Kaga,Karagawaru,,0.000,no_lga,skipped_no_match
-809,Borno,Kaga,Mainok,,0.000,no_lga,skipped_no_match
-810,Borno,Kaga,Marguba,,0.000,no_lga,skipped_no_match
-811,Borno,Kaga,Ngamdu,,0.000,no_lga,skipped_no_match
-812,Borno,Kaga,Shetimare,,0.000,no_lga,skipped_no_match
-813,Borno,Kaga,Tobolo,,0.000,no_lga,skipped_no_match
-814,Borno,Kaga,Wajiro,,0.000,no_lga,skipped_no_match
-815,Borno,Kaga,Wassaram,,0.000,no_lga,skipped_no_match
-816,Borno,Kala/Balge,Daima,,0.000,no_lga,skipped_no_match
-817,Borno,Kala/Balge,Jarawa,,0.000,no_lga,skipped_no_match
-818,Borno,Kala/Balge,Jilbe,,0.000,no_lga,skipped_no_match
-819,Borno,Kala/Balge,Kala,,0.000,no_lga,skipped_no_match
-820,Borno,Kala/Balge,Kilumaga,,0.000,no_lga,skipped_no_match
-821,Borno,Kala/Balge,Komakandi,,0.000,no_lga,skipped_no_match
-822,Borno,Kala/Balge,Mada,,0.000,no_lga,skipped_no_match
-823,Borno,Kala/Balge,Moholo,,0.000,no_lga,skipped_no_match
-824,Borno,Kala/Balge,Rann,,0.000,no_lga,skipped_no_match
-825,Borno,Kala/Balge,Sigal Karche,,0.000,no_lga,skipped_no_match
-826,Borno,Konduga,Ajiri,,0.000,no_lga,skipped_no_match
-827,Borno,Konduga,Auno,,0.000,no_lga,skipped_no_match
-828,Borno,Konduga,Dalori,,0.000,no_lga,skipped_no_match
-829,Borno,Konduga,Dalwa,,0.000,no_lga,skipped_no_match
-830,Borno,Konduga,Jakana,,0.000,no_lga,skipped_no_match
-831,Borno,Konduga,Kawuri,,0.000,no_lga,skipped_no_match
-832,Borno,Konduga,Konduga,,0.000,no_lga,skipped_no_match
-833,Borno,Konduga,Malari,,0.000,no_lga,skipped_no_match
-834,Borno,Konduga,Yabal,,0.000,no_lga,skipped_no_match
-835,Borno,Konduga,Yajiwa,,0.000,no_lga,skipped_no_match
-836,Borno,Konduga,Yale,,0.000,no_lga,skipped_no_match
-837,Borno,Kukawa,Alagarno,,0.000,no_lga,skipped_no_match
-838,Borno,Kukawa,Baga,,0.000,no_lga,skipped_no_match
-839,Borno,Kukawa,Barwati,,0.000,no_lga,skipped_no_match
-840,Borno,Kukawa,Bundur,,0.000,no_lga,skipped_no_match
-841,Borno,Kukawa,Dogoshi,,0.000,no_lga,skipped_no_match
-842,Borno,Kukawa,Doro,,0.000,no_lga,skipped_no_match
-843,Borno,Kukawa,Kauwa,,0.000,no_lga,skipped_no_match
-844,Borno,Kukawa,Kekeno,,0.000,no_lga,skipped_no_match
-845,Borno,Kukawa,Kukawa,,0.000,no_lga,skipped_no_match
-846,Borno,Kukawa,Yoyo,,0.000,no_lga,skipped_no_match
-847,Borno,Kwaya Kusar,Bila Gusi,,0.000,no_lga,skipped_no_match
-848,Borno,Kwaya Kusar,Gongdi,,0.000,no_lga,skipped_no_match
-849,Borno,Kwaya Kusar,Guwal,,0.000,no_lga,skipped_no_match
-850,Borno,Kwaya Kusar,Kubuku,,0.000,no_lga,skipped_no_match
-851,Borno,Kwaya Kusar,Kurba Gayi,,0.000,no_lga,skipped_no_match
-852,Borno,Kwaya Kusar,Kwaya Kusar,,0.000,no_lga,skipped_no_match
-853,Borno,Kwaya Kusar,Peta,,0.000,no_lga,skipped_no_match
-854,Borno,Kwaya Kusar,Wada,,0.000,no_lga,skipped_no_match
-855,Borno,Kwaya Kusar,Wawa,,0.000,no_lga,skipped_no_match
-856,Borno,Kwaya Kusar,Yimirdalang,,0.000,no_lga,skipped_no_match
-857,Borno,Mafa,Ajiri,,0.000,no_lga,skipped_no_match
-858,Borno,Mafa,Gawa,,0.000,no_lga,skipped_no_match
-859,Borno,Mafa,Koshebe,,0.000,no_lga,skipped_no_match
-860,Borno,Mafa,Laje,,0.000,no_lga,skipped_no_match
-861,Borno,Mafa,Limanti,,0.000,no_lga,skipped_no_match
-862,Borno,Mafa,Loskuri,,0.000,no_lga,skipped_no_match
-863,Borno,Mafa,Ma'Afa,,0.000,no_lga,skipped_no_match
-864,Borno,Mafa,Mafa,,0.000,no_lga,skipped_no_match
-865,Borno,Mafa,Masu,,0.000,no_lga,skipped_no_match
-866,Borno,Mafa,Mujigine,,0.000,no_lga,skipped_no_match
-867,Borno,Mafa,Tamsum Gamdua,,0.000,no_lga,skipped_no_match
-868,Borno,Mafa,Zengebe,,0.000,no_lga,skipped_no_match
-869,Borno,Magumeri,Ardoram,,0.000,no_lga,skipped_no_match
-870,Borno,Magumeri,Ayi Yasku,,0.000,no_lga,skipped_no_match
-871,Borno,Magumeri,Borno Yesu,,0.000,no_lga,skipped_no_match
-872,Borno,Magumeri,Furram,,0.000,no_lga,skipped_no_match
-873,Borno,Magumeri,Gajiganna,,0.000,no_lga,skipped_no_match
-874,Borno,Magumeri,Hoyo Chingua,,0.000,no_lga,skipped_no_match
-875,Borno,Magumeri,Kalizoram,,0.000,no_lga,skipped_no_match
-876,Borno,Magumeri,Kareram,,0.000,no_lga,skipped_no_match
-877,Borno,Magumeri,Kupti,,0.000,no_lga,skipped_no_match
-878,Borno,Magumeri,Magumeri,,0.000,no_lga,skipped_no_match
-879,Borno,Magumeri,Ngamma,,0.000,no_lga,skipped_no_match
-880,Borno,Magumeri,Ngulabamma,,0.000,no_lga,skipped_no_match
-881,Borno,Magumeri,Titiwa,,0.000,no_lga,skipped_no_match
-882,Borno,Maiduguri,Bolori I,,0.000,no_lga,skipped_no_match
-883,Borno,Maiduguri,Bolori II,,0.000,no_lga,skipped_no_match
-884,Borno,Maiduguri,Bulabulin,,0.000,no_lga,skipped_no_match
-885,Borno,Maiduguri,Fezzan,,0.000,no_lga,skipped_no_match
-886,Borno,Maiduguri,Gamboru,,0.000,no_lga,skipped_no_match
-887,Borno,Maiduguri,Gwange I,,0.000,no_lga,skipped_no_match
-888,Borno,Maiduguri,Gwange II,,0.000,no_lga,skipped_no_match
-889,Borno,Maiduguri,Gwange III,,0.000,no_lga,skipped_no_match
-890,Borno,Maiduguri,Hausari,,0.000,no_lga,skipped_no_match
-891,Borno,Maiduguri,Lamisula,,0.000,no_lga,skipped_no_match
-892,Borno,Maiduguri,Limanti,,0.000,no_lga,skipped_no_match
-893,Borno,Maiduguri,Mafoni,,0.000,no_lga,skipped_no_match
-894,Borno,Maiduguri,Maisandari,,0.000,no_lga,skipped_no_match
-895,Borno,Maiduguri,Shehuri North,,0.000,no_lga,skipped_no_match
-896,Borno,Maiduguri,Shehuri South,,0.000,no_lga,skipped_no_match
-897,Borno,Marte,A Lawant,,0.000,no_lga,skipped_no_match
-898,Borno,Marte,Ala,,0.000,no_lga,skipped_no_match
-899,Borno,Marte,Badairi,,0.000,no_lga,skipped_no_match
-900,Borno,Marte,Borsori,,0.000,no_lga,skipped_no_match
-901,Borno,Marte,Gumna,,0.000,no_lga,skipped_no_match
-902,Borno,Marte,Kabulawa,,0.000,no_lga,skipped_no_match
-903,Borno,Marte,Kirenowa,,0.000,no_lga,skipped_no_match
-904,Borno,Marte,Kulli,,0.000,no_lga,skipped_no_match
-905,Borno,Marte,Marte,,0.000,no_lga,skipped_no_match
-906,Borno,Marte,Musune,,0.000,no_lga,skipped_no_match
-907,Borno,Marte,Muwalli,,0.000,no_lga,skipped_no_match
-908,Borno,Marte,Njine,,0.000,no_lga,skipped_no_match
-909,Borno,Marte,Zaga,,0.000,no_lga,skipped_no_match
-910,Borno,Mobbar,Asaga,,0.000,no_lga,skipped_no_match
-911,Borno,Mobbar,Bogum,,0.000,no_lga,skipped_no_match
-912,Borno,Mobbar,Chamba,,0.000,no_lga,skipped_no_match
-913,Borno,Mobbar,Damasak,,0.000,no_lga,skipped_no_match
-914,Borno,Mobbar,Duji,,0.000,no_lga,skipped_no_match
-915,Borno,Mobbar,Gashigar,,0.000,no_lga,skipped_no_match
-916,Borno,Mobbar,Kareto,,0.000,no_lga,skipped_no_match
-917,Borno,Mobbar,Layi,,0.000,no_lga,skipped_no_match
-918,Borno,Mobbar,Zanna Umarti,,0.000,no_lga,skipped_no_match
-919,Borno,Mobbar,Zari,,0.000,no_lga,skipped_no_match
-920,Borno,Monguno,Damakuli,,0.000,no_lga,skipped_no_match
-921,Borno,Monguno,Kaguram,,0.000,no_lga,skipped_no_match
-922,Borno,Monguno,Kumalia,,0.000,no_lga,skipped_no_match
-923,Borno,Monguno,Mandala,,0.000,no_lga,skipped_no_match
-924,Borno,Monguno,Mintar,,0.000,no_lga,skipped_no_match
-925,Borno,Monguno,Mofio,,0.000,no_lga,skipped_no_match
-926,Borno,Monguno,Monguno,,0.000,no_lga,skipped_no_match
-927,Borno,Monguno,Ngurno,,0.000,no_lga,skipped_no_match
-928,Borno,Monguno,Sure,,0.000,no_lga,skipped_no_match
-929,Borno,Monguno,Wulo,,0.000,no_lga,skipped_no_match
-930,Borno,Monguno,Yele,,0.000,no_lga,skipped_no_match
-931,Borno,Monguno,Zulum,,0.000,no_lga,skipped_no_match
-932,Borno,Ngala,Fuye,,0.000,no_lga,skipped_no_match
-933,Borno,Ngala,Gamboru A,,0.000,no_lga,skipped_no_match
-934,Borno,Ngala,Gamboru B,,0.000,no_lga,skipped_no_match
-935,Borno,Ngala,Gamboru C,,0.000,no_lga,skipped_no_match
-936,Borno,Ngala,Logumane,,0.000,no_lga,skipped_no_match
-937,Borno,Ngala,Ndufu,,0.000,no_lga,skipped_no_match
-938,Borno,Ngala,Ngala,,0.000,no_lga,skipped_no_match
-939,Borno,Ngala,Shehuri,,0.000,no_lga,skipped_no_match
-940,Borno,Ngala,Warshele,,0.000,no_lga,skipped_no_match
-941,Borno,Ngala,Wulgo,,0.000,no_lga,skipped_no_match
-942,Borno,Nganzai,Alarge,,0.000,no_lga,skipped_no_match
-943,Borno,Nganzai,Badu,,0.000,no_lga,skipped_no_match
-944,Borno,Nganzai,Damaram,,0.000,no_lga,skipped_no_match
-945,Borno,Nganzai,Gadai,,0.000,no_lga,skipped_no_match
-946,Borno,Nganzai,Gajiram,,0.000,no_lga,skipped_no_match
-947,Borno,Nganzai,Jigalta,,0.000,no_lga,skipped_no_match
-948,Borno,Nganzai,Kuda,,0.000,no_lga,skipped_no_match
-949,Borno,Nganzai,Kurnawa,,0.000,no_lga,skipped_no_match
-950,Borno,Nganzai,Maiwa,,0.000,no_lga,skipped_no_match
-951,Borno,Nganzai,Miye,,0.000,no_lga,skipped_no_match
-952,Borno,Nganzai,Sabsabuwa,,0.000,no_lga,skipped_no_match
-953,Borno,Nganzai,Sugundure,,0.000,no_lga,skipped_no_match
-954,Borno,Shani,Bargu,,0.000,no_lga,skipped_no_match
-955,Borno,Shani,Buma,,0.000,no_lga,skipped_no_match
-956,Borno,Shani,Gasi,,0.000,no_lga,skipped_no_match
-957,Borno,Shani,Gora,,0.000,no_lga,skipped_no_match
-958,Borno,Shani,Gwalasho,,0.000,no_lga,skipped_no_match
-959,Borno,Shani,Gwaskara,,0.000,no_lga,skipped_no_match
-960,Borno,Shani,Kombo,,0.000,no_lga,skipped_no_match
-961,Borno,Shani,Kubo,,0.000,no_lga,skipped_no_match
-962,Borno,Shani,Lakundum,,0.000,no_lga,skipped_no_match
-963,Borno,Shani,Shani,,0.000,no_lga,skipped_no_match
-964,Borno,Shani,Walama,,0.000,no_lga,skipped_no_match
+665,Borno,Askira/Uba,Askira East,BO-02-01,1.000,exact,loaded
+666,Borno,Askira/Uba,Dille Huyim,BO-02-03,1.000,exact,loaded
+667,Borno,Askira/Uba,Hausari Tampul,BO-02-04,1.000,exact,loaded
+668,Borno,Askira/Uba,Hausari Zadawa,BO-02-13,1.000,exact,loaded
+669,Borno,Askira/Uba,Lassa,BO-02-06,1.000,exact,loaded
+670,Borno,Askira/Uba,Mussa,BO-02-07,1.000,exact,loaded
+671,Borno,Askira/Uba,Ngohi,BO-02-08,1.000,exact,loaded
+672,Borno,Askira/Uba,Ngulde,BO-02-09,1.000,exact,loaded
+673,Borno,Askira/Uba,Ngurthavu Kopa,BO-02-05,1.000,exact,loaded
+674,Borno,Askira/Uba,Rumirgo Chul,BO-02-02,1.000,exact,loaded
+675,Borno,Askira/Uba,Uba,BO-02-10,1.000,exact,loaded
+676,Borno,Askira/Uba,Uvu Uda,BO-02-11,1.000,exact,loaded
+677,Borno,Askira/Uba,Wamdeo Giwi,BO-02-12,1.000,exact,loaded
+678,Borno,Bama,Abbaram,BO-03-07,1.000,exact,loaded
+679,Borno,Bama,Amchaka,BO-03-08,1.000,exact,loaded
+680,Borno,Bama,Andara,BO-03-01,1.000,exact,loaded
+681,Borno,Bama,Banki,,0.308,no_ward,skipped_no_match
+682,Borno,Bama,Bogomari,,0.345,no_ward,skipped_no_match
+683,Borno,Bama,Dipchari,BO-03-03,1.000,exact,loaded
+684,Borno,Bama,Goniri,BO-03-09,1.000,exact,loaded
+685,Borno,Bama,Gulumba,BO-03-04,1.000,exact,loaded
+686,Borno,Bama,Kasugula,BO-03-05,1.000,exact,loaded
+687,Borno,Bama,Kumshe,BO-03-06,1.000,exact,loaded
+688,Borno,Bama,Shehuri,BO-03-11,1.000,exact,loaded
+689,Borno,Bama,Soye,BO-03-10,1.000,exact,loaded
+690,Borno,Bama,Yabiri,BO-03-13,1.000,exact,loaded
+691,Borno,Bama,Zageri,BO-03-14,1.000,exact,loaded
+692,Borno,Bayo,Balbaya,BO-04-01,1.000,exact,loaded
+693,Borno,Bayo,Briyel,BO-04-02,1.000,exact,loaded
+694,Borno,Bayo,Fikayel,BO-04-03,1.000,exact,loaded
+695,Borno,Bayo,Gamdadi,BO-04-04,1.000,exact,loaded
+696,Borno,Bayo,Jaradali,BO-04-06,1.000,exact,loaded
+697,Borno,Bayo,Jaragol,BO-04-05,1.000,exact,loaded
+698,Borno,Bayo,Limanti,BO-04-07,1.000,exact,loaded
+699,Borno,Bayo,Telii,BO-04-08,1.000,exact,loaded
+700,Borno,Bayo,Wuyo,BO-04-09,1.000,exact,loaded
+701,Borno,Bayo,Zara,BO-04-10,1.000,exact,loaded
+702,Borno,Biu,Buratai,BO-05-01,1.000,exact,loaded
+703,Borno,Biu,Dugja,BO-05-03,1.000,exact,loaded
+704,Borno,Biu,Galdimari,BO-05-06,1.000,exact,loaded
+705,Borno,Biu,Garubula,BO-05-04,1.000,exact,loaded
+706,Borno,Biu,Gunda,BO-05-02,1.000,exact,loaded
+707,Borno,Biu,Gur,BO-05-05,1.000,exact,loaded
+708,Borno,Biu,Mandaragirau,BO-05-07,1.000,exact,loaded
+709,Borno,Biu,Miringa,BO-05-08,1.000,exact,loaded
+710,Borno,Biu,Silumthla,BO-05-09,1.000,exact,loaded
+711,Borno,Biu,Yawi,BO-05-10,1.000,exact,loaded
+712,Borno,Biu,Zarawuyaki,BO-05-11,1.000,exact,loaded
+713,Borno,Chibok,Garu,BO-06-01,1.000,exact,loaded
+714,Borno,Chibok,Gatamarwa,BO-06-04,1.000,exact,loaded
+715,Borno,Chibok,Kautakari,BO-06-05,1.000,exact,loaded
+716,Borno,Chibok,Korongillum,BO-06-06,1.000,exact,loaded
+717,Borno,Chibok,Kurbumbulla,BO-06-07,1.000,exact,loaded
+718,Borno,Chibok,Likama,BO-06-02,1.000,exact,loaded
+719,Borno,Chibok,Mbalala,BO-06-08,1.000,exact,loaded
+720,Borno,Chibok,Mboakwa,BO-06-09,1.000,exact,loaded
+721,Borno,Chibok,Pemi,BO-06-11,1.000,exact,loaded
+722,Borno,Chibok,Shikarkir,BO-06-10,1.000,exact,loaded
+723,Borno,Chibok,Whuntaku,BO-06-03,1.000,exact,loaded
+724,Borno,Damboa,Ajigin A,BO-07-01,1.000,exact,loaded
+725,Borno,Damboa,Ajigin B,BO-07-02,1.000,exact,loaded
+726,Borno,Damboa,Azir Multe,BO-07-03,1.000,exact,loaded
+727,Borno,Damboa,Bego Yerwa,BO-07-04,1.000,exact,loaded
+728,Borno,Damboa,Damboa,BO-07-05,1.000,exact,loaded
+729,Borno,Damboa,Gumsuri,BO-07-06,1.000,exact,loaded
+730,Borno,Damboa,Kafa Mafi,BO-07-07,1.000,exact,loaded
+731,Borno,Damboa,Mulgoi Kobchi,BO-07-08,1.000,exact,loaded
+732,Borno,Damboa,Nzuba Wayaram,BO-07-09,1.000,exact,loaded
+733,Borno,Damboa,Wawa Korede,BO-07-10,1.000,exact,loaded
+734,Borno,Dikwa,Afuye,BO-08-10,1.000,exact,loaded
+735,Borno,Dikwa,Boboshe,BO-08-01,1.000,exact,loaded
+736,Borno,Dikwa,Dikwa,BO-08-02,1.000,exact,loaded
+737,Borno,Dikwa,Gajibo,BO-08-03,1.000,exact,loaded
+738,Borno,Dikwa,Magarta,BO-08-09,1.000,exact,loaded
+739,Borno,Dikwa,Mala Maja,BO-08-07,1.000,exact,loaded
+740,Borno,Dikwa,Mudu Kaza,BO-08-06,1.000,exact,loaded
+741,Borno,Dikwa,Muliye,BO-08-05,1.000,exact,loaded
+742,Borno,Dikwa,Ngudoram,BO-08-08,1.000,exact,loaded
+743,Borno,Dikwa,Ufaye,BO-08-04,1.000,exact,loaded
+744,Borno,Gubio,Ardimini,BO-09-01,1.000,exact,loaded
+745,Borno,Gubio,Dabira,BO-09-02,1.000,exact,loaded
+746,Borno,Gubio,Felo,BO-09-03,1.000,exact,loaded
+747,Borno,Gubio,Gamawo,BO-09-04,1.000,exact,loaded
+748,Borno,Gubio,Gazabure,BO-09-05,1.000,exact,loaded
+749,Borno,Gubio,Gubio I,BO-09-06,0.917,fuzzy,loaded
+750,Borno,Gubio,Gubio II,BO-09-06,0.917,fuzzy,loaded
+751,Borno,Gubio,Kingowa,BO-09-08,1.000,exact,loaded
+752,Borno,Gubio,Ngetra,BO-09-09,1.000,exact,loaded
+753,Borno,Gubio,Zowo,BO-09-10,1.000,exact,loaded
+754,Borno,Guzamala,Aduwa,BO-10-01,1.000,exact,loaded
+755,Borno,Guzamala,Gudumbali East,BO-10-02,1.000,exact,loaded
+756,Borno,Guzamala,Gudumbali West,BO-10-03,1.000,exact,loaded
+757,Borno,Guzamala,Guworam,BO-10-04,1.000,exact,loaded
+758,Borno,Guzamala,Guzamala East,BO-10-05,1.000,exact,loaded
+759,Borno,Guzamala,Guzamala West,BO-10-06,1.000,exact,loaded
+760,Borno,Guzamala,Kingarwa,BO-10-07,1.000,exact,loaded
+761,Borno,Guzamala,Mairari,BO-10-08,1.000,exact,loaded
+762,Borno,Guzamala,Moduri,BO-10-09,1.000,exact,loaded
+763,Borno,Guzamala,Wamiri,BO-10-10,1.000,exact,loaded
+764,Borno,Gwoza,Ashigashiya,BO-11-01,1.000,exact,loaded
+765,Borno,Gwoza,Bita Izge,BO-11-02,1.000,exact,loaded
+766,Borno,Gwoza,Bulabulin,BO-11-07,1.000,exact,loaded
+767,Borno,Gwoza,Chikide Jahode,BO-11-09,1.000,exact,loaded
+768,Borno,Gwoza,Gava Agapalwa,BO-11-04,1.000,exact,loaded
+769,Borno,Gwoza,Guduf A & B,BO-11-05,1.000,exact,loaded
+770,Borno,Gwoza,Hambagda Limankara Jaje,BO-11-08,1.000,exact,loaded
+771,Borno,Gwoza,Hausari,BO-11-06,1.000,exact,loaded
+772,Borno,Gwoza,Kirawa Jimin,BO-11-10,1.000,exact,loaded
+773,Borno,Gwoza,Kuranabasa,BO-11-11,1.000,exact,loaded
+774,Borno,Gwoza,Ngoshe,BO-11-12,1.000,exact,loaded
+775,Borno,Gwoza,Pulka Bokko,BO-11-13,1.000,exact,loaded
+776,Borno,Gwoza,Wala Warabe Dure,BO-11-03,1.000,exact,loaded
+777,Borno,Hawul,Bilingwi,BO-12-01,1.000,exact,loaded
+778,Borno,Hawul,Grim Damchoba,BO-12-02,1.000,exact,loaded
+779,Borno,Hawul,Gwanzang,BO-12-03,1.000,exact,loaded
+780,Borno,Hawul,Hizhi Bwala,BO-12-04,1.000,exact,loaded
+781,Borno,Hawul,Kidda,BO-12-05,1.000,exact,loaded
+782,Borno,Hawul,Kwajaffa,BO-12-06,1.000,exact,loaded
+783,Borno,Hawul,Kwaya Bura,BO-12-07,1.000,exact,loaded
+784,Borno,Hawul,Marama Kidang,BO-12-08,1.000,exact,loaded
+785,Borno,Hawul,Pama Waitam,BO-12-09,1.000,exact,loaded
+786,Borno,Hawul,Puba Vidau,BO-12-10,1.000,exact,loaded
+787,Borno,Hawul,Sakwa Hema,BO-12-11,1.000,exact,loaded
+788,Borno,Hawul,Shaffa,BO-12-12,1.000,exact,loaded
+789,Borno,Jere,Alau,BO-13-01,1.000,exact,loaded
+790,Borno,Jere,Dala,BO-13-03,1.000,exact,loaded
+791,Borno,Jere,Dusuman,BO-13-04,1.000,exact,loaded
+792,Borno,Jere,Galtimari,BO-13-02,1.000,exact,loaded
+793,Borno,Jere,Gomari,BO-13-12,1.000,exact,loaded
+794,Borno,Jere,Gongulong,BO-13-05,1.000,exact,loaded
+795,Borno,Jere,Khaddamari,BO-13-08,1.000,exact,loaded
+796,Borno,Jere,Maimusari,BO-13-06,1.000,exact,loaded
+797,Borno,Jere,Mairi,BO-13-11,1.000,exact,loaded
+798,Borno,Jere,Mashamari,BO-13-07,1.000,exact,loaded
+799,Borno,Jere,Old Maiduguri,BO-13-09,1.000,exact,loaded
+800,Borno,Jere,Tuba,BO-13-10,1.000,exact,loaded
+801,Borno,Kaga,Benisheikh,BO-14-02,1.000,exact,loaded
+802,Borno,Kaga,Borgozo,BO-14-03,1.000,exact,loaded
+803,Borno,Kaga,Dogoma Jalori,BO-14-04,1.000,exact,loaded
+804,Borno,Kaga,Dongo,BO-14-05,1.000,exact,loaded
+805,Borno,Kaga,Foi,BO-14-01,1.000,exact,loaded
+806,Borno,Kaga,Galangi,BO-14-06,1.000,exact,loaded
+807,Borno,Kaga,Guwo,BO-14-07,1.000,exact,loaded
+808,Borno,Kaga,Karagawaru,BO-14-08,1.000,exact,loaded
+809,Borno,Kaga,Mainok,BO-14-09,1.000,exact,loaded
+810,Borno,Kaga,Marguba,BO-14-10,1.000,exact,loaded
+811,Borno,Kaga,Ngamdu,BO-14-11,1.000,exact,loaded
+812,Borno,Kaga,Shetimare,BO-14-12,1.000,exact,loaded
+813,Borno,Kaga,Tobolo,BO-14-13,1.000,exact,loaded
+814,Borno,Kaga,Wajiro,BO-14-14,1.000,exact,loaded
+815,Borno,Kaga,Wassaram,BO-14-15,1.000,exact,loaded
+816,Borno,Kala/Balge,Daima,,0.588,no_ward,skipped_no_match
+817,Borno,Kala/Balge,Jarawa,BO-15-04,1.000,exact,loaded
+818,Borno,Kala/Balge,Jilbe,,0.000,ambiguous,skipped_no_match
+819,Borno,Kala/Balge,Kala,BO-15-05,1.000,exact,loaded
+820,Borno,Kala/Balge,Kilumaga,BO-15-06,0.857,needs_review,loaded
+821,Borno,Kala/Balge,Komakandi,,0.593,no_ward,skipped_no_match
+822,Borno,Kala/Balge,Mada,BO-15-09,1.000,exact,loaded
+823,Borno,Kala/Balge,Moholo,BO-15-01,1.000,exact,loaded
+824,Borno,Kala/Balge,Rann,,0.000,ambiguous,skipped_no_match
+825,Borno,Kala/Balge,Sigal Karche,BO-15-10,1.000,exact,loaded
+826,Borno,Konduga,Ajiri,BO-16-11,1.000,exact,loaded
+827,Borno,Konduga,Auno,BO-16-01,1.000,exact,loaded
+828,Borno,Konduga,Dalori,BO-16-02,1.000,exact,loaded
+829,Borno,Konduga,Dalwa,,0.000,ambiguous,skipped_no_match
+830,Borno,Konduga,Jakana,BO-16-04,1.000,exact,loaded
+831,Borno,Konduga,Kawuri,BO-16-05,1.000,exact,loaded
+832,Borno,Konduga,Konduga,BO-16-07,1.000,exact,loaded
+833,Borno,Konduga,Malari,,0.500,no_ward,skipped_no_match
+834,Borno,Konduga,Yabal,,0.381,no_ward,skipped_no_match
+835,Borno,Konduga,Yajiwa,BO-16-10,1.000,exact,loaded
+836,Borno,Konduga,Yale,BO-16-06,1.000,exact,loaded
+837,Borno,Kukawa,Alagarno,BO-17-01,1.000,exact,loaded
+838,Borno,Kukawa,Baga,BO-17-02,1.000,exact,loaded
+839,Borno,Kukawa,Barwati,BO-17-09,1.000,exact,loaded
+840,Borno,Kukawa,Bundur,BO-17-03,1.000,exact,loaded
+841,Borno,Kukawa,Dogoshi,BO-17-04,1.000,exact,loaded
+842,Borno,Kukawa,Doro,BO-17-05,1.000,exact,loaded
+843,Borno,Kukawa,Kauwa,BO-17-06,1.000,exact,loaded
+844,Borno,Kukawa,Kekeno,BO-17-07,1.000,exact,loaded
+845,Borno,Kukawa,Kukawa,BO-17-08,1.000,exact,loaded
+846,Borno,Kukawa,Yoyo,BO-17-10,1.000,exact,loaded
+847,Borno,Kwaya Kusar,Bila Gusi,BO-18-02,1.000,exact,loaded
+848,Borno,Kwaya Kusar,Gongdi,BO-18-01,1.000,exact,loaded
+849,Borno,Kwaya Kusar,Guwal,BO-18-03,1.000,exact,loaded
+850,Borno,Kwaya Kusar,Kubuku,BO-18-04,1.000,exact,loaded
+851,Borno,Kwaya Kusar,Kurba Gayi,BO-18-05,1.000,exact,loaded
+852,Borno,Kwaya Kusar,Kwaya Kusar,BO-18-06,1.000,exact,loaded
+853,Borno,Kwaya Kusar,Peta,BO-18-07,1.000,exact,loaded
+854,Borno,Kwaya Kusar,Wada,BO-18-08,1.000,exact,loaded
+855,Borno,Kwaya Kusar,Wawa,BO-18-09,1.000,exact,loaded
+856,Borno,Kwaya Kusar,Yimirdalang,BO-18-10,1.000,exact,loaded
+857,Borno,Mafa,Ajiri,BO-19-02,1.000,exact,loaded
+858,Borno,Mafa,Gawa,BO-19-03,1.000,exact,loaded
+859,Borno,Mafa,Koshebe,BO-19-04,1.000,exact,loaded
+860,Borno,Mafa,Laje,BO-19-05,1.000,exact,loaded
+861,Borno,Mafa,Limanti,BO-19-06,1.000,exact,loaded
+862,Borno,Mafa,Loskuri,BO-19-07,1.000,exact,loaded
+863,Borno,Mafa,Ma'Afa,BO-19-08,1.000,exact,loaded
+864,Borno,Mafa,Mafa,BO-19-09,1.000,exact,loaded
+865,Borno,Mafa,Masu,BO-19-10,1.000,exact,loaded
+866,Borno,Mafa,Mujigine,BO-19-11,1.000,exact,loaded
+867,Borno,Mafa,Tamsum Gamdua,BO-19-12,1.000,exact,loaded
+868,Borno,Mafa,Zengebe,,0.429,no_ward,skipped_no_match
+869,Borno,Magumeri,Ardoram,BO-20-01,1.000,exact,loaded
+870,Borno,Magumeri,Ayi Yasku,BO-20-02,1.000,exact,loaded
+871,Borno,Magumeri,Borno Yesu,BO-20-03,1.000,exact,loaded
+872,Borno,Magumeri,Furram,BO-20-04,1.000,exact,loaded
+873,Borno,Magumeri,Gajiganna,BO-20-05,0.917,fuzzy,loaded
+874,Borno,Magumeri,Hoyo Chingua,BO-20-07,1.000,exact,loaded
+875,Borno,Magumeri,Kalizoram,BO-20-08,1.000,exact,loaded
+876,Borno,Magumeri,Kareram,BO-20-09,1.000,exact,loaded
+877,Borno,Magumeri,Kupti,BO-20-10,1.000,exact,loaded
+878,Borno,Magumeri,Magumeri,BO-20-11,1.000,exact,loaded
+879,Borno,Magumeri,Ngamma,BO-20-12,1.000,exact,loaded
+880,Borno,Magumeri,Ngulabamma,BO-20-13,1.000,exact,loaded
+881,Borno,Magumeri,Titiwa,,0.364,no_ward,skipped_no_match
+882,Borno,Maiduguri,Bolori I,BO-21-01,0.850,lga_fuzzy_exact_ward,loaded
+883,Borno,Maiduguri,Bolori II,BO-21-02,0.850,lga_fuzzy_exact_ward,loaded
+884,Borno,Maiduguri,Bulabulin,BO-21-03,0.850,lga_fuzzy_exact_ward,loaded
+885,Borno,Maiduguri,Fezzan,BO-21-04,0.850,lga_fuzzy_exact_ward,loaded
+886,Borno,Maiduguri,Gamboru,BO-21-05,0.850,lga_fuzzy_exact_ward,loaded
+887,Borno,Maiduguri,Gwange I,BO-21-06,0.850,lga_fuzzy_exact_ward,loaded
+888,Borno,Maiduguri,Gwange II,BO-21-07,0.850,lga_fuzzy_exact_ward,loaded
+889,Borno,Maiduguri,Gwange III,BO-21-08,0.850,lga_fuzzy_exact_ward,loaded
+890,Borno,Maiduguri,Hausari,BO-21-09,0.850,lga_fuzzy_exact_ward,loaded
+891,Borno,Maiduguri,Lamisula,BO-21-10,0.850,lga_fuzzy_exact_ward,loaded
+892,Borno,Maiduguri,Limanti,BO-21-11,0.850,lga_fuzzy_exact_ward,loaded
+893,Borno,Maiduguri,Mafoni,BO-21-12,0.850,lga_fuzzy_exact_ward,loaded
+894,Borno,Maiduguri,Maisandari,BO-21-13,0.850,lga_fuzzy_exact_ward,loaded
+895,Borno,Maiduguri,Shehuri North,BO-21-14,0.850,lga_fuzzy_exact_ward,loaded
+896,Borno,Maiduguri,Shehuri South,BO-21-15,0.850,lga_fuzzy_exact_ward,loaded
+897,Borno,Marte,A Lawant,BO-22-02,1.000,exact,loaded
+898,Borno,Marte,Ala,BO-22-01,1.000,exact,loaded
+899,Borno,Marte,Badairi,,0.429,no_ward,skipped_no_match
+900,Borno,Marte,Borsori,BO-22-03,1.000,exact,loaded
+901,Borno,Marte,Gumna,BO-22-04,1.000,exact,loaded
+902,Borno,Marte,Kabulawa,BO-22-05,1.000,exact,loaded
+903,Borno,Marte,Kirenowa,BO-22-06,1.000,exact,loaded
+904,Borno,Marte,Kulli,BO-22-07,1.000,exact,loaded
+905,Borno,Marte,Marte,BO-22-08,1.000,exact,loaded
+906,Borno,Marte,Musune,BO-22-10,1.000,exact,loaded
+907,Borno,Marte,Muwalli,BO-22-09,1.000,exact,loaded
+908,Borno,Marte,Njine,BO-22-12,1.000,exact,loaded
+909,Borno,Marte,Zaga,BO-22-13,1.000,exact,loaded
+910,Borno,Mobbar,Asaga,BO-23-01,1.000,exact,loaded
+911,Borno,Mobbar,Bogum,BO-23-02,1.000,exact,loaded
+912,Borno,Mobbar,Chamba,BO-23-03,1.000,exact,loaded
+913,Borno,Mobbar,Damasak,BO-23-04,1.000,exact,loaded
+914,Borno,Mobbar,Duji,BO-23-05,1.000,exact,loaded
+915,Borno,Mobbar,Gashigar,BO-23-06,1.000,exact,loaded
+916,Borno,Mobbar,Kareto,BO-23-07,1.000,exact,loaded
+917,Borno,Mobbar,Layi,BO-23-08,1.000,exact,loaded
+918,Borno,Mobbar,Zanna Umarti,BO-23-09,1.000,exact,loaded
+919,Borno,Mobbar,Zari,BO-23-10,1.000,exact,loaded
+920,Borno,Monguno,Damakuli,BO-24-01,1.000,exact,loaded
+921,Borno,Monguno,Kaguram,BO-24-02,1.000,exact,loaded
+922,Borno,Monguno,Kumalia,BO-24-03,1.000,exact,loaded
+923,Borno,Monguno,Mandala,BO-24-05,1.000,exact,loaded
+924,Borno,Monguno,Mintar,BO-24-06,1.000,exact,loaded
+925,Borno,Monguno,Mofio,BO-24-04,1.000,exact,loaded
+926,Borno,Monguno,Monguno,BO-24-07,1.000,exact,loaded
+927,Borno,Monguno,Ngurno,BO-24-08,1.000,exact,loaded
+928,Borno,Monguno,Sure,BO-24-09,1.000,exact,loaded
+929,Borno,Monguno,Wulo,BO-24-10,1.000,exact,loaded
+930,Borno,Monguno,Yele,BO-24-11,1.000,exact,loaded
+931,Borno,Monguno,Zulum,BO-24-12,1.000,exact,loaded
+932,Borno,Ngala,Fuye,,0.000,ambiguous,skipped_no_match
+933,Borno,Ngala,Gamboru A,BO-25-08,1.000,exact,loaded
+934,Borno,Ngala,Gamboru B,BO-25-03,1.000,exact,loaded
+935,Borno,Ngala,Gamboru C,BO-25-04,1.000,exact,loaded
+936,Borno,Ngala,Logumane,BO-25-05,1.000,exact,loaded
+937,Borno,Ngala,Ndufu,BO-25-06,1.000,exact,loaded
+938,Borno,Ngala,Ngala,BO-25-07,1.000,exact,loaded
+939,Borno,Ngala,Shehuri,,0.400,no_ward,skipped_no_match
+940,Borno,Ngala,Warshele,BO-25-10,1.000,exact,loaded
+941,Borno,Ngala,Wulgo,BO-25-11,1.000,exact,loaded
+942,Borno,Nganzai,Alarge,BO-26-01,1.000,exact,loaded
+943,Borno,Nganzai,Badu,BO-26-02,1.000,exact,loaded
+944,Borno,Nganzai,Damaram,BO-26-03,1.000,exact,loaded
+945,Borno,Nganzai,Gadai,BO-26-05,1.000,exact,loaded
+946,Borno,Nganzai,Gajiram,BO-26-04,1.000,exact,loaded
+947,Borno,Nganzai,Jigalta,BO-26-06,1.000,exact,loaded
+948,Borno,Nganzai,Kuda,BO-26-07,1.000,exact,loaded
+949,Borno,Nganzai,Kurnawa,BO-26-08,1.000,exact,loaded
+950,Borno,Nganzai,Maiwa,BO-26-09,1.000,exact,loaded
+951,Borno,Nganzai,Miye,BO-26-10,1.000,exact,loaded
+952,Borno,Nganzai,Sabsabuwa,BO-26-11,1.000,exact,loaded
+953,Borno,Nganzai,Sugundure,BO-26-12,1.000,exact,loaded
+954,Borno,Shani,Bargu,BO-27-01,1.000,exact,loaded
+955,Borno,Shani,Buma,BO-27-02,1.000,exact,loaded
+956,Borno,Shani,Gasi,BO-27-03,1.000,exact,loaded
+957,Borno,Shani,Gora,BO-27-04,1.000,exact,loaded
+958,Borno,Shani,Gwalasho,BO-27-05,1.000,exact,loaded
+959,Borno,Shani,Gwaskara,BO-27-06,1.000,exact,loaded
+960,Borno,Shani,Kombo,BO-27-07,1.000,exact,loaded
+961,Borno,Shani,Kubo,BO-27-08,1.000,exact,loaded
+962,Borno,Shani,Lakundum,BO-27-09,1.000,exact,loaded
+963,Borno,Shani,Shani,BO-27-10,1.000,exact,loaded
+964,Borno,Shani,Walama,BO-27-11,1.000,exact,loaded
 965,Delta,Aniocha North,Ezi,DE-01-10,1.000,exact,loaded
 966,Delta,Aniocha North,Idumuje-Unor,DE-01-08,1.000,exact,loaded
 967,Delta,Aniocha North,Issele-Mkpitime,DE-01-05,1.000,exact,loaded
@@ -1005,28 +1005,28 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1004,Delta,Burutu,Tamigbe,DE-04-02,1.000,exact,loaded
 1005,Delta,Burutu,Torugbene,DE-04-01,1.000,exact,loaded
 1006,Delta,Burutu,Tuomo,DE-04-03,1.000,exact,loaded
-1007,Delta,Ethiope East,Abraka,DE-05-01,0.875,needs_review,skipped_low_confidence
-1008,Delta,Ethiope East,Egbo,DE-05-04,0.857,needs_review,skipped_low_confidence
-1009,Delta,Ethiope East,Eku,DE-05-04,0.857,needs_review,skipped_low_confidence
-1010,Delta,Ethiope East,Igun,DE-05-04,0.857,needs_review,skipped_low_confidence
-1011,Delta,Ethiope East,Isiokolo,DE-05-04,0.857,needs_review,skipped_low_confidence
-1012,Delta,Ethiope East,Kokori,DE-05-04,0.857,needs_review,skipped_low_confidence
-1013,Delta,Ethiope East,Okpara,DE-05-04,0.857,needs_review,skipped_low_confidence
+1007,Delta,Ethiope East,Abraka,DE-05-01,0.875,needs_review,loaded
+1008,Delta,Ethiope East,Egbo,DE-05-04,0.857,needs_review,loaded
+1009,Delta,Ethiope East,Eku,DE-05-04,0.857,needs_review,loaded
+1010,Delta,Ethiope East,Igun,DE-05-04,0.857,needs_review,loaded
+1011,Delta,Ethiope East,Isiokolo,DE-05-04,0.857,needs_review,loaded
+1012,Delta,Ethiope East,Kokori,DE-05-04,0.857,needs_review,loaded
+1013,Delta,Ethiope East,Okpara,DE-05-04,0.857,needs_review,loaded
 1014,Delta,Ethiope East,Orhaorpo,,0.522,no_ward,skipped_no_match
-1015,Delta,Ethiope East,Oria,DE-05-01,0.875,needs_review,skipped_low_confidence
-1016,Delta,Ethiope East,Ovu,DE-05-04,0.857,needs_review,skipped_low_confidence
-1017,Delta,Ethiope East,Urhuovie,DE-05-01,0.875,needs_review,skipped_low_confidence
-1018,Delta,Ethiope West,Jesse 1,DE-06-03,0.857,needs_review,skipped_low_confidence
-1019,Delta,Ethiope West,Jesse 2,DE-06-03,0.857,needs_review,skipped_low_confidence
-1020,Delta,Ethiope West,Jesse 3,DE-06-03,0.857,needs_review,skipped_low_confidence
-1021,Delta,Ethiope West,Jesse 4,DE-06-03,0.857,needs_review,skipped_low_confidence
-1022,Delta,Ethiope West,Mosogar 1,DE-06-01,0.889,needs_review,skipped_low_confidence
-1023,Delta,Ethiope West,Mosogar 2,DE-06-01,0.889,needs_review,skipped_low_confidence
-1024,Delta,Ethiope West,Ogharefe 1,DE-06-07,0.875,needs_review,skipped_low_confidence
-1025,Delta,Ethiope West,Ogharefe 2,DE-06-07,0.875,needs_review,skipped_low_confidence
-1026,Delta,Ethiope West,Ogharefe 3,DE-06-07,0.875,needs_review,skipped_low_confidence
-1027,Delta,Ethiope West,Oghareki 1,DE-06-07,0.875,needs_review,skipped_low_confidence
-1028,Delta,Ethiope West,Oghareki 2,DE-06-07,0.875,needs_review,skipped_low_confidence
+1015,Delta,Ethiope East,Oria,DE-05-01,0.875,needs_review,loaded
+1016,Delta,Ethiope East,Ovu,DE-05-04,0.857,needs_review,loaded
+1017,Delta,Ethiope East,Urhuovie,DE-05-01,0.875,needs_review,loaded
+1018,Delta,Ethiope West,Jesse 1,DE-06-03,0.857,needs_review,loaded
+1019,Delta,Ethiope West,Jesse 2,DE-06-03,0.857,needs_review,loaded
+1020,Delta,Ethiope West,Jesse 3,DE-06-03,0.857,needs_review,loaded
+1021,Delta,Ethiope West,Jesse 4,DE-06-03,0.857,needs_review,loaded
+1022,Delta,Ethiope West,Mosogar 1,DE-06-01,0.889,needs_review,loaded
+1023,Delta,Ethiope West,Mosogar 2,DE-06-01,0.889,needs_review,loaded
+1024,Delta,Ethiope West,Ogharefe 1,DE-06-07,0.875,needs_review,loaded
+1025,Delta,Ethiope West,Ogharefe 2,DE-06-07,0.875,needs_review,loaded
+1026,Delta,Ethiope West,Ogharefe 3,DE-06-07,0.875,needs_review,loaded
+1027,Delta,Ethiope West,Oghareki 1,DE-06-07,0.875,needs_review,loaded
+1028,Delta,Ethiope West,Oghareki 2,DE-06-07,0.875,needs_review,loaded
 1029,Delta,Ika North East,Akumazi,DE-07-07,1.000,exact,loaded
 1030,Delta,Ika North East,Boji-Boji Owa 1,,0.400,no_ward,skipped_no_match
 1031,Delta,Ika North East,Boji-Boji Owa 2,,0.400,no_ward,skipped_no_match
@@ -1035,43 +1035,43 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1034,Delta,Ika North East,Mbiri,DE-07-12,1.000,exact,loaded
 1035,Delta,Ika North East,Otolokpo,DE-07-14,1.000,exact,loaded
 1036,Delta,Ika North East,Owa-Alero,,0.571,no_ward,skipped_no_match
-1037,Delta,Ika North East,Owa-Alizomor,DE-07-01,0.800,needs_review,skipped_low_confidence
+1037,Delta,Ika North East,Owa-Alizomor,DE-07-01,0.800,needs_review,loaded
 1038,Delta,Ika North East,Owa-Oyibu,,0.714,no_ward,skipped_no_match
-1039,Delta,Ika North East,Owanta,DE-07-01,0.800,needs_review,skipped_low_confidence
+1039,Delta,Ika North East,Owanta,DE-07-01,0.800,needs_review,loaded
 1040,Delta,Ika North East,Umunede,DE-07-11,1.000,exact,loaded
 1041,Delta,Ika North East,Ute-Ogbeje,DE-07-13,1.000,exact,loaded
 1042,Delta,Ika North East,Ute-Okpu,DE-07-09,1.000,exact,loaded
-1043,Delta,Ika South,Abavo Central,DE-08-10,0.857,needs_review,skipped_low_confidence
+1043,Delta,Ika South,Abavo Central,DE-08-10,0.857,needs_review,loaded
 1044,Delta,Ika South,Agbor-Nta,DE-08-01,0.917,fuzzy,loaded
 1045,Delta,Ika South,Boji-Boji Agbor 7,DE-08-07,0.909,fuzzy,loaded
 1046,Delta,Ika South,Agbor Obi,DE-08-01,0.762,needs_review,skipped_low_confidence
 1047,Delta,Ika South,Alihagwu,DE-08-04,0.909,fuzzy,loaded
 1048,Delta,Ika South,Ekuku Agbor,DE-08-05,1.000,exact,loaded
 1049,Delta,Ika South,Emuhu,,0.375,no_ward,skipped_no_match
-1050,Delta,Ika South,Oyoko,DE-08-10,0.857,needs_review,skipped_low_confidence
+1050,Delta,Ika South,Oyoko,DE-08-10,0.857,needs_review,loaded
 1051,Delta,Ika South,Ozanogogo,DE-08-03,1.000,exact,loaded
-1052,Delta,Ika South,Udomi-Azuowa,DE-08-10,0.857,needs_review,skipped_low_confidence
+1052,Delta,Ika South,Udomi-Azuowa,DE-08-10,0.857,needs_review,loaded
 1053,Delta,Isoko North,Ellu,DE-09-03,1.000,exact,loaded
 1054,Delta,Isoko North,Emevor,DE-09-07,1.000,exact,loaded
-1055,Delta,Isoko North,Iyede 1,DE-09-01,0.857,needs_review,skipped_low_confidence
-1056,Delta,Isoko North,Iyede 2,DE-09-01,0.857,needs_review,skipped_low_confidence
+1055,Delta,Isoko North,Iyede 1,DE-09-01,0.857,needs_review,loaded
+1056,Delta,Isoko North,Iyede 2,DE-09-01,0.857,needs_review,loaded
 1057,Delta,Isoko North,Ofagbe,DE-09-04,1.000,exact,loaded
 1058,Delta,Isoko North,Okpe-Isoko,DE-09-08,1.000,exact,loaded
 1059,Delta,Isoko North,Owhe 1,,0.556,no_ward,skipped_no_match
 1060,Delta,Isoko North,Owhe 2,,0.556,no_ward,skipped_no_match
 1061,Delta,Isoko North,Owhe 3,,0.556,no_ward,skipped_no_match
 1062,Delta,Isoko North,Oyede,DE-09-12,1.000,exact,loaded
-1063,Delta,Isoko North,Ozoro 1,DE-09-09,0.857,needs_review,skipped_low_confidence
-1064,Delta,Isoko North,Ozoro 2,DE-09-09,0.857,needs_review,skipped_low_confidence
-1065,Delta,Isoko North,Ozoro 3,DE-09-09,0.857,needs_review,skipped_low_confidence
+1063,Delta,Isoko North,Ozoro 1,DE-09-09,0.857,needs_review,loaded
+1064,Delta,Isoko North,Ozoro 2,DE-09-09,0.857,needs_review,loaded
+1065,Delta,Isoko North,Ozoro 3,DE-09-09,0.857,needs_review,loaded
 1066,Delta,Isoko South,Avsiara,DE-10-03,1.000,exact,loaded
 1067,Delta,Isoko South,Emede,DE-10-05,1.000,exact,loaded
 1068,Delta,Isoko South,Enwhe,DE-10-09,1.000,exact,loaded
 1069,Delta,Isoko South,Igbide,DE-10-07,1.000,exact,loaded
-1070,Delta,Isoko South,Irri 10,DE-10-10,0.833,needs_review,skipped_low_confidence
-1071,Delta,Isoko South,Irri 11,DE-10-10,0.833,needs_review,skipped_low_confidence
-1072,Delta,Isoko South,Oleh 1,DE-10-01,0.833,needs_review,skipped_low_confidence
-1073,Delta,Isoko South,Oleh 2,DE-10-01,0.833,needs_review,skipped_low_confidence
+1070,Delta,Isoko South,Irri 10,DE-10-10,0.833,needs_review,loaded
+1071,Delta,Isoko South,Irri 11,DE-10-10,0.833,needs_review,loaded
+1072,Delta,Isoko South,Oleh 1,DE-10-01,0.833,needs_review,loaded
+1073,Delta,Isoko South,Oleh 2,DE-10-01,0.833,needs_review,loaded
 1074,Delta,Isoko South,Olomoro,DE-10-06,1.000,exact,loaded
 1075,Delta,Isoko South,Umeh/Erowha,DE-10-08,1.000,exact,loaded
 1076,Delta,Isoko South,Uzere,DE-10-04,1.000,exact,loaded
@@ -1085,21 +1085,21 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1084,Delta,Ndokwa East,Okpi/Utchi/Beneku,DE-11-04,1.000,exact,loaded
 1085,Delta,Ndokwa East,Ossissa,DE-11-01,1.000,exact,loaded
 1086,Delta,Ndokwa East,Umuolu/Onya,,0.595,no_ward,skipped_no_match
-1087,Delta,Ndokwa West,Abbi 8,DE-12-08,0.833,needs_review,skipped_low_confidence
-1088,Delta,Ndokwa West,Abbi 9,DE-12-08,0.833,needs_review,skipped_low_confidence
+1087,Delta,Ndokwa West,Abbi 8,DE-12-08,0.833,needs_review,loaded
+1088,Delta,Ndokwa West,Abbi 9,DE-12-08,0.833,needs_review,loaded
 1089,Delta,Ndokwa West,Emu,DE-12-10,1.000,exact,loaded
 1090,Delta,Ndokwa West,Etua,,0.571,no_ward,skipped_no_match
 1091,Delta,Ndokwa West,Kwale,,0.333,no_ward,skipped_no_match
 1092,Delta,Ndokwa West,Ndemili,,0.400,no_ward,skipped_no_match
-1093,Delta,Ndokwa West,Ogume 6,DE-12-06,0.857,needs_review,skipped_low_confidence
-1094,Delta,Ndokwa West,Ogume 7,DE-12-06,0.857,needs_review,skipped_low_confidence
+1093,Delta,Ndokwa West,Ogume 6,DE-12-06,0.857,needs_review,loaded
+1094,Delta,Ndokwa West,Ogume 7,DE-12-06,0.857,needs_review,loaded
 1095,Delta,Ndokwa West,Onitcha Ukwuani,DE-12-05,1.000,exact,loaded
 1096,Delta,Ndokwa West,Utagba Uno,DE-12-01,1.000,exact,loaded
 1097,Delta,Okpe,Adagbarassa,,0.476,no_ward,skipped_no_match
 1098,Delta,Okpe,Adeje,,0.462,no_ward,skipped_no_match
 1099,Delta,Okpe,Aghalokpe,DE-13-05,1.000,exact,loaded
 1100,Delta,Okpe,Evwriyen,,0.444,no_ward,skipped_no_match
-1101,Delta,Okpe,Mereje,DE-13-07,0.857,needs_review,skipped_low_confidence
+1101,Delta,Okpe,Mereje,DE-13-07,0.857,needs_review,loaded
 1102,Delta,Okpe,Oha,DE-13-03,0.750,needs_review,skipped_low_confidence
 1103,Delta,Okpe,Okwabude,,0.375,no_ward,skipped_no_match
 1104,Delta,Okpe,Orerokpe,DE-13-01,1.000,exact,loaded
@@ -1130,10 +1130,10 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1129,Delta,Patani,Agoloma,DE-16-06,1.000,exact,loaded
 1130,Delta,Patani,Buluangiama,DE-16-08,1.000,exact,loaded
 1131,Delta,Patani,Odorubu,DE-16-10,1.000,exact,loaded
-1132,Delta,Patani,Patani 2,DE-16-02,0.875,needs_review,skipped_low_confidence
-1133,Delta,Patani,Patani 3,DE-16-02,0.875,needs_review,skipped_low_confidence
-1134,Delta,Patani,Patani 4,DE-16-02,0.875,needs_review,skipped_low_confidence
-1135,Delta,Patani,Patani 5,DE-16-02,0.875,needs_review,skipped_low_confidence
+1132,Delta,Patani,Patani 2,DE-16-02,0.875,needs_review,loaded
+1133,Delta,Patani,Patani 3,DE-16-02,0.875,needs_review,loaded
+1134,Delta,Patani,Patani 4,DE-16-02,0.875,needs_review,loaded
+1135,Delta,Patani,Patani 5,DE-16-02,0.875,needs_review,loaded
 1136,Delta,Patani,Toruangiama,DE-16-07,1.000,exact,loaded
 1137,Delta,Patani,Uduophori,DE-16-09,1.000,exact,loaded
 1138,Delta,Sapele,Abeke,,0.400,no_ward,skipped_no_match
@@ -1148,36 +1148,36 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1147,Delta,Sapele,Okpe,,0.727,no_ward,skipped_no_match
 1148,Delta,Sapele,Ugborhen/Okokporo,DE-17-11,1.000,exact,loaded
 1149,Delta,Udu,Aladja,DE-18-10,1.000,exact,loaded
-1150,Delta,Udu,Egini,DE-18-07,0.875,needs_review,skipped_low_confidence
+1150,Delta,Udu,Egini,DE-18-07,0.875,needs_review,loaded
 1151,Delta,Udu,Ekete,DE-18-06,1.000,exact,loaded
 1152,Delta,Udu,Emadadja,,0.714,no_ward,skipped_no_match
 1153,Delta,Udu,Ogbe Udu,,0.462,no_ward,skipped_no_match
 1154,Delta,Udu,Opete,DE-18-05,1.000,exact,loaded
 1155,Delta,Udu,Orhuwhorun,DE-18-09,1.000,exact,loaded
-1156,Delta,Udu,Otor Udu,DE-18-01,0.800,needs_review,skipped_low_confidence
-1157,Delta,Udu,Ovwian,DE-18-07,0.875,needs_review,skipped_low_confidence
-1158,Delta,Udu,Owhrode,DE-18-01,0.800,needs_review,skipped_low_confidence
+1156,Delta,Udu,Otor Udu,DE-18-01,0.800,needs_review,loaded
+1157,Delta,Udu,Ovwian,DE-18-07,0.875,needs_review,loaded
+1158,Delta,Udu,Owhrode,DE-18-01,0.800,needs_review,loaded
 1159,Delta,Ughelli North,Afiesere/Ereumukohwaren,,0.400,no_ward,skipped_no_match
 1160,Delta,Ughelli North,Agbarha-Otor,DE-19-01,1.000,exact,loaded
-1161,Delta,Ughelli North,Agbarho 1,DE-19-10,0.889,needs_review,skipped_low_confidence
-1162,Delta,Ughelli North,Agbarho 2,DE-19-10,0.889,needs_review,skipped_low_confidence
+1161,Delta,Ughelli North,Agbarho 1,DE-19-10,0.889,needs_review,loaded
+1162,Delta,Ughelli North,Agbarho 2,DE-19-10,0.889,needs_review,loaded
 1163,Delta,Ughelli North,Evwreni,DE-19-08,1.000,exact,loaded
-1164,Delta,Ughelli North,Orogun 1,DE-19-03,0.875,needs_review,skipped_low_confidence
-1165,Delta,Ughelli North,Orogun 2-Erhobaro,DE-19-03,0.875,needs_review,skipped_low_confidence
+1164,Delta,Ughelli North,Orogun 1,DE-19-03,0.875,needs_review,loaded
+1165,Delta,Ughelli North,Orogun 2-Erhobaro,DE-19-03,0.875,needs_review,loaded
 1166,Delta,Ughelli North,Otor-Ogor,DE-19-02,1.000,exact,loaded
-1167,Delta,Ughelli North,Ughelli Urban 1,DE-19-05,0.889,needs_review,skipped_low_confidence
-1168,Delta,Ughelli North,Ughelli Urban 2,DE-19-05,0.889,needs_review,skipped_low_confidence
+1167,Delta,Ughelli North,Ughelli Urban 1,DE-19-05,0.889,needs_review,loaded
+1168,Delta,Ughelli North,Ughelli Urban 2,DE-19-05,0.889,needs_review,loaded
 1169,Delta,Ughelli North,Uwheru,DE-19-09,1.000,exact,loaded
 1170,Delta,Ughelli South,Ekakpamre,DE-20-07,1.000,exact,loaded
-1171,Delta,Ughelli South,Ewu 1,DE-20-01,0.800,needs_review,skipped_low_confidence
-1172,Delta,Ughelli South,Ewu 2,DE-20-01,0.800,needs_review,skipped_low_confidence
-1173,Delta,Ughelli South,Ewu 3,DE-20-01,0.800,needs_review,skipped_low_confidence
-1174,Delta,Ughelli South,Jeremi 1,DE-20-08,0.875,needs_review,skipped_low_confidence
-1175,Delta,Ughelli South,Jeremi 2,DE-20-08,0.875,needs_review,skipped_low_confidence
-1176,Delta,Ughelli South,Jeremi 3,DE-20-08,0.875,needs_review,skipped_low_confidence
-1177,Delta,Ughelli South,Jeremi 4,DE-20-08,0.875,needs_review,skipped_low_confidence
-1178,Delta,Ughelli South,Olomu 1,DE-20-04,0.857,needs_review,skipped_low_confidence
-1179,Delta,Ughelli South,Olomu 2,DE-20-04,0.857,needs_review,skipped_low_confidence
+1171,Delta,Ughelli South,Ewu 1,DE-20-01,0.800,needs_review,loaded
+1172,Delta,Ughelli South,Ewu 2,DE-20-01,0.800,needs_review,loaded
+1173,Delta,Ughelli South,Ewu 3,DE-20-01,0.800,needs_review,loaded
+1174,Delta,Ughelli South,Jeremi 1,DE-20-08,0.875,needs_review,loaded
+1175,Delta,Ughelli South,Jeremi 2,DE-20-08,0.875,needs_review,loaded
+1176,Delta,Ughelli South,Jeremi 3,DE-20-08,0.875,needs_review,loaded
+1177,Delta,Ughelli South,Jeremi 4,DE-20-08,0.875,needs_review,loaded
+1178,Delta,Ughelli South,Olomu 1,DE-20-04,0.857,needs_review,loaded
+1179,Delta,Ughelli South,Olomu 2,DE-20-04,0.857,needs_review,loaded
 1180,Delta,Ughelli South,Olomu 3-Effurun-Otor,DE-20-06,1.000,exact,loaded
 1181,Delta,Ukwuani,Akoku,DE-21-02,1.000,exact,loaded
 1182,Delta,Ukwuani,Amai,DE-21-06,1.000,exact,loaded
@@ -1190,10 +1190,10 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1189,Delta,Ukwuani,Umukwata,DE-21-04,1.000,exact,loaded
 1190,Delta,Ukwuani,Umutu,DE-21-01,1.000,exact,loaded
 1191,Delta,Uvwie,Alaka,,0.333,no_ward,skipped_no_match
-1192,Delta,Uvwie,Ekpan 10,DE-22-09,0.857,needs_review,skipped_low_confidence
-1193,Delta,Uvwie,Ekpan 9,DE-22-09,0.857,needs_review,skipped_low_confidence
-1194,Delta,Uvwie,Enerhen 3,DE-22-03,0.889,needs_review,skipped_low_confidence
-1195,Delta,Uvwie,Enerhen 4,DE-22-03,0.889,needs_review,skipped_low_confidence
+1192,Delta,Uvwie,Ekpan 10,DE-22-09,0.857,needs_review,loaded
+1193,Delta,Uvwie,Ekpan 9,DE-22-09,0.857,needs_review,loaded
+1194,Delta,Uvwie,Enerhen 3,DE-22-03,0.889,needs_review,loaded
+1195,Delta,Uvwie,Enerhen 4,DE-22-03,0.889,needs_review,loaded
 1196,Delta,Uvwie,Ohorhe,,0.429,no_ward,skipped_no_match
 1197,Delta,Uvwie,Ugbomro,DE-22-07,1.000,exact,loaded
 1198,Delta,Uvwie,Ugborikoko,DE-22-05,1.000,exact,loaded
@@ -1203,7 +1203,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1202,Delta,Warri North,Ebrohimi,DE-23-03,1.000,exact,loaded
 1203,Delta,Warri North,Eghoro,DE-23-04,1.000,exact,loaded
 1204,Delta,Warri North,Gbokoda,DE-23-02,1.000,exact,loaded
-1205,Delta,Warri North,Koko,DE-23-05,0.800,needs_review,skipped_low_confidence
+1205,Delta,Warri North,Koko,DE-23-05,0.800,needs_review,loaded
 1206,Delta,Warri North,Ogbinbiri,DE-23-09,1.000,exact,loaded
 1207,Delta,Warri North,Ogheye,DE-23-01,1.000,exact,loaded
 1208,Delta,Warri North,Okbudugbudu,DE-23-10,1.000,exact,loaded
@@ -1322,27 +1322,27 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1321,Gombe,Nafada,Nafada Central,GO-09-08,1.000,exact,loaded
 1322,Gombe,Nafada,Nafada East,GO-09-09,1.000,exact,loaded
 1323,Gombe,Nafada,Nafada West,GO-09-10,1.000,exact,loaded
-1324,Gombe,Shomgom,Bangunji,,0.000,no_lga,skipped_no_match
-1325,Gombe,Shomgom,Boh,,0.000,no_lga,skipped_no_match
-1326,Gombe,Shomgom,Burak,,0.000,no_lga,skipped_no_match
-1327,Gombe,Shomgom,Filiya,,0.000,no_lga,skipped_no_match
-1328,Gombe,Shomgom,Gundale,,0.000,no_lga,skipped_no_match
-1329,Gombe,Shomgom,Gwandum,,0.000,no_lga,skipped_no_match
-1330,Gombe,Shomgom,Kulishin,,0.000,no_lga,skipped_no_match
-1331,Gombe,Shomgom,Kushi,,0.000,no_lga,skipped_no_match
-1332,Gombe,Shomgom,Lalaipido,,0.000,no_lga,skipped_no_match
-1333,Gombe,Shomgom,Lapan,,0.000,no_lga,skipped_no_match
-1334,Gombe,Yamaltu/Deba,Deba,,0.000,no_lga,skipped_no_match
-1335,Gombe,Yamaltu/Deba,Gwani/Shinga/Wade,,0.000,no_lga,skipped_no_match
-1336,Gombe,Yamaltu/Deba,Hinna,,0.000,no_lga,skipped_no_match
-1337,Gombe,Yamaltu/Deba,Jagali North,,0.000,no_lga,skipped_no_match
-1338,Gombe,Yamaltu/Deba,Jagali South,,0.000,no_lga,skipped_no_match
-1339,Gombe,Yamaltu/Deba,Kanawa/Wajari,,0.000,no_lga,skipped_no_match
-1340,Gombe,Yamaltu/Deba,Kwadon/Liji/Kurba,,0.000,no_lga,skipped_no_match
-1341,Gombe,Yamaltu/Deba,Lano/Kuri/Lambam,,0.000,no_lga,skipped_no_match
-1342,Gombe,Yamaltu/Deba,Lubo/Difa/Kinafa,,0.000,no_lga,skipped_no_match
-1343,Gombe,Yamaltu/Deba,Nono/Kunuwal/Wuro Birdeka,,0.000,no_lga,skipped_no_match
-1344,Gombe,Yamaltu/Deba,Zambuk/Kwali,,0.000,no_lga,skipped_no_match
+1324,Gombe,Shomgom,Bangunji,GO-10-01,0.857,lga_fuzzy_exact_ward,loaded
+1325,Gombe,Shomgom,Boh,GO-10-02,0.857,lga_fuzzy_exact_ward,loaded
+1326,Gombe,Shomgom,Burak,GO-10-03,0.857,lga_fuzzy_exact_ward,loaded
+1327,Gombe,Shomgom,Filiya,GO-10-04,0.857,lga_fuzzy_exact_ward,loaded
+1328,Gombe,Shomgom,Gundale,GO-10-05,0.857,lga_fuzzy_exact_ward,loaded
+1329,Gombe,Shomgom,Gwandum,GO-10-06,0.857,lga_fuzzy_exact_ward,loaded
+1330,Gombe,Shomgom,Kulishin,GO-10-07,0.857,lga_fuzzy_exact_ward,loaded
+1331,Gombe,Shomgom,Kushi,GO-10-08,0.857,lga_fuzzy_exact_ward,loaded
+1332,Gombe,Shomgom,Lalaipido,GO-10-09,0.857,lga_fuzzy_exact_ward,loaded
+1333,Gombe,Shomgom,Lapan,GO-10-10,0.857,lga_fuzzy_exact_ward,loaded
+1334,Gombe,Yamaltu/Deba,Deba,GO-11-01,0.960,lga_fuzzy_exact_ward,loaded
+1335,Gombe,Yamaltu/Deba,Gwani/Shinga/Wade,GO-11-03,0.960,lga_fuzzy_exact_ward,loaded
+1336,Gombe,Yamaltu/Deba,Hinna,GO-11-04,0.960,lga_fuzzy_exact_ward,loaded
+1337,Gombe,Yamaltu/Deba,Jagali North,GO-11-05,0.960,lga_fuzzy_exact_ward,loaded
+1338,Gombe,Yamaltu/Deba,Jagali South,GO-11-06,0.960,lga_fuzzy_exact_ward,loaded
+1339,Gombe,Yamaltu/Deba,Kanawa/Wajari,GO-11-07,0.960,lga_fuzzy_exact_ward,loaded
+1340,Gombe,Yamaltu/Deba,Kwadon/Liji/Kurba,GO-11-09,0.960,lga_fuzzy_exact_ward,loaded
+1341,Gombe,Yamaltu/Deba,Lano/Kuri/Lambam,GO-11-08,0.960,lga_fuzzy_exact_ward,loaded
+1342,Gombe,Yamaltu/Deba,Lubo/Difa/Kinafa,GO-11-02,0.960,lga_fuzzy_exact_ward,loaded
+1343,Gombe,Yamaltu/Deba,Nono/Kunuwal/Wuro Birdeka,GO-11-10,0.960,lga_fuzzy_exact_ward,loaded
+1344,Gombe,Yamaltu/Deba,Zambuk/Kwali,GO-11-11,0.960,lga_fuzzy_exact_ward,loaded
 1345,Jigawa,Auyo,Auyakayi,JI-01-02,1.000,exact,loaded
 1346,Jigawa,Auyo,Auyo,JI-01-01,1.000,exact,loaded
 1347,Jigawa,Auyo,Ayama,JI-01-03,1.000,exact,loaded
@@ -1526,16 +1526,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1525,Jigawa,Kazaure,Unguwar Arewa,JI-17-09,1.000,exact,loaded
 1526,Jigawa,Kazaure,Unguwar Gabas,JI-17-10,1.000,exact,loaded
 1527,Jigawa,Kazaure,Unguwar Yamma,JI-17-11,1.000,exact,loaded
-1528,Jigawa,Kiri Kasamma,Baturiya,,0.000,no_lga,skipped_no_match
-1529,Jigawa,Kiri Kasamma,Bulunchai,,0.000,no_lga,skipped_no_match
-1530,Jigawa,Kiri Kasamma,Fandum,,0.000,no_lga,skipped_no_match
-1531,Jigawa,Kiri Kasamma,Gayin,,0.000,no_lga,skipped_no_match
-1532,Jigawa,Kiri Kasamma,Kiri Kasamma,,0.000,no_lga,skipped_no_match
-1533,Jigawa,Kiri Kasamma,Madachi,,0.000,no_lga,skipped_no_match
-1534,Jigawa,Kiri Kasamma,Marma,,0.000,no_lga,skipped_no_match
-1535,Jigawa,Kiri Kasamma,Saleri,,0.000,no_lga,skipped_no_match
-1536,Jigawa,Kiri Kasamma,Tasheguwa,,0.000,no_lga,skipped_no_match
-1537,Jigawa,Kiri Kasamma,Turabu,,0.000,no_lga,skipped_no_match
+1528,Jigawa,Kiri Kasamma,Baturiya,JI-18-01,0.917,lga_fuzzy_exact_ward,loaded
+1529,Jigawa,Kiri Kasamma,Bulunchai,JI-18-02,0.917,lga_fuzzy_exact_ward,loaded
+1530,Jigawa,Kiri Kasamma,Fandum,JI-18-04,0.917,lga_fuzzy_exact_ward,loaded
+1531,Jigawa,Kiri Kasamma,Gayin,JI-18-05,0.917,lga_fuzzy_exact_ward,loaded
+1532,Jigawa,Kiri Kasamma,Kiri Kasamma,JI-18-06,0.917,lga_fuzzy_exact_ward,loaded
+1533,Jigawa,Kiri Kasamma,Madachi,JI-18-07,0.917,lga_fuzzy_exact_ward,loaded
+1534,Jigawa,Kiri Kasamma,Marma,JI-18-08,0.917,lga_fuzzy_exact_ward,loaded
+1535,Jigawa,Kiri Kasamma,Saleri,JI-18-03,0.917,lga_fuzzy_exact_ward,loaded
+1536,Jigawa,Kiri Kasamma,Tasheguwa,JI-18-09,0.917,lga_fuzzy_exact_ward,loaded
+1537,Jigawa,Kiri Kasamma,Turabu,JI-18-10,0.917,lga_fuzzy_exact_ward,loaded
 1538,Jigawa,Kiyawa,Andaza,JI-19-02,1.000,exact,loaded
 1539,Jigawa,Kiyawa,Balago,JI-19-01,1.000,exact,loaded
 1540,Jigawa,Kiyawa,Fake,JI-19-03,1.000,exact,loaded
@@ -1718,32 +1718,32 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1717,Kano,Dambatta,Kore,,0.000,no_lga,skipped_no_match
 1718,Kano,Dambatta,Saidawa,,0.000,no_lga,skipped_no_match
 1719,Kano,Dambatta,San San,,0.000,no_lga,skipped_no_match
-1720,Kano,Dawakin Kudu,Dabar Kwari,,0.000,no_lga,skipped_no_match
-1721,Kano,Dawakin Kudu,Danbagina,,0.000,no_lga,skipped_no_match
-1722,Kano,Dawakin Kudu,Dawaki,,0.000,no_lga,skipped_no_match
-1723,Kano,Dawakin Kudu,Dawakiji,,0.000,no_lga,skipped_no_match
-1724,Kano,Dawakin Kudu,Dosan,,0.000,no_lga,skipped_no_match
-1725,Kano,Dawakin Kudu,Gano,,0.000,no_lga,skipped_no_match
-1726,Kano,Dawakin Kudu,Gurjiya,,0.000,no_lga,skipped_no_match
-1727,Kano,Dawakin Kudu,Jido,,0.000,no_lga,skipped_no_match
-1728,Kano,Dawakin Kudu,Tanburawa,,0.000,no_lga,skipped_no_match
-1729,Kano,Dawakin Kudu,Tsakuwa,,0.000,no_lga,skipped_no_match
-1730,Kano,Dawakin Kudu,Unguwar Duniya,,0.000,no_lga,skipped_no_match
-1731,Kano,Dawakin Kudu,Yan Barau,,0.000,no_lga,skipped_no_match
-1732,Kano,Dawakin Kudu,Yankatsari,,0.000,no_lga,skipped_no_match
-1733,Kano,Dawakin Kudu,Yargaya,,0.000,no_lga,skipped_no_match
-1734,Kano,Dawakin Kudu,Zogarawa,,0.000,no_lga,skipped_no_match
-1735,Kano,Dawakin Tofa,Danguguwa,,0.000,no_lga,skipped_no_match
-1736,Kano,Dawakin Tofa,Dawaki East,,0.000,no_lga,skipped_no_match
-1737,Kano,Dawakin Tofa,Dawaki West,,0.000,no_lga,skipped_no_match
-1738,Kano,Dawakin Tofa,Dawanau,,0.000,no_lga,skipped_no_match
-1739,Kano,Dawakin Tofa,Ganduje,,0.000,no_lga,skipped_no_match
-1740,Kano,Dawakin Tofa,Gargari,,0.000,no_lga,skipped_no_match
-1741,Kano,Dawakin Tofa,Jalli,,0.000,no_lga,skipped_no_match
-1742,Kano,Dawakin Tofa,Kwa,,0.000,no_lga,skipped_no_match
-1743,Kano,Dawakin Tofa,Marke,,0.000,no_lga,skipped_no_match
-1744,Kano,Dawakin Tofa,Tattarawa,,0.000,no_lga,skipped_no_match
-1745,Kano,Dawakin Tofa,Tumfafi,,0.000,no_lga,skipped_no_match
+1720,Kano,Dawakin Kudu,Dabar Kwari,KN-09-01,0.957,lga_fuzzy_exact_ward,loaded
+1721,Kano,Dawakin Kudu,Danbagina,KN-09-02,0.957,lga_fuzzy_exact_ward,loaded
+1722,Kano,Dawakin Kudu,Dawaki,KN-09-03,0.957,lga_fuzzy_exact_ward,loaded
+1723,Kano,Dawakin Kudu,Dawakiji,KN-09-04,0.957,lga_fuzzy_exact_ward,loaded
+1724,Kano,Dawakin Kudu,Dosan,KN-09-05,0.957,lga_fuzzy_exact_ward,loaded
+1725,Kano,Dawakin Kudu,Gano,KN-09-06,0.957,lga_fuzzy_exact_ward,loaded
+1726,Kano,Dawakin Kudu,Gurjiya,KN-09-07,0.957,lga_fuzzy_exact_ward,loaded
+1727,Kano,Dawakin Kudu,Jido,KN-09-08,0.957,lga_fuzzy_exact_ward,loaded
+1728,Kano,Dawakin Kudu,Tanburawa,KN-09-09,0.957,lga_fuzzy_exact_ward,loaded
+1729,Kano,Dawakin Kudu,Tsakuwa,KN-09-10,0.957,lga_fuzzy_exact_ward,loaded
+1730,Kano,Dawakin Kudu,Unguwar Duniya,KN-09-11,0.957,lga_fuzzy_exact_ward,loaded
+1731,Kano,Dawakin Kudu,Yan Barau,KN-09-12,0.957,lga_fuzzy_exact_ward,loaded
+1732,Kano,Dawakin Kudu,Yankatsari,KN-09-13,0.957,lga_fuzzy_exact_ward,loaded
+1733,Kano,Dawakin Kudu,Yargaya,KN-09-14,0.957,lga_fuzzy_exact_ward,loaded
+1734,Kano,Dawakin Kudu,Zogarawa,KN-09-15,0.957,lga_fuzzy_exact_ward,loaded
+1735,Kano,Dawakin Tofa,Danguguwa,KN-10-04,0.957,lga_fuzzy_exact_ward,loaded
+1736,Kano,Dawakin Tofa,Dawaki East,KN-10-01,0.957,lga_fuzzy_exact_ward,loaded
+1737,Kano,Dawakin Tofa,Dawaki West,KN-10-02,0.957,lga_fuzzy_exact_ward,loaded
+1738,Kano,Dawakin Tofa,Dawanau,KN-10-03,0.957,lga_fuzzy_exact_ward,loaded
+1739,Kano,Dawakin Tofa,Ganduje,KN-10-05,0.957,lga_fuzzy_exact_ward,loaded
+1740,Kano,Dawakin Tofa,Gargari,KN-10-06,0.957,lga_fuzzy_exact_ward,loaded
+1741,Kano,Dawakin Tofa,Jalli,KN-10-07,0.957,lga_fuzzy_exact_ward,loaded
+1742,Kano,Dawakin Tofa,Kwa,KN-10-08,0.957,lga_fuzzy_exact_ward,loaded
+1743,Kano,Dawakin Tofa,Marke,KN-10-09,0.957,lga_fuzzy_exact_ward,loaded
+1744,Kano,Dawakin Tofa,Tattarawa,KN-10-10,0.957,lga_fuzzy_exact_ward,loaded
+1745,Kano,Dawakin Tofa,Tumfafi,KN-10-11,0.957,lga_fuzzy_exact_ward,loaded
 1746,Kano,Doguwa,Dadin Kowa,KN-11-06,1.000,exact,loaded
 1747,Kano,Doguwa,Dariyar Shere,KN-11-01,1.000,exact,loaded
 1748,Kano,Doguwa,Dogon Kawo,KN-11-02,1.000,exact,loaded
@@ -1785,16 +1785,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1784,Kano,Garko,Raba,KN-14-08,1.000,exact,loaded
 1785,Kano,Garko,Sarina,KN-14-09,1.000,exact,loaded
 1786,Kano,Garko,Zakarawa,KN-14-10,1.000,exact,loaded
-1787,Kano,Garum Mallam,Chiromawa,,0.000,no_lga,skipped_no_match
-1788,Kano,Garum Mallam,Dakasoye,,0.000,no_lga,skipped_no_match
-1789,Kano,Garum Mallam,Dorawar Sallau,,0.000,no_lga,skipped_no_match
-1790,Kano,Garum Mallam,Fankurun,,0.000,no_lga,skipped_no_match
-1791,Kano,Garum Mallam,Garun Babba,,0.000,no_lga,skipped_no_match
-1792,Kano,Garum Mallam,Garun Malam,,0.000,no_lga,skipped_no_match
-1793,Kano,Garum Mallam,Jobawa,,0.000,no_lga,skipped_no_match
-1794,Kano,Garum Mallam,Kadawa,,0.000,no_lga,skipped_no_match
-1795,Kano,Garum Mallam,Makwaro,,0.000,no_lga,skipped_no_match
-1796,Kano,Garum Mallam,Yada Kwari,,0.000,no_lga,skipped_no_match
+1787,Kano,Garum Mallam,Chiromawa,KN-15-01,0.870,lga_fuzzy_exact_ward,loaded
+1788,Kano,Garum Mallam,Dakasoye,,0.464,no_ward,skipped_no_match
+1789,Kano,Garum Mallam,Dorawar Sallau,KN-15-02,0.870,lga_fuzzy_exact_ward,loaded
+1790,Kano,Garum Mallam,Fankurun,KN-15-03,0.870,lga_fuzzy_exact_ward,loaded
+1791,Kano,Garum Mallam,Garun Babba,KN-15-04,0.870,lga_fuzzy_exact_ward,loaded
+1792,Kano,Garum Mallam,Garun Malam,KN-15-05,0.870,lga_fuzzy_exact_ward,loaded
+1793,Kano,Garum Mallam,Jobawa,KN-15-06,0.870,lga_fuzzy_exact_ward,loaded
+1794,Kano,Garum Mallam,Kadawa,KN-15-07,0.870,lga_fuzzy_exact_ward,loaded
+1795,Kano,Garum Mallam,Makwaro,KN-15-08,0.870,lga_fuzzy_exact_ward,loaded
+1796,Kano,Garum Mallam,Yada Kwari,,0.000,ambiguous,skipped_no_match
 1797,Kano,Gaya,Balan,KN-16-01,1.000,exact,loaded
 1798,Kano,Gaya,Gamarya,KN-16-04,1.000,exact,loaded
 1799,Kano,Gaya,Gamoji,KN-16-05,1.000,exact,loaded
@@ -1874,8 +1874,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1873,Kano,Kibiya,Fassi,KN-23-03,1.000,exact,loaded
 1874,Kano,Kibiya,Kadigawa,KN-23-04,1.000,exact,loaded
 1875,Kano,Kibiya,Kahu,KN-23-05,1.000,exact,loaded
-1876,Kano,Kibiya,Kibiya 1,KN-23-06,0.875,needs_review,skipped_low_confidence
-1877,Kano,Kibiya,Kibiya 2,KN-23-06,0.875,needs_review,skipped_low_confidence
+1876,Kano,Kibiya,Kibiya 1,KN-23-06,0.875,needs_review,loaded
+1877,Kano,Kibiya,Kibiya 2,KN-23-06,0.875,needs_review,loaded
 1878,Kano,Kibiya,Nariya,KN-23-08,1.000,exact,loaded
 1879,Kano,Kibiya,Tarai,KN-23-09,1.000,exact,loaded
 1880,Kano,Kibiya,Unguwar Gai,KN-23-10,1.000,exact,loaded
@@ -1959,17 +1959,17 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 1958,Kano,Minjibir,Tsakiya,KN-30-09,1.000,exact,loaded
 1959,Kano,Minjibir,Tsakuwa,KN-30-10,1.000,exact,loaded
 1960,Kano,Minjibir,Wasai,KN-30-11,1.000,exact,loaded
-1961,Kano,Nassarawa,Dakata,,0.000,no_lga,skipped_no_match
-1962,Kano,Nassarawa,Gama,,0.000,no_lga,skipped_no_match
-1963,Kano,Nassarawa,Gawuna,,0.000,no_lga,skipped_no_match
-1964,Kano,Nassarawa,Giginyu,,0.000,no_lga,skipped_no_match
-1965,Kano,Nassarawa,Gwagwarwa,,0.000,no_lga,skipped_no_match
-1966,Kano,Nassarawa,Hotoro North,,0.000,no_lga,skipped_no_match
-1967,Kano,Nassarawa,Hotoro South,,0.000,no_lga,skipped_no_match
-1968,Kano,Nassarawa,Kaura Goje,,0.000,no_lga,skipped_no_match
-1969,Kano,Nassarawa,Kawaji,,0.000,no_lga,skipped_no_match
-1970,Kano,Nassarawa,Tudun Murtala,,0.000,no_lga,skipped_no_match
-1971,Kano,Nassarawa,Tudun Wada,,0.000,no_lga,skipped_no_match
+1961,Kano,Nassarawa,Dakata,KN-31-01,0.941,lga_fuzzy_exact_ward,loaded
+1962,Kano,Nassarawa,Gama,KN-31-02,0.941,lga_fuzzy_exact_ward,loaded
+1963,Kano,Nassarawa,Gawuna,KN-31-03,0.941,lga_fuzzy_exact_ward,loaded
+1964,Kano,Nassarawa,Giginyu,KN-31-05,0.941,lga_fuzzy_exact_ward,loaded
+1965,Kano,Nassarawa,Gwagwarwa,KN-31-04,0.941,lga_fuzzy_exact_ward,loaded
+1966,Kano,Nassarawa,Hotoro North,KN-31-06,0.941,lga_fuzzy_exact_ward,loaded
+1967,Kano,Nassarawa,Hotoro South,KN-31-07,0.941,lga_fuzzy_exact_ward,loaded
+1968,Kano,Nassarawa,Kaura Goje,KN-31-09,0.941,lga_fuzzy_exact_ward,loaded
+1969,Kano,Nassarawa,Kawaji,KN-31-08,0.941,lga_fuzzy_exact_ward,loaded
+1970,Kano,Nassarawa,Tudun Murtala,KN-31-10,0.941,lga_fuzzy_exact_ward,loaded
+1971,Kano,Nassarawa,Tudun Wada,KN-31-11,0.941,lga_fuzzy_exact_ward,loaded
 1972,Kano,Rano,Lausu,KN-32-02,1.000,exact,loaded
 1973,Kano,Rano,Madachi,KN-32-03,1.000,exact,loaded
 1974,Kano,Rano,Rano Dawaki,KN-32-01,1.000,exact,loaded
@@ -2188,7 +2188,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2187,Katsina,Dan Musa,Maidabino A,KT-09-06,1.000,exact,loaded
 2188,Katsina,Dan Musa,Maidabino B,KT-09-07,1.000,exact,loaded
 2189,Katsina,Dan Musa,Mara A,KT-09-01,1.000,exact,loaded
-2190,Katsina,Dan Musa,Mara B,KT-09-01,0.800,needs_review,skipped_low_confidence
+2190,Katsina,Dan Musa,Mara B,KT-09-01,0.800,needs_review,loaded
 2191,Katsina,Dan Musa,Yantumaki A,KT-09-10,1.000,exact,loaded
 2192,Katsina,Dan Musa,Yantumaki B,KT-09-11,1.000,exact,loaded
 2193,Katsina,Dandume,Dandume A,KT-07-04,1.000,exact,loaded
@@ -2310,7 +2310,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2309,Katsina,Kankara,Burdugau,,0.462,no_ward,skipped_no_match
 2310,Katsina,Kankara,Dan Murabu,KT-19-10,1.000,exact,loaded
 2311,Katsina,Kankara,Gundawa,KT-19-09,1.000,exact,loaded
-2312,Katsina,Kankara,Gurbi,KT-19-03,0.818,needs_review,skipped_low_confidence
+2312,Katsina,Kankara,Gurbi,KT-19-03,0.818,needs_review,loaded
 2313,Katsina,Kankara,Kankara,,0.500,no_ward,skipped_no_match
 2314,Katsina,Kankara,Ketare,KT-19-05,1.000,exact,loaded
 2315,Katsina,Kankara,Kukasheka,KT-19-04,1.000,exact,loaded
@@ -2335,14 +2335,14 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2334,Katsina,Katsina,Gabas 3,,0.545,no_ward,skipped_no_match
 2335,Katsina,Katsina,Kudu 1,KT-21-06,0.929,fuzzy,loaded
 2336,Katsina,Katsina,Kudu 2,KT-21-06,0.929,fuzzy,loaded
-2337,Katsina,Katsina,Kudu 3,KT-21-06,0.889,needs_review,skipped_low_confidence
+2337,Katsina,Katsina,Kudu 3,KT-21-06,0.889,needs_review,loaded
 2338,Katsina,Katsina,Shinkafi 1,KT-21-10,1.000,exact,loaded
 2339,Katsina,Katsina,Shinkafi 2,KT-21-11,1.000,exact,loaded
 2340,Katsina,Katsina,Yamma 1,KT-21-04,1.000,exact,loaded
 2341,Katsina,Katsina,Yamma 2,KT-21-05,0.970,fuzzy,loaded
 2342,Katsina,Kurfi,Barkiya,,0.533,no_ward,skipped_no_match
 2343,Katsina,Kurfi,Birchi,KT-22-07,1.000,exact,loaded
-2344,Katsina,Kurfi,Kurfi A,KT-22-04,0.857,needs_review,skipped_low_confidence
+2344,Katsina,Kurfi,Kurfi A,KT-22-04,0.857,needs_review,loaded
 2345,Katsina,Kurfi,Kurfi B,KT-22-04,1.000,exact,loaded
 2346,Katsina,Kurfi,Rawayau A,KT-22-05,1.000,exact,loaded
 2347,Katsina,Kurfi,Rawayau B,KT-22-06,1.000,exact,loaded
@@ -2370,18 +2370,18 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2369,Katsina,Mai'adua,Maikoni A,KT-24-07,1.000,exact,loaded
 2370,Katsina,Mai'adua,Maikoni B,KT-24-08,1.000,exact,loaded
 2371,Katsina,Mai'adua,Natsalle,KT-24-09,1.000,exact,loaded
-2372,Katsina,Malumfashi,Borindawa,,0.000,no_lga,skipped_no_match
-2373,Katsina,Malumfashi,Dansarai,,0.000,no_lga,skipped_no_match
-2374,Katsina,Malumfashi,Dayi,,0.000,no_lga,skipped_no_match
-2375,Katsina,Malumfashi,Gora Dan Saka,,0.000,no_lga,skipped_no_match
-2376,Katsina,Malumfashi,Karfi,,0.000,no_lga,skipped_no_match
-2377,Katsina,Malumfashi,Makaurachi,,0.000,no_lga,skipped_no_match
-2378,Katsina,Malumfashi,Malumfashi A,,0.000,no_lga,skipped_no_match
-2379,Katsina,Malumfashi,Malumfashi B,,0.000,no_lga,skipped_no_match
-2380,Katsina,Malumfashi,Na'Alma,,0.000,no_lga,skipped_no_match
-2381,Katsina,Malumfashi,Ruwan Sanyi,,0.000,no_lga,skipped_no_match
-2382,Katsina,Malumfashi,Yaba,,0.000,no_lga,skipped_no_match
-2383,Katsina,Malumfashi,Yarmama,,0.000,no_lga,skipped_no_match
+2372,Katsina,Malumfashi,Borindawa,KT-25-06,0.947,lga_fuzzy_exact_ward,loaded
+2373,Katsina,Malumfashi,Dansarai,KT-25-09,0.947,lga_fuzzy_exact_ward,loaded
+2374,Katsina,Malumfashi,Dayi,KT-25-11,0.947,lga_fuzzy_exact_ward,loaded
+2375,Katsina,Malumfashi,Gora Dan Saka,KT-25-08,0.947,lga_fuzzy_exact_ward,loaded
+2376,Katsina,Malumfashi,Karfi,KT-25-05,0.947,lga_fuzzy_exact_ward,loaded
+2377,Katsina,Malumfashi,Makaurachi,KT-25-10,0.947,lga_fuzzy_exact_ward,loaded
+2378,Katsina,Malumfashi,Malumfashi A,KT-25-01,0.947,lga_fuzzy_exact_ward,loaded
+2379,Katsina,Malumfashi,Malumfashi B,KT-25-01,0.874,fuzzy,loaded
+2380,Katsina,Malumfashi,Na'Alma,KT-25-12,0.947,lga_fuzzy_exact_ward,loaded
+2381,Katsina,Malumfashi,Ruwan Sanyi,KT-25-04,0.947,lga_fuzzy_exact_ward,loaded
+2382,Katsina,Malumfashi,Yaba,KT-25-03,0.947,lga_fuzzy_exact_ward,loaded
+2383,Katsina,Malumfashi,Yarmama,KT-25-07,0.947,lga_fuzzy_exact_ward,loaded
 2384,Katsina,Mani,Bagiwa,KT-26-04,1.000,exact,loaded
 2385,Katsina,Mani,Bujawa,KT-26-01,1.000,exact,loaded
 2386,Katsina,Mani,Duwan Makau,KT-26-02,1.000,exact,loaded
@@ -2450,7 +2450,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2449,Katsina,Safana,Baure A,KT-32-09,1.000,exact,loaded
 2450,Katsina,Safana,Baure B,KT-32-10,1.000,exact,loaded
 2451,Katsina,Safana,Runka A,KT-32-03,1.000,exact,loaded
-2452,Katsina,Safana,Runka B,KT-32-03,0.857,needs_review,skipped_low_confidence
+2452,Katsina,Safana,Runka B,KT-32-03,0.857,needs_review,loaded
 2453,Katsina,Safana,Safana,KT-32-01,1.000,exact,loaded
 2454,Katsina,Safana,Tsaskiya,KT-32-02,1.000,exact,loaded
 2455,Katsina,Safana,Zakka A,KT-32-07,1.000,exact,loaded
@@ -2504,14 +2504,14 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2503,Kwara,Baruten,Sinawu/Tumbiya,KW-02-10,1.000,exact,loaded
 2504,Kwara,Baruten,Yashikira I,KW-02-11,1.000,exact,loaded
 2505,Kwara,Baruten,Yashikira II,KW-02-02,1.000,exact,loaded
-2506,Kwara,Edu,Lafiagi I,KW-03-01,0.889,needs_review,skipped_low_confidence
+2506,Kwara,Edu,Lafiagi I,KW-03-01,0.889,needs_review,loaded
 2507,Kwara,Edu,Lafiagi II,KW-03-02,1.000,exact,loaded
 2508,Kwara,Edu,Lafiagi III,KW-03-03,1.000,exact,loaded
 2509,Kwara,Edu,Lafiagi IV,KW-03-04,0.952,fuzzy,loaded
-2510,Kwara,Edu,Tsaragi I,KW-03-05,0.889,needs_review,skipped_low_confidence
+2510,Kwara,Edu,Tsaragi I,KW-03-05,0.889,needs_review,loaded
 2511,Kwara,Edu,Tsaragi II,KW-03-06,1.000,exact,loaded
 2512,Kwara,Edu,Tsaragi III,KW-03-07,1.000,exact,loaded
-2513,Kwara,Edu,Tsonga I,KW-03-08,0.875,needs_review,skipped_low_confidence
+2513,Kwara,Edu,Tsonga I,KW-03-08,0.875,needs_review,loaded
 2514,Kwara,Edu,Tsonga II,KW-03-09,1.000,exact,loaded
 2515,Kwara,Edu,Tsonga III,KW-03-10,1.000,exact,loaded
 2516,Kwara,Ekiti,Eruku,KW-04-01,1.000,exact,loaded
@@ -2522,12 +2522,12 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2521,Kwara,Ekiti,Obbo-Ile,KW-04-06,1.000,exact,loaded
 2522,Kwara,Ekiti,Oke-Opin/Etan,KW-04-10,1.000,exact,loaded
 2523,Kwara,Ekiti,Opin,KW-04-09,1.000,exact,loaded
-2524,Kwara,Ekiti,Osi I,KW-04-07,0.800,needs_review,skipped_low_confidence
+2524,Kwara,Ekiti,Osi I,KW-04-07,0.800,needs_review,loaded
 2525,Kwara,Ekiti,Osi II,KW-04-08,1.000,exact,loaded
 2526,Kwara,Ifelodun,Agwijin,KW-05-06,1.000,exact,loaded
-2527,Kwara,Ifelodun,Idofian I,KW-05-17,0.889,needs_review,skipped_low_confidence
+2527,Kwara,Ifelodun,Idofian I,KW-05-17,0.889,needs_review,loaded
 2528,Kwara,Ifelodun,Idofian II,KW-05-18,1.000,exact,loaded
-2529,Kwara,Ifelodun,Igbaja I,KW-05-14,0.875,needs_review,skipped_low_confidence
+2529,Kwara,Ifelodun,Igbaja I,KW-05-14,0.875,needs_review,loaded
 2530,Kwara,Ifelodun,Igbaja II,KW-05-15,1.000,exact,loaded
 2531,Kwara,Ifelodun,Igbaja III,KW-05-16,1.000,exact,loaded
 2532,Kwara,Ifelodun,Ile-Ire,KW-05-05,1.000,exact,loaded
@@ -2537,7 +2537,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2536,Kwara,Ifelodun,Omupo,KW-05-08,1.000,exact,loaded
 2537,Kwara,Ifelodun,Ora,KW-05-04,1.000,exact,loaded
 2538,Kwara,Ifelodun,Oro-Ago,KW-05-07,1.000,exact,loaded
-2539,Kwara,Ifelodun,Share I,KW-05-09,0.857,needs_review,skipped_low_confidence
+2539,Kwara,Ifelodun,Share I,KW-05-09,0.857,needs_review,loaded
 2540,Kwara,Ifelodun,Share II,KW-05-10,1.000,exact,loaded
 2541,Kwara,Ifelodun,Share III,KW-05-11,1.000,exact,loaded
 2542,Kwara,Ifelodun,Share IV,KW-05-12,0.941,fuzzy,loaded
@@ -2546,7 +2546,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2545,Kwara,Ilorin East,Apado,KW-06-05,1.000,exact,loaded
 2546,Kwara,Ilorin East,Are I,KW-06-07,1.000,exact,loaded
 2547,Kwara,Ilorin East,Are II,KW-06-08,1.000,exact,loaded
-2548,Kwara,Ilorin East,Gambari I,KW-06-02,0.889,needs_review,skipped_low_confidence
+2548,Kwara,Ilorin East,Gambari I,KW-06-02,0.889,needs_review,loaded
 2549,Kwara,Ilorin East,Gambari II,KW-06-03,1.000,exact,loaded
 2550,Kwara,Ilorin East,Ibagun,KW-06-04,1.000,exact,loaded
 2551,Kwara,Ilorin East,Iponrin,KW-06-06,1.000,exact,loaded
@@ -2563,7 +2563,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2562,Kwara,Ilorin South,Balogun Fulani II,KW-07-07,1.000,exact,loaded
 2563,Kwara,Ilorin South,Balogun Fulani III,KW-07-08,1.000,exact,loaded
 2564,Kwara,Ilorin South,Oka-Ogun,KW-07-11,1.000,exact,loaded
-2565,Kwara,Ilorin South,Okaka I,KW-07-09,0.857,needs_review,skipped_low_confidence
+2565,Kwara,Ilorin South,Okaka I,KW-07-09,0.857,needs_review,loaded
 2566,Kwara,Ilorin South,Okaka II,KW-07-10,1.000,exact,loaded
 2567,Kwara,Ilorin West,Adewole,KW-08-01,1.000,exact,loaded
 2568,Kwara,Ilorin West,Ajikobi,KW-08-02,1.000,exact,loaded
@@ -2586,12 +2586,12 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2585,Kwara,Irepodun,Ihaye,KW-09-07,1.000,exact,loaded
 2586,Kwara,Irepodun,Ipetu/Rore/Aran Orin,KW-09-05,1.000,exact,loaded
 2587,Kwara,Irepodun,Oko,KW-09-11,1.000,exact,loaded
-2588,Kwara,Irepodun,Oro I,KW-09-09,0.800,needs_review,skipped_low_confidence
+2588,Kwara,Irepodun,Oro I,KW-09-09,0.800,needs_review,loaded
 2589,Kwara,Irepodun,Oro II,KW-09-10,1.000,exact,loaded
 2590,Kwara,Isin,Alla,KW-10-01,1.000,exact,loaded
 2591,Kwara,Isin,Edidi,KW-10-02,1.000,exact,loaded
 2592,Kwara,Isin,Ijara,KW-10-05,1.000,exact,loaded
-2593,Kwara,Isin,Isanlu I,KW-10-03,0.875,needs_review,skipped_low_confidence
+2593,Kwara,Isin,Isanlu I,KW-10-03,0.875,needs_review,loaded
 2594,Kwara,Isin,Isanlu II,KW-10-04,1.000,exact,loaded
 2595,Kwara,Isin,Iwo,KW-10-06,1.000,exact,loaded
 2596,Kwara,Isin,Oke Aba,KW-10-10,1.000,exact,loaded
@@ -2601,10 +2601,10 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2600,Kwara,Isin,Sabaja/Pama/Oba,KW-10-09,1.000,exact,loaded
 2601,Kwara,Kaiama,Adena,KW-11-01,1.000,exact,loaded
 2602,Kwara,Kaiama,Bani,KW-11-02,1.000,exact,loaded
-2603,Kwara,Kaiama,Gwanabe I,KW-11-03,0.889,needs_review,skipped_low_confidence
+2603,Kwara,Kaiama,Gwanabe I,KW-11-03,0.889,needs_review,loaded
 2604,Kwara,Kaiama,Gwanabe II,KW-11-04,1.000,exact,loaded
 2605,Kwara,Kaiama,Gwaria,KW-11-05,1.000,exact,loaded
-2606,Kwara,Kaiama,Kaiama I,KW-11-06,0.875,needs_review,skipped_low_confidence
+2606,Kwara,Kaiama,Kaiama I,KW-11-06,0.875,needs_review,loaded
 2607,Kwara,Kaiama,Kaiama II,KW-11-07,1.000,exact,loaded
 2608,Kwara,Kaiama,Kaiama III,KW-11-08,1.000,exact,loaded
 2609,Kwara,Kaiama,Kemaji,KW-11-09,1.000,exact,loaded
@@ -2659,16 +2659,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2658,Kwara,Oyun,Ipee,KW-15-10,1.000,exact,loaded
 2659,Kwara,Oyun,Ira,KW-15-04,1.000,exact,loaded
 2660,Kwara,Oyun,Ojoku,KW-15-07,1.000,exact,loaded
-2661,Kwara,Pategi,Kpada I,,0.000,no_lga,skipped_no_match
-2662,Kwara,Pategi,Kpada II,,0.000,no_lga,skipped_no_match
-2663,Kwara,Pategi,Kpada III,,0.000,no_lga,skipped_no_match
-2664,Kwara,Pategi,Lade I,,0.000,no_lga,skipped_no_match
-2665,Kwara,Pategi,Lade II,,0.000,no_lga,skipped_no_match
-2666,Kwara,Pategi,Lade III,,0.000,no_lga,skipped_no_match
-2667,Kwara,Pategi,Pategi I,,0.000,no_lga,skipped_no_match
-2668,Kwara,Pategi,Pategi II,,0.000,no_lga,skipped_no_match
-2669,Kwara,Pategi,Pategi III,,0.000,no_lga,skipped_no_match
-2670,Kwara,Pategi,Pategi IV,,0.000,no_lga,skipped_no_match
+2661,Kwara,Pategi,Kpada I,KW-16-05,0.714,needs_review,skipped_low_confidence
+2662,Kwara,Pategi,Kpada II,KW-16-06,0.833,lga_fuzzy_exact_ward,loaded
+2663,Kwara,Pategi,Kpada III,KW-16-07,0.833,lga_fuzzy_exact_ward,loaded
+2664,Kwara,Pategi,Lade I,KW-16-08,0.694,needs_review,skipped_low_confidence
+2665,Kwara,Pategi,Lade II,KW-16-09,0.833,lga_fuzzy_exact_ward,loaded
+2666,Kwara,Pategi,Lade III,KW-16-10,0.833,lga_fuzzy_exact_ward,loaded
+2667,Kwara,Pategi,Pategi I,KW-16-01,0.833,lga_fuzzy_exact_ward,loaded
+2668,Kwara,Pategi,Pategi II,KW-16-02,0.833,lga_fuzzy_exact_ward,loaded
+2669,Kwara,Pategi,Pategi III,KW-16-03,0.833,lga_fuzzy_exact_ward,loaded
+2670,Kwara,Pategi,Pategi IV,KW-16-04,0.789,fuzzy,skipped_low_confidence
 2671,Niger,Agaie,Baro,NI-01-01,1.000,exact,loaded
 2672,Niger,Agaie,Boku,NI-01-02,1.000,exact,loaded
 2673,Niger,Agaie,Ekobadeggi,NI-01-03,1.000,exact,loaded
@@ -2695,10 +2695,10 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2694,Niger,Bida,Dokoza,NI-03-03,1.000,exact,loaded
 2695,Niger,Bida,Kyari,NI-03-04,1.000,exact,loaded
 2696,Niger,Bida,Landzun,NI-03-05,1.000,exact,loaded
-2697,Niger,Bida,Masaba A,NI-03-06,0.875,needs_review,skipped_low_confidence
-2698,Niger,Bida,Masaba B,NI-03-06,0.875,needs_review,skipped_low_confidence
-2699,Niger,Bida,Masaga A,NI-03-08,0.875,needs_review,skipped_low_confidence
-2700,Niger,Bida,Masaga B,NI-03-08,0.875,needs_review,skipped_low_confidence
+2697,Niger,Bida,Masaba A,NI-03-06,0.875,needs_review,loaded
+2698,Niger,Bida,Masaba B,NI-03-06,0.875,needs_review,loaded
+2699,Niger,Bida,Masaga A,NI-03-08,0.875,needs_review,loaded
+2700,Niger,Bida,Masaga B,NI-03-08,0.875,needs_review,loaded
 2701,Niger,Bida,Mayaki Ndejiya,NI-03-10,1.000,exact,loaded
 2702,Niger,Bida,Nasarafu,NI-03-11,1.000,exact,loaded
 2703,Niger,Bida,Umaru Majagi A,NI-03-12,0.929,fuzzy,loaded
@@ -2735,16 +2735,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2734,Niger,Chanchaga,Sabon Gari,NI-06-09,1.000,exact,loaded
 2735,Niger,Chanchaga,T/Wada N,NI-06-10,1.000,exact,loaded
 2736,Niger,Chanchaga,T/Wada S,NI-06-11,1.000,exact,loaded
-2737,Niger,Edati,Enagi,,0.000,no_lga,skipped_no_match
-2738,Niger,Edati,Etsutasha,,0.000,no_lga,skipped_no_match
-2739,Niger,Edati,Fazhi,,0.000,no_lga,skipped_no_match
-2740,Niger,Edati,Gazhe 1,,0.000,no_lga,skipped_no_match
-2741,Niger,Edati,Gazhe 2,,0.000,no_lga,skipped_no_match
-2742,Niger,Edati,Gbangban,,0.000,no_lga,skipped_no_match
-2743,Niger,Edati,Gonagi,,0.000,no_lga,skipped_no_match
-2744,Niger,Edati,Guzan,,0.000,no_lga,skipped_no_match
-2745,Niger,Edati,Rokota,,0.000,no_lga,skipped_no_match
-2746,Niger,Edati,Sakpe,,0.000,no_lga,skipped_no_match
+2737,Niger,Edati,Enagi,NI-07-01,0.909,lga_fuzzy_exact_ward,loaded
+2738,Niger,Edati,Etsutasha,NI-07-02,0.909,lga_fuzzy_exact_ward,loaded
+2739,Niger,Edati,Fazhi,NI-07-03,0.909,lga_fuzzy_exact_ward,loaded
+2740,Niger,Edati,Gazhe 1,NI-07-04,0.779,needs_review,skipped_low_confidence
+2741,Niger,Edati,Gazhe 2,NI-07-04,0.779,needs_review,skipped_low_confidence
+2742,Niger,Edati,Gbangban,NI-07-06,0.909,lga_fuzzy_exact_ward,loaded
+2743,Niger,Edati,Gonagi,NI-07-07,0.909,lga_fuzzy_exact_ward,loaded
+2744,Niger,Edati,Guzan,NI-07-08,0.909,lga_fuzzy_exact_ward,loaded
+2745,Niger,Edati,Rokota,NI-07-09,0.909,lga_fuzzy_exact_ward,loaded
+2746,Niger,Edati,Sakpe,NI-07-10,0.909,lga_fuzzy_exact_ward,loaded
 2747,Niger,Gbako,Batagi,NI-08-01,1.000,exact,loaded
 2748,Niger,Gbako,Batako,NI-08-02,1.000,exact,loaded
 2749,Niger,Gbako,Edo Kota,NI-08-03,1.000,exact,loaded
@@ -2950,22 +2950,22 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2949,Ogun,Abeokuta North,Iberekodo 4,,0.667,no_ward,skipped_no_match
 2950,Ogun,Abeokuta North,Iberekodo 5,,0.667,no_ward,skipped_no_match
 2951,Ogun,Abeokuta North,Idiya,,0.600,no_ward,skipped_no_match
-2952,Ogun,Abeokuta North,Ikereku 1,OG-01-01,0.875,needs_review,skipped_low_confidence
-2953,Ogun,Abeokuta North,Ikereku 2,OG-01-01,0.875,needs_review,skipped_low_confidence
+2952,Ogun,Abeokuta North,Ikereku 1,OG-01-01,0.875,needs_review,loaded
+2953,Ogun,Abeokuta North,Ikereku 2,OG-01-01,0.875,needs_review,loaded
 2954,Ogun,Abeokuta North,Imala,OG-01-14,1.000,exact,loaded
 2955,Ogun,Abeokuta North,Olorunda,OG-01-13,1.000,exact,loaded
-2956,Ogun,Abeokuta North,Sabo 1,OG-01-09,0.800,needs_review,skipped_low_confidence
-2957,Ogun,Abeokuta North,Sabo 2,OG-01-09,0.800,needs_review,skipped_low_confidence
+2956,Ogun,Abeokuta North,Sabo 1,OG-01-09,0.800,needs_review,loaded
+2957,Ogun,Abeokuta North,Sabo 2,OG-01-09,0.800,needs_review,loaded
 2958,Ogun,Abeokuta North,Totoro 1,,0.667,no_ward,skipped_no_match
 2959,Ogun,Abeokuta North,Totoro 2,,0.667,no_ward,skipped_no_match
 2960,Ogun,Abeokuta North,Totoro 3,,0.667,no_ward,skipped_no_match
 2961,Ogun,Abeokuta North,Totoro 4,,0.667,no_ward,skipped_no_match
-2962,Ogun,Abeokuta South,Ake 1,OG-02-01,0.800,needs_review,skipped_low_confidence
-2963,Ogun,Abeokuta South,Ake 2,OG-02-01,0.800,needs_review,skipped_low_confidence
-2964,Ogun,Abeokuta South,Ake 3,OG-02-01,0.800,needs_review,skipped_low_confidence
+2962,Ogun,Abeokuta South,Ake 1,OG-02-01,0.800,needs_review,loaded
+2963,Ogun,Abeokuta South,Ake 2,OG-02-01,0.800,needs_review,loaded
+2964,Ogun,Abeokuta South,Ake 3,OG-02-01,0.800,needs_review,loaded
 2965,Ogun,Abeokuta South,Emere,OG-02-04,1.000,exact,loaded
-2966,Ogun,Abeokuta South,Ibara 1,OG-02-14,0.857,needs_review,skipped_low_confidence
-2967,Ogun,Abeokuta South,Ibara 2,OG-02-14,0.857,needs_review,skipped_low_confidence
+2966,Ogun,Abeokuta South,Ibara 1,OG-02-14,0.857,needs_review,loaded
+2967,Ogun,Abeokuta South,Ibara 2,OG-02-14,0.857,needs_review,loaded
 2968,Ogun,Abeokuta South,Igbore,OG-02-13,1.000,exact,loaded
 2969,Ogun,Abeokuta South,Ijaiye,OG-02-07,1.000,exact,loaded
 2970,Ogun,Abeokuta South,Ijemo,OG-02-05,1.000,exact,loaded
@@ -2975,9 +2975,9 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2974,Ogun,Abeokuta South,Kemta,,0.400,no_ward,skipped_no_match
 2975,Ogun,Abeokuta South,Kuto,OG-02-12,1.000,exact,loaded
 2976,Ogun,Abeokuta South,Oke Ijeun,OG-02-08,1.000,exact,loaded
-2977,Ogun,Ado Odo/Ota,Ado 1,OG-03-09,0.889,needs_review,skipped_low_confidence
-2978,Ogun,Ado Odo/Ota,Ado 2,OG-03-09,0.889,needs_review,skipped_low_confidence
-2979,Ogun,Ado Odo/Ota,Agbara,OG-03-15,0.875,needs_review,skipped_low_confidence
+2977,Ogun,Ado Odo/Ota,Ado 1,OG-03-09,0.889,needs_review,loaded
+2978,Ogun,Ado Odo/Ota,Ado 2,OG-03-09,0.889,needs_review,loaded
+2979,Ogun,Ado Odo/Ota,Agbara,OG-03-15,0.875,needs_review,loaded
 2980,Ogun,Ado Odo/Ota,Alapoti,OG-03-12,1.000,exact,loaded
 2981,Ogun,Ado Odo/Ota,Atan,OG-03-06,1.000,exact,loaded
 2982,Ogun,Ado Odo/Ota,Ejila Awori,OG-03-16,0.759,needs_review,skipped_low_confidence
@@ -2987,9 +2987,9 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 2986,Ogun,Ado Odo/Ota,Iju,OG-03-07,1.000,exact,loaded
 2987,Ogun,Ado Odo/Ota,Ilogbo,OG-03-08,1.000,exact,loaded
 2988,Ogun,Ado Odo/Ota,Ketu,OG-03-13,1.000,exact,loaded
-2989,Ogun,Ado Odo/Ota,Ota 1,OG-03-01,0.800,needs_review,skipped_low_confidence
-2990,Ogun,Ado Odo/Ota,Ota 2,OG-03-01,0.800,needs_review,skipped_low_confidence
-2991,Ogun,Ado Odo/Ota,Ota 3,OG-03-01,0.800,needs_review,skipped_low_confidence
+2989,Ogun,Ado Odo/Ota,Ota 1,OG-03-01,0.800,needs_review,loaded
+2990,Ogun,Ado Odo/Ota,Ota 2,OG-03-01,0.800,needs_review,loaded
+2991,Ogun,Ado Odo/Ota,Ota 3,OG-03-01,0.800,needs_review,loaded
 2992,Ogun,Ado Odo/Ota,Sango,OG-03-04,1.000,exact,loaded
 2993,Ogun,Ewekoro,Abalabi,OG-06-01,1.000,exact,loaded
 2994,Ogun,Ewekoro,Arigbajo,OG-06-03,1.000,exact,loaded
@@ -3084,8 +3084,8 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3083,Ogun,Ipokia,Ijofin,OG-14-04,1.000,exact,loaded
 3084,Ogun,Ipokia,Ipokia I,OG-14-01,1.000,exact,loaded
 3085,Ogun,Ipokia,Ipokia II,OG-14-02,1.000,exact,loaded
-3086,Ogun,Ipokia,Mahun I,OG-14-07,0.857,needs_review,skipped_low_confidence
-3087,Ogun,Ipokia,Mahun II,OG-14-08,0.875,needs_review,skipped_low_confidence
+3086,Ogun,Ipokia,Mahun I,OG-14-07,0.857,needs_review,loaded
+3087,Ogun,Ipokia,Mahun II,OG-14-08,0.875,needs_review,loaded
 3088,Ogun,Ipokia,Tube,OG-14-05,1.000,exact,loaded
 3089,Ogun,Obafemi Owode,Ajebo,OG-15-11,1.000,exact,loaded
 3090,Ogun,Obafemi Owode,Ajura,OG-15-04,1.000,exact,loaded
@@ -3125,16 +3125,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3124,Ogun,Odogbolu,Okun Owa,OG-17-03,1.000,exact,loaded
 3125,Ogun,Odogbolu,Omu,OG-17-14,1.000,exact,loaded
 3126,Ogun,Odogbolu,Ososa,OG-17-07,1.000,exact,loaded
-3127,Ogun,Ogun Waterside,Abigi,,0.000,no_lga,skipped_no_match
-3128,Ogun,Ogun Waterside,Ayede,,0.000,no_lga,skipped_no_match
-3129,Ogun,Ogun Waterside,Ayila,,0.000,no_lga,skipped_no_match
-3130,Ogun,Ogun Waterside,Efire,,0.000,no_lga,skipped_no_match
-3131,Ogun,Ogun Waterside,Ibiade,,0.000,no_lga,skipped_no_match
-3132,Ogun,Ogun Waterside,Ilushin,,0.000,no_lga,skipped_no_match
-3133,Ogun,Ogun Waterside,Irokun,,0.000,no_lga,skipped_no_match
-3134,Ogun,Ogun Waterside,Iwopin I,,0.000,no_lga,skipped_no_match
-3135,Ogun,Ogun Waterside,Iwopin II,,0.000,no_lga,skipped_no_match
-3136,Ogun,Ogun Waterside,Ode-Omi,,0.000,no_lga,skipped_no_match
+3127,Ogun,Ogun Waterside,Abigi,OG-18-05,0.966,lga_fuzzy_exact_ward,loaded
+3128,Ogun,Ogun Waterside,Ayede,OG-18-07,0.966,lga_fuzzy_exact_ward,loaded
+3129,Ogun,Ogun Waterside,Ayila,OG-18-08,0.966,lga_fuzzy_exact_ward,loaded
+3130,Ogun,Ogun Waterside,Efire,OG-18-06,0.966,lga_fuzzy_exact_ward,loaded
+3131,Ogun,Ogun Waterside,Ibiade,OG-18-03,0.966,lga_fuzzy_exact_ward,loaded
+3132,Ogun,Ogun Waterside,Ilushin,OG-18-04,0.966,lga_fuzzy_exact_ward,loaded
+3133,Ogun,Ogun Waterside,Irokun,OG-18-09,0.966,lga_fuzzy_exact_ward,loaded
+3134,Ogun,Ogun Waterside,Iwopin I,OG-18-01,0.966,lga_fuzzy_exact_ward,loaded
+3135,Ogun,Ogun Waterside,Iwopin II,OG-18-01,0.772,needs_review,skipped_low_confidence
+3136,Ogun,Ogun Waterside,Ode-Omi,OG-18-10,0.966,lga_fuzzy_exact_ward,loaded
 3137,Ogun,Remo North,Akaka,OG-19-06,1.000,exact,loaded
 3138,Ogun,Remo North,Ilara,OG-19-05,1.000,exact,loaded
 3139,Ogun,Remo North,Ipara,OG-19-07,1.000,exact,loaded
@@ -3145,21 +3145,21 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3144,Ogun,Remo North,Ode I,OG-19-09,1.000,exact,loaded
 3145,Ogun,Remo North,Ode II,OG-19-10,1.000,exact,loaded
 3146,Ogun,Remo North,Orile Oko,OG-19-08,1.000,exact,loaded
-3147,Ogun,Shagamu,Agbowa,,0.000,no_lga,skipped_no_match
-3148,Ogun,Shagamu,Agura,,0.000,no_lga,skipped_no_match
-3149,Ogun,Shagamu,Ajara,,0.000,no_lga,skipped_no_match
-3150,Ogun,Shagamu,Ayegbami,,0.000,no_lga,skipped_no_match
-3151,Ogun,Shagamu,Batoro/Ado,,0.000,no_lga,skipped_no_match
-3152,Ogun,Shagamu,GRA Sabo,,0.000,no_lga,skipped_no_match
-3153,Ogun,Shagamu,Ijagba,,0.000,no_lga,skipped_no_match
-3154,Ogun,Shagamu,Isote,,0.000,no_lga,skipped_no_match
-3155,Ogun,Shagamu,Itunsoku,,0.000,no_lga,skipped_no_match
-3156,Ogun,Shagamu,Latawa,,0.000,no_lga,skipped_no_match
-3157,Ogun,Shagamu,Odelemo,,0.000,no_lga,skipped_no_match
-3158,Ogun,Shagamu,Ogijo,,0.000,no_lga,skipped_no_match
-3159,Ogun,Shagamu,Ojumele,,0.000,no_lga,skipped_no_match
-3160,Ogun,Shagamu,Simawa,,0.000,no_lga,skipped_no_match
-3161,Ogun,Shagamu,Soyindo,,0.000,no_lga,skipped_no_match
+3147,Ogun,Shagamu,Agbowa,OG-20-14,0.923,lga_fuzzy_exact_ward,loaded
+3148,Ogun,Shagamu,Agura,OG-20-04,0.769,needs_review,skipped_low_confidence
+3149,Ogun,Shagamu,Ajara,,0.503,no_ward,skipped_no_match
+3150,Ogun,Shagamu,Ayegbami,OG-20-03,0.923,lga_fuzzy_exact_ward,loaded
+3151,Ogun,Shagamu,Batoro/Ado,,0.486,no_ward,skipped_no_match
+3152,Ogun,Shagamu,GRA Sabo,,0.659,no_ward,skipped_no_match
+3153,Ogun,Shagamu,Ijagba,OG-20-07,0.923,lga_fuzzy_exact_ward,loaded
+3154,Ogun,Shagamu,Isote,OG-20-12,0.923,lga_fuzzy_exact_ward,loaded
+3155,Ogun,Shagamu,Itunsoku,,0.462,no_ward,skipped_no_match
+3156,Ogun,Shagamu,Latawa,OG-20-08,0.923,lga_fuzzy_exact_ward,loaded
+3157,Ogun,Shagamu,Odelemo,OG-20-09,0.923,lga_fuzzy_exact_ward,loaded
+3158,Ogun,Shagamu,Ogijo,OG-20-10,0.923,lga_fuzzy_exact_ward,loaded
+3159,Ogun,Shagamu,Ojumele,,0.492,no_ward,skipped_no_match
+3160,Ogun,Shagamu,Simawa,OG-20-13,0.923,lga_fuzzy_exact_ward,loaded
+3161,Ogun,Shagamu,Soyindo,OG-20-01,0.862,fuzzy,loaded
 3162,Ogun,Yewa North,Ayetoro 1,,0.000,no_lga,skipped_no_match
 3163,Ogun,Yewa North,Ayetoro 2,,0.000,no_lga,skipped_no_match
 3164,Ogun,Yewa North,Ayetoro 3,,0.000,no_lga,skipped_no_match
@@ -3181,41 +3181,41 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3180,Ogun,Yewa South,Oke Odan,,0.000,no_lga,skipped_no_match
 3181,Ogun,Yewa South,Owode I,,0.000,no_lga,skipped_no_match
 3182,Ogun,Yewa South,Owode II,,0.000,no_lga,skipped_no_match
-3183,Osun,Atakunmosa East,Ajebandele,,0.000,no_lga,skipped_no_match
-3184,Osun,Atakunmosa East,Arowojobe,,0.000,no_lga,skipped_no_match
-3185,Osun,Atakunmosa East,Eti-Oni,,0.000,no_lga,skipped_no_match
-3186,Osun,Atakunmosa East,Faforiji,,0.000,no_lga,skipped_no_match
-3187,Osun,Atakunmosa East,Igangan,,0.000,no_lga,skipped_no_match
-3188,Osun,Atakunmosa East,Iperindo,,0.000,no_lga,skipped_no_match
-3189,Osun,Atakunmosa East,Ipole,,0.000,no_lga,skipped_no_match
-3190,Osun,Atakunmosa East,Iwara,,0.000,no_lga,skipped_no_match
-3191,Osun,Atakunmosa East,Odogbo,,0.000,no_lga,skipped_no_match
-3192,Osun,Atakunmosa East,Sokoto,,0.000,no_lga,skipped_no_match
-3193,Osun,Atakunmosa West,Ibodi,,0.000,no_lga,skipped_no_match
-3194,Osun,Atakunmosa West,Ifelodun,,0.000,no_lga,skipped_no_match
-3195,Osun,Atakunmosa West,Ifewara I,,0.000,no_lga,skipped_no_match
-3196,Osun,Atakunmosa West,Ifewara II,,0.000,no_lga,skipped_no_match
-3197,Osun,Atakunmosa West,Isaobi,,0.000,no_lga,skipped_no_match
-3198,Osun,Atakunmosa West,Itagunmodi,,0.000,no_lga,skipped_no_match
-3199,Osun,Atakunmosa West,Muroko,,0.000,no_lga,skipped_no_match
-3200,Osun,Atakunmosa West,Okebode,,0.000,no_lga,skipped_no_match
-3201,Osun,Atakunmosa West,Osu I,,0.000,no_lga,skipped_no_match
-3202,Osun,Atakunmosa West,Osu II,,0.000,no_lga,skipped_no_match
-3203,Osun,Atakunmosa West,Osu III,,0.000,no_lga,skipped_no_match
-3204,Osun,Ayedade,Anlugbua,,0.000,no_lga,skipped_no_match
-3205,Osun,Ayedade,Araromi Owu,,0.000,no_lga,skipped_no_match
-3206,Osun,Ayedade,Balogun,,0.000,no_lga,skipped_no_match
-3207,Osun,Ayedade,Gbogan Rural,,0.000,no_lga,skipped_no_match
-3208,Osun,Ayedade,Ijugbe/Oke Owu,,0.000,no_lga,skipped_no_match
-3209,Osun,Ayedade,Lagere/Amola,,0.000,no_lga,skipped_no_match
-3210,Osun,Ayedade,Obalufon,,0.000,no_lga,skipped_no_match
-3211,Osun,Ayedade,Ode Omu Rural,,0.000,no_lga,skipped_no_match
-3212,Osun,Ayedade,Olufi,,0.000,no_lga,skipped_no_match
-3213,Osun,Ayedade,Otun Balogun,,0.000,no_lga,skipped_no_match
-3214,Osun,Ayedade,Otun Olufi,,0.000,no_lga,skipped_no_match
+3183,Osun,Atakunmosa East,Ajebandele,OS-01-10,0.966,lga_fuzzy_exact_ward,loaded
+3184,Osun,Atakunmosa East,Arowojobe,,0.407,no_ward,skipped_no_match
+3185,Osun,Atakunmosa East,Eti-Oni,OS-01-05,0.966,lga_fuzzy_exact_ward,loaded
+3186,Osun,Atakunmosa East,Faforiji,OS-01-09,0.966,lga_fuzzy_exact_ward,loaded
+3187,Osun,Atakunmosa East,Igangan,OS-01-02,0.966,lga_fuzzy_exact_ward,loaded
+3188,Osun,Atakunmosa East,Iperindo,OS-01-04,0.966,lga_fuzzy_exact_ward,loaded
+3189,Osun,Atakunmosa East,Ipole,OS-01-03,0.966,lga_fuzzy_exact_ward,loaded
+3190,Osun,Atakunmosa East,Iwara,OS-01-01,0.966,lga_fuzzy_exact_ward,loaded
+3191,Osun,Atakunmosa East,Odogbo,OS-01-06,0.966,lga_fuzzy_exact_ward,loaded
+3192,Osun,Atakunmosa East,Sokoto,OS-01-07,0.905,fuzzy,loaded
+3193,Osun,Atakunmosa West,Ibodi,OS-02-04,0.966,lga_fuzzy_exact_ward,loaded
+3194,Osun,Atakunmosa West,Ifelodun,OS-02-05,0.966,lga_fuzzy_exact_ward,loaded
+3195,Osun,Atakunmosa West,Ifewara I,OS-02-10,0.966,lga_fuzzy_exact_ward,loaded
+3196,Osun,Atakunmosa West,Ifewara II,OS-02-11,0.966,lga_fuzzy_exact_ward,loaded
+3197,Osun,Atakunmosa West,Isaobi,OS-02-08,0.966,lga_fuzzy_exact_ward,loaded
+3198,Osun,Atakunmosa West,Itagunmodi,OS-02-06,0.966,lga_fuzzy_exact_ward,loaded
+3199,Osun,Atakunmosa West,Muroko,OS-02-09,0.966,lga_fuzzy_exact_ward,loaded
+3200,Osun,Atakunmosa West,Okebode,OS-02-07,0.966,lga_fuzzy_exact_ward,loaded
+3201,Osun,Atakunmosa West,Osu I,OS-02-01,0.966,lga_fuzzy_exact_ward,loaded
+3202,Osun,Atakunmosa West,Osu II,OS-02-02,0.966,lga_fuzzy_exact_ward,loaded
+3203,Osun,Atakunmosa West,Osu III,OS-02-03,0.966,lga_fuzzy_exact_ward,loaded
+3204,Osun,Ayedade,Anlugbua,OS-03-10,0.933,lga_fuzzy_exact_ward,loaded
+3205,Osun,Ayedade,Araromi Owu,OS-03-11,0.933,lga_fuzzy_exact_ward,loaded
+3206,Osun,Ayedade,Balogun,OS-03-01,0.933,lga_fuzzy_exact_ward,loaded
+3207,Osun,Ayedade,Gbogan Rural,OS-03-07,0.933,lga_fuzzy_exact_ward,loaded
+3208,Osun,Ayedade,Ijugbe/Oke Owu,OS-03-05,0.933,lga_fuzzy_exact_ward,loaded
+3209,Osun,Ayedade,Lagere/Amola,OS-03-06,0.933,lga_fuzzy_exact_ward,loaded
+3210,Osun,Ayedade,Obalufon,OS-03-09,0.933,lga_fuzzy_exact_ward,loaded
+3211,Osun,Ayedade,Ode Omu Rural,OS-03-08,0.933,lga_fuzzy_exact_ward,loaded
+3212,Osun,Ayedade,Olufi,OS-03-03,0.933,lga_fuzzy_exact_ward,loaded
+3213,Osun,Ayedade,Otun Balogun,OS-03-02,0.933,lga_fuzzy_exact_ward,loaded
+3214,Osun,Ayedade,Otun Olufi,OS-03-04,0.933,lga_fuzzy_exact_ward,loaded
 3215,Osun,Ayedire,Amobi,,0.429,no_ward,skipped_no_match
-3216,Osun,Ayedire,Gbogbo,OS-04-05,0.889,needs_review,skipped_low_confidence
-3217,Osun,Ayedire,Idi-Ogun,OS-04-05,0.889,needs_review,skipped_low_confidence
+3216,Osun,Ayedire,Gbogbo,OS-04-05,0.889,needs_review,loaded
+3217,Osun,Ayedire,Idi-Ogun,OS-04-05,0.889,needs_review,loaded
 3218,Osun,Ayedire,Idi Ape,,0.308,no_ward,skipped_no_match
 3219,Osun,Ayedire,Ilaji,,0.429,no_ward,skipped_no_match
 3220,Osun,Ayedire,Isale Oba,,0.444,no_ward,skipped_no_match
@@ -3238,7 +3238,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3237,Osun,Boripe,Isale Asa,OS-06-09,1.000,exact,loaded
 3238,Osun,Boripe,Isale Offa,OS-06-03,1.000,exact,loaded
 3239,Osun,Boripe,Isale Oyo,OS-06-04,1.000,exact,loaded
-3240,Osun,Boripe,Iso-Ege/Ada,OS-06-07,0.800,needs_review,skipped_low_confidence
+3240,Osun,Boripe,Iso-Ege/Ada,OS-06-07,0.800,needs_review,loaded
 3241,Osun,Boripe,Oke-Aree,OS-06-11,1.000,exact,loaded
 3242,Osun,Boripe,Oke-Baale,OS-06-11,0.750,needs_review,skipped_low_confidence
 3243,Osun,Boripe,Oke Ogi,OS-06-10,1.000,exact,loaded
@@ -3340,7 +3340,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3339,Osun,Ifedayo,Temidire,OS-12-10,1.000,exact,loaded
 3340,Osun,Ifelodun,Aludundun,,0.706,no_ward,skipped_no_match
 3341,Osun,Ifelodun,Dagbolu,,0.462,no_ward,skipped_no_match
-3342,Osun,Ifelodun,Eko Ende Rd/Eweta,OS-14-07,0.800,needs_review,skipped_low_confidence
+3342,Osun,Ifelodun,Eko Ende Rd/Eweta,OS-14-07,0.800,needs_review,loaded
 3343,Osun,Ifelodun,Eko Ende/Eko Ajala,OS-14-12,1.000,exact,loaded
 3344,Osun,Ifelodun,Iba I,OS-14-09,1.000,exact,loaded
 3345,Osun,Ifelodun,Iba II,OS-14-10,1.000,exact,loaded
@@ -3357,31 +3357,31 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3356,Osun,Ila,Isedo I,OS-17-04,1.000,exact,loaded
 3357,Osun,Ila,Isedo II,OS-17-05,1.000,exact,loaded
 3358,Osun,Ila,Oke Ede,OS-17-09,1.000,exact,loaded
-3359,Osun,Ila,Oke Ejigbo I,OS-17-01,0.875,needs_review,skipped_low_confidence
-3360,Osun,Ila,Oke Ejigbo II,OS-17-01,0.875,needs_review,skipped_low_confidence
-3361,Osun,Ila,Oke Ejigbo III,OS-17-01,0.875,needs_review,skipped_low_confidence
+3359,Osun,Ila,Oke Ejigbo I,OS-17-01,0.875,needs_review,loaded
+3360,Osun,Ila,Oke Ejigbo II,OS-17-01,0.875,needs_review,loaded
+3361,Osun,Ila,Oke Ejigbo III,OS-17-01,0.875,needs_review,loaded
 3362,Osun,Ila,Oke Ola,OS-17-08,1.000,exact,loaded
-3363,Osun,Ilesha East,Anaye,,0.000,no_lga,skipped_no_match
-3364,Osun,Ilesha East,Bolorunduro,,0.000,no_lga,skipped_no_match
-3365,Osun,Ilesha East,Ifosan,,0.000,no_lga,skipped_no_match
-3366,Osun,Ilesha East,Ijamo,,0.000,no_lga,skipped_no_match
-3367,Osun,Ilesha East,Ijoka,,0.000,no_lga,skipped_no_match
-3368,Osun,Ilesha East,Imo,,0.000,no_lga,skipped_no_match
-3369,Osun,Ilesha East,Irojo,,0.000,no_lga,skipped_no_match
-3370,Osun,Ilesha East,Itisin,,0.000,no_lga,skipped_no_match
-3371,Osun,Ilesha East,Oke-Ooye,,0.000,no_lga,skipped_no_match
-3372,Osun,Ilesha East,Oke-Opo,,0.000,no_lga,skipped_no_match
-3373,Osun,Ilesha East,Okesa,,0.000,no_lga,skipped_no_match
-3374,Osun,Ilesha West,Adeti,,0.000,no_lga,skipped_no_match
-3375,Osun,Ilesha West,Aragan,,0.000,no_lga,skipped_no_match
-3376,Osun,Ilesha West,Egbe-Idi,,0.000,no_lga,skipped_no_match
-3377,Osun,Ilesha West,Ereja,,0.000,no_lga,skipped_no_match
-3378,Osun,Ilesha West,Igbogi,,0.000,no_lga,skipped_no_match
-3379,Osun,Ilesha West,Ilaje,,0.000,no_lga,skipped_no_match
-3380,Osun,Ilesha West,Isokun,,0.000,no_lga,skipped_no_match
-3381,Osun,Ilesha West,Ita-Ofa,,0.000,no_lga,skipped_no_match
-3382,Osun,Ilesha West,Itakogun,,0.000,no_lga,skipped_no_match
-3383,Osun,Ilesha West,Oke Iyin,,0.000,no_lga,skipped_no_match
+3363,Osun,Ilesha East,Anaye,OS-18-07,0.952,lga_fuzzy_exact_ward,loaded
+3364,Osun,Ilesha East,Bolorunduro,OS-18-10,0.952,lga_fuzzy_exact_ward,loaded
+3365,Osun,Ilesha East,Ifosan,OS-18-03,0.952,lga_fuzzy_exact_ward,loaded
+3366,Osun,Ilesha East,Ijamo,OS-18-05,0.952,lga_fuzzy_exact_ward,loaded
+3367,Osun,Ilesha East,Ijoka,OS-18-06,0.852,needs_review,loaded
+3368,Osun,Ilesha East,Imo,OS-18-02,0.952,lga_fuzzy_exact_ward,loaded
+3369,Osun,Ilesha East,Irojo,OS-18-09,0.952,lga_fuzzy_exact_ward,loaded
+3370,Osun,Ilesha East,Itisin,OS-18-04,0.952,lga_fuzzy_exact_ward,loaded
+3371,Osun,Ilesha East,Oke-Ooye,,0.560,no_ward,skipped_no_match
+3372,Osun,Ilesha East,Oke-Opo,OS-18-08,0.952,lga_fuzzy_exact_ward,loaded
+3373,Osun,Ilesha East,Okesa,OS-18-01,0.952,lga_fuzzy_exact_ward,loaded
+3374,Osun,Ilesha West,Adeti,OS-19-08,0.952,lga_fuzzy_exact_ward,loaded
+3375,Osun,Ilesha West,Aragan,,0.260,no_ward,skipped_no_match
+3376,Osun,Ilesha West,Egbe-Idi,,0.693,no_ward,skipped_no_match
+3377,Osun,Ilesha West,Ereja,OS-19-09,0.952,lga_fuzzy_exact_ward,loaded
+3378,Osun,Ilesha West,Igbogi,OS-19-03,0.952,lga_fuzzy_exact_ward,loaded
+3379,Osun,Ilesha West,Ilaje,OS-19-07,0.952,lga_fuzzy_exact_ward,loaded
+3380,Osun,Ilesha West,Isokun,OS-19-05,0.952,lga_fuzzy_exact_ward,loaded
+3381,Osun,Ilesha West,Ita-Ofa,OS-19-04,0.952,lga_fuzzy_exact_ward,loaded
+3382,Osun,Ilesha West,Itakogun,OS-19-01,0.952,lga_fuzzy_exact_ward,loaded
+3383,Osun,Ilesha West,Oke Iyin,,0.433,no_ward,skipped_no_match
 3384,Osun,Irepodun,Adeo,OS-20-06,1.000,exact,loaded
 3385,Osun,Irepodun,Afolu,OS-20-07,1.000,exact,loaded
 3386,Osun,Irepodun,Anwo,OS-20-08,1.000,exact,loaded
@@ -3471,9 +3471,9 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3470,Osun,Olorunda,Ilie,OS-27-11,1.000,exact,loaded
 3471,Osun,Olorunda,Oba-Ile,OS-27-09,1.000,exact,loaded
 3472,Osun,Olorunda,Oba-Oke,OS-27-10,1.000,exact,loaded
-3473,Osun,Olorunda,Oluode,OS-27-06,0.857,needs_review,skipped_low_confidence
+3473,Osun,Olorunda,Oluode,OS-27-06,0.857,needs_review,loaded
 3474,Osun,Olorunda,Orisunmbare,OS-27-02,1.000,exact,loaded
-3475,Osun,Olorunda,Orita Sabo,OS-27-06,0.857,needs_review,skipped_low_confidence
+3475,Osun,Olorunda,Orita Sabo,OS-27-06,0.857,needs_review,loaded
 3476,Osun,Olorunda,Ota-Efun,,0.533,no_ward,skipped_no_match
 3477,Osun,Olorunda,Sabo,OS-27-05,1.000,exact,loaded
 3478,Osun,Oriade,Apoti,OS-28-08,1.000,exact,loaded
@@ -3509,9 +3509,9 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3508,Osun,Osogbo,Ibokun Road,,0.480,no_ward,skipped_no_match
 3509,Osun,Osogbo,Jagun I,,0.000,ambiguous,skipped_no_match
 3510,Osun,Osogbo,Jagun II,,0.000,ambiguous,skipped_no_match
-3511,Osun,Osogbo,Jagun III,OS-30-09,0.857,needs_review,skipped_low_confidence
+3511,Osun,Osogbo,Jagun III,OS-30-09,0.857,needs_review,loaded
 3512,Osun,Osogbo,Olugun,,0.588,no_ward,skipped_no_match
-3513,Osun,Osogbo,Popo,OS-30-12,0.828,needs_review,skipped_low_confidence
+3513,Osun,Osogbo,Popo,OS-30-12,0.828,needs_review,loaded
 3514,Oyo,Afijio,Akinmorin,OY-01-08,1.000,exact,loaded
 3515,Oyo,Afijio,Awe I,OY-01-06,1.000,exact,loaded
 3516,Oyo,Afijio,Awe II,OY-01-07,1.000,exact,loaded
@@ -3612,7 +3612,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3611,Oyo,Ibadan South East,Oke-Oluokun,,0.143,no_ward,skipped_no_match
 3612,Oyo,Ibadan South East,Oranyan,,0.182,no_ward,skipped_no_match
 3613,Oyo,Ibadan South East,Owode,,0.000,no_ward,skipped_no_match
-3614,Oyo,Ibadan South West,Agbokojo,OY-10-11,0.875,needs_review,skipped_low_confidence
+3614,Oyo,Ibadan South West,Agbokojo,OY-10-11,0.875,needs_review,loaded
 3615,Oyo,Ibadan South West,Alesinloye,,0.211,no_ward,skipped_no_match
 3616,Oyo,Ibadan South West,Amule/Atere,,0.200,no_ward,skipped_no_match
 3617,Oyo,Ibadan South West,Apata/Odo Ona,,0.200,no_ward,skipped_no_match
@@ -3667,22 +3667,22 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3666,Oyo,Irepo,Agoro,OY-15-01,1.000,exact,loaded
 3667,Oyo,Irepo,Ajagunna,OY-15-02,1.000,exact,loaded
 3668,Oyo,Irepo,Atipa,OY-15-03,1.000,exact,loaded
-3669,Oyo,Irepo,Iba 1,OY-15-04,0.800,needs_review,skipped_low_confidence
-3670,Oyo,Irepo,Iba 2,OY-15-04,0.800,needs_review,skipped_low_confidence
-3671,Oyo,Irepo,Iba 3,OY-15-04,0.800,needs_review,skipped_low_confidence
-3672,Oyo,Irepo,Iba 4,OY-15-04,0.800,needs_review,skipped_low_confidence
-3673,Oyo,Irepo,Iba 5,OY-15-04,0.800,needs_review,skipped_low_confidence
+3669,Oyo,Irepo,Iba 1,OY-15-04,0.800,needs_review,loaded
+3670,Oyo,Irepo,Iba 2,OY-15-04,0.800,needs_review,loaded
+3671,Oyo,Irepo,Iba 3,OY-15-04,0.800,needs_review,loaded
+3672,Oyo,Irepo,Iba 4,OY-15-04,0.800,needs_review,loaded
+3673,Oyo,Irepo,Iba 5,OY-15-04,0.800,needs_review,loaded
 3674,Oyo,Irepo,Ikolaba,OY-15-09,1.000,exact,loaded
 3675,Oyo,Irepo,Laha/Ajana,OY-15-10,1.000,exact,loaded
 3676,Oyo,Iseyin,Ado Awaye,OY-16-01,1.000,exact,loaded
 3677,Oyo,Iseyin,Akinwumi,OY-16-02,1.000,exact,loaded
-3678,Oyo,Iseyin,Ekunle 1,OY-16-03,0.875,needs_review,skipped_low_confidence
+3678,Oyo,Iseyin,Ekunle 1,OY-16-03,0.875,needs_review,loaded
 3679,Oyo,Iseyin,Ekunle 2,OY-16-04,0.941,fuzzy,loaded
 3680,Oyo,Iseyin,Faramora,OY-16-05,1.000,exact,loaded
-3681,Oyo,Iseyin,Isalu 1,OY-16-07,0.857,needs_review,skipped_low_confidence
-3682,Oyo,Iseyin,Isalu 2,OY-16-07,0.857,needs_review,skipped_low_confidence
-3683,Oyo,Iseyin,Koso 1,OY-16-09,0.833,needs_review,skipped_low_confidence
-3684,Oyo,Iseyin,Koso 2,OY-16-09,0.833,needs_review,skipped_low_confidence
+3681,Oyo,Iseyin,Isalu 1,OY-16-07,0.857,needs_review,loaded
+3682,Oyo,Iseyin,Isalu 2,OY-16-07,0.857,needs_review,loaded
+3683,Oyo,Iseyin,Koso 1,OY-16-09,0.833,needs_review,loaded
+3684,Oyo,Iseyin,Koso 2,OY-16-09,0.833,needs_review,loaded
 3685,Oyo,Iseyin,Ladogan,OY-16-11,1.000,exact,loaded
 3686,Oyo,Iseyin,Oke Ola,OY-16-06,1.000,exact,loaded
 3687,Oyo,Itesiwaju,Babaode,OY-17-01,1.000,exact,loaded
@@ -3692,7 +3692,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3691,Oyo,Itesiwaju,Okaka I,OY-17-05,1.000,exact,loaded
 3692,Oyo,Itesiwaju,Okaka II,OY-17-06,1.000,exact,loaded
 3693,Oyo,Itesiwaju,Okeamu,OY-17-07,1.000,exact,loaded
-3694,Oyo,Itesiwaju,Otuibise,OY-17-09,0.800,needs_review,skipped_low_confidence
+3694,Oyo,Itesiwaju,Otuibise,OY-17-09,0.800,needs_review,loaded
 3695,Oyo,Itesiwaju,Otuilesan,,0.625,no_ward,skipped_no_match
 3696,Oyo,Itesiwaju,Owode Ipapo,OY-17-10,1.000,exact,loaded
 3697,Oyo,Iwajowa,Ajimati/Ojaoba,,0.400,no_ward,skipped_no_match
@@ -3704,7 +3704,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3703,Oyo,Iwajowa,Itasa/Idikoago,,0.462,no_ward,skipped_no_match
 3704,Oyo,Iwajowa,Iwere Ile,OY-18-03,0.900,fuzzy,loaded
 3705,Oyo,Iwajowa,Ofeegun,,0.235,no_ward,skipped_no_match
-3706,Oyo,Iwajowa,Sabiganna,OY-18-07,0.800,needs_review,skipped_low_confidence
+3706,Oyo,Iwajowa,Sabiganna,OY-18-07,0.800,needs_review,loaded
 3707,Oyo,Kajola,Ayeitoro,OY-19-01,0.923,fuzzy,loaded
 3708,Oyo,Kajola,Elero,OY-19-02,1.000,exact,loaded
 3709,Oyo,Kajola,Gbelekale,OY-19-03,0.783,needs_review,skipped_low_confidence
@@ -3730,27 +3730,27 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3729,Oyo,Lagelu,Oyedeji II,,0.600,no_ward,skipped_no_match
 3730,Oyo,Lagelu,Oyedeji III,,0.581,no_ward,skipped_no_match
 3731,Oyo,Lagelu,Oyedeji IV,,0.600,no_ward,skipped_no_match
-3732,Oyo,Ogbomosho North,Aaje/Ogunbado,,0.000,no_lga,skipped_no_match
-3733,Oyo,Ogbomosho North,Abogunde,,0.000,no_lga,skipped_no_match
-3734,Oyo,Ogbomosho North,Alasa,,0.000,no_lga,skipped_no_match
-3735,Oyo,Ogbomosho North,Isale Afon,,0.000,no_lga,skipped_no_match
-3736,Oyo,Ogbomosho North,Jagun,,0.000,no_lga,skipped_no_match
-3737,Oyo,Ogbomosho North,Masifa/Aguodo,,0.000,no_lga,skipped_no_match
-3738,Oyo,Ogbomosho North,Okelerin,,0.000,no_lga,skipped_no_match
-3739,Oyo,Ogbomosho North,Osupa,,0.000,no_lga,skipped_no_match
-3740,Oyo,Ogbomosho North,Sabo/Tara,,0.000,no_lga,skipped_no_match
-3741,Oyo,Ogbomosho North,Saja/Isale Ora,,0.000,no_lga,skipped_no_match
-3742,Oyo,Ogbomosho South,Akata,,0.000,no_lga,skipped_no_match
-3743,Oyo,Ogbomosho South,Alapata,,0.000,no_lga,skipped_no_match
-3744,Oyo,Ogbomosho South,Arowomole,,0.000,no_lga,skipped_no_match
-3745,Oyo,Ogbomosho South,Ibapon,,0.000,no_lga,skipped_no_match
-3746,Oyo,Ogbomosho South,Ijeru I,,0.000,no_lga,skipped_no_match
-3747,Oyo,Ogbomosho South,Ijeru II,,0.000,no_lga,skipped_no_match
-3748,Oyo,Ogbomosho South,Ilogbo,,0.000,no_lga,skipped_no_match
-3749,Oyo,Ogbomosho South,Isoko,,0.000,no_lga,skipped_no_match
-3750,Oyo,Ogbomosho South,Lagbedu,,0.000,no_lga,skipped_no_match
-3751,Oyo,Ogbomosho South,Oke Ola,,0.000,no_lga,skipped_no_match
-3752,Oyo,Ogo Oluwa,Ajaawa,OY-23-01,0.875,needs_review,skipped_low_confidence
+3732,Oyo,Ogbomosho North,Aaje/Ogunbado,OY-21-02,0.966,lga_fuzzy_exact_ward,loaded
+3733,Oyo,Ogbomosho North,Abogunde,OY-21-01,0.966,lga_fuzzy_exact_ward,loaded
+3734,Oyo,Ogbomosho North,Alasa,OY-21-05,0.966,lga_fuzzy_exact_ward,loaded
+3735,Oyo,Ogbomosho North,Isale Afon,OY-21-04,0.966,lga_fuzzy_exact_ward,loaded
+3736,Oyo,Ogbomosho North,Jagun,OY-21-07,0.966,lga_fuzzy_exact_ward,loaded
+3737,Oyo,Ogbomosho North,Masifa/Aguodo,OY-21-03,0.966,lga_fuzzy_exact_ward,loaded
+3738,Oyo,Ogbomosho North,Okelerin,OY-21-08,0.966,lga_fuzzy_exact_ward,loaded
+3739,Oyo,Ogbomosho North,Osupa,OY-21-09,0.966,lga_fuzzy_exact_ward,loaded
+3740,Oyo,Ogbomosho North,Sabo/Tara,OY-21-10,0.966,lga_fuzzy_exact_ward,loaded
+3741,Oyo,Ogbomosho North,Saja/Isale Ora,OY-21-06,0.966,lga_fuzzy_exact_ward,loaded
+3742,Oyo,Ogbomosho South,Akata,OY-22-01,0.966,lga_fuzzy_exact_ward,loaded
+3743,Oyo,Ogbomosho South,Alapata,OY-22-02,0.966,lga_fuzzy_exact_ward,loaded
+3744,Oyo,Ogbomosho South,Arowomole,OY-22-03,0.966,lga_fuzzy_exact_ward,loaded
+3745,Oyo,Ogbomosho South,Ibapon,OY-22-04,0.966,lga_fuzzy_exact_ward,loaded
+3746,Oyo,Ogbomosho South,Ijeru I,OY-22-05,0.966,lga_fuzzy_exact_ward,loaded
+3747,Oyo,Ogbomosho South,Ijeru II,OY-22-06,0.966,lga_fuzzy_exact_ward,loaded
+3748,Oyo,Ogbomosho South,Ilogbo,OY-22-07,0.966,lga_fuzzy_exact_ward,loaded
+3749,Oyo,Ogbomosho South,Isoko,OY-22-08,0.966,lga_fuzzy_exact_ward,loaded
+3750,Oyo,Ogbomosho South,Lagbedu,OY-22-09,0.966,lga_fuzzy_exact_ward,loaded
+3751,Oyo,Ogbomosho South,Oke Ola,OY-22-10,0.966,lga_fuzzy_exact_ward,loaded
+3752,Oyo,Ogo Oluwa,Ajaawa,OY-23-01,0.875,needs_review,loaded
 3753,Oyo,Ogo Oluwa,Ayede,OY-23-03,1.000,exact,loaded
 3754,Oyo,Ogo Oluwa,Ayetoro,OY-23-04,1.000,exact,loaded
 3755,Oyo,Ogo Oluwa,Idewure,OY-23-05,1.000,exact,loaded
@@ -3769,7 +3769,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3768,Oyo,Olorunsogo,Ikolaba,OY-24-03,1.000,exact,loaded
 3769,Oyo,Olorunsogo,Onigbeti,OY-24-04,0.944,fuzzy,loaded
 3770,Oyo,Olorunsogo,Opa Ogundiran,,0.720,no_ward,skipped_no_match
-3771,Oyo,Olorunsogo,Seriki,OY-24-08,0.870,needs_review,skipped_low_confidence
+3771,Oyo,Olorunsogo,Seriki,OY-24-08,0.870,needs_review,loaded
 3772,Oyo,Oluyole,Abanla,OY-25-08,1.000,exact,loaded
 3773,Oyo,Oluyole,Ayegun,OY-25-01,1.000,exact,loaded
 3774,Oyo,Oluyole,Bare,OY-25-10,1.000,exact,loaded
@@ -3791,16 +3791,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3790,Oyo,Ona Ara,Olorunsogo,OY-26-09,1.000,exact,loaded
 3791,Oyo,Ona Ara,Olunloyo,,0.667,no_ward,skipped_no_match
 3792,Oyo,Ona Ara,Oremeji,OY-26-11,1.000,exact,loaded
-3793,Oyo,Orelope,Ago Igi Isubu,,0.000,no_lga,skipped_no_match
-3794,Oyo,Orelope,Ayetoro,,0.000,no_lga,skipped_no_match
-3795,Oyo,Orelope,Bonni,,0.000,no_lga,skipped_no_match
-3796,Oyo,Orelope,Igbope I,,0.000,no_lga,skipped_no_match
-3797,Oyo,Orelope,Igbope II,,0.000,no_lga,skipped_no_match
-3798,Oyo,Orelope,Modeke,,0.000,no_lga,skipped_no_match
-3799,Oyo,Orelope,Molete,,0.000,no_lga,skipped_no_match
-3800,Oyo,Orelope,Obaago,,0.000,no_lga,skipped_no_match
-3801,Oyo,Orelope,Oke Aafin,,0.000,no_lga,skipped_no_match
-3802,Oyo,Orelope,Oke Igboho,,0.000,no_lga,skipped_no_match
+3793,Oyo,Orelope,Ago Igi Isubu,OY-27-06,0.875,lga_fuzzy_exact_ward,loaded
+3794,Oyo,Orelope,Ayetoro,,0.375,no_ward,skipped_no_match
+3795,Oyo,Orelope,Bonni,OY-27-03,0.875,lga_fuzzy_exact_ward,loaded
+3796,Oyo,Orelope,Igbope I,OY-27-04,0.812,fuzzy,loaded
+3797,Oyo,Orelope,Igbope II,OY-27-04,0.812,fuzzy,loaded
+3798,Oyo,Orelope,Modeke,,0.350,no_ward,skipped_no_match
+3799,Oyo,Orelope,Molete,,0.404,no_ward,skipped_no_match
+3800,Oyo,Orelope,Obaago,,0.350,no_ward,skipped_no_match
+3801,Oyo,Orelope,Oke Aafin,,0.412,no_ward,skipped_no_match
+3802,Oyo,Orelope,Oke Igboho,,0.412,no_ward,skipped_no_match
 3803,Oyo,Ori Ire,Adafila,,0.615,no_ward,skipped_no_match
 3804,Oyo,Ori Ire,Ahorodada,,0.316,no_ward,skipped_no_match
 3805,Oyo,Ori Ire,Elesun Adeosun,,0.174,no_ward,skipped_no_match
@@ -3825,7 +3825,7 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3824,Oyo,Oyo West,Akeetan,OY-30-01,1.000,exact,loaded
 3825,Oyo,Oyo West,Fasola,OY-30-03,1.000,exact,loaded
 3826,Oyo,Oyo West,Iseke,OY-30-04,1.000,exact,loaded
-3827,Oyo,Oyo West,Ishokun,OY-30-05,0.857,needs_review,skipped_low_confidence
+3827,Oyo,Oyo West,Ishokun,OY-30-05,0.857,needs_review,loaded
 3828,Oyo,Oyo West,Iyaji,OY-30-07,1.000,exact,loaded
 3829,Oyo,Oyo West,Ojongbodu,,0.429,no_ward,skipped_no_match
 3830,Oyo,Oyo West,Opapa/Fatuke,OY-30-08,1.000,exact,loaded
@@ -3960,16 +3960,16 @@ source_ward_id,source_state,source_lga,source_ward,inec_ward_code,confidence,rea
 3959,Yobe,Jakusko,Lafia Loi Loi,YO-09-08,1.000,exact,loaded
 3960,Yobe,Jakusko,Muguram,YO-09-09,1.000,exact,loaded
 3961,Yobe,Jakusko,Zabudum/Dachia,YO-09-10,1.000,exact,loaded
-3962,Yobe,Karasuwa,Bilal Jawa,,0.000,no_lga,skipped_no_match
-3963,Yobe,Karasuwa,Fajiganari,,0.000,no_lga,skipped_no_match
-3964,Yobe,Karasuwa,Garin Gawo,,0.000,no_lga,skipped_no_match
-3965,Yobe,Karasuwa,Gasma,,0.000,no_lga,skipped_no_match
-3966,Yobe,Karasuwa,Jajeri,,0.000,no_lga,skipped_no_match
-3967,Yobe,Karasuwa,Jajimaji,,0.000,no_lga,skipped_no_match
-3968,Yobe,Karasuwa,Karasuwa Galu,,0.000,no_lga,skipped_no_match
-3969,Yobe,Karasuwa,Karasuwa Garin Guna,,0.000,no_lga,skipped_no_match
-3970,Yobe,Karasuwa,Wachakal,,0.000,no_lga,skipped_no_match
-3971,Yobe,Karasuwa,Waro,,0.000,no_lga,skipped_no_match
+3962,Yobe,Karasuwa,Bilal Jawa,YO-10-01,0.875,lga_fuzzy_exact_ward,loaded
+3963,Yobe,Karasuwa,Fajiganari,YO-10-02,0.875,lga_fuzzy_exact_ward,loaded
+3964,Yobe,Karasuwa,Garin Gawo,YO-10-03,0.875,lga_fuzzy_exact_ward,loaded
+3965,Yobe,Karasuwa,Gasma,YO-10-04,0.875,lga_fuzzy_exact_ward,loaded
+3966,Yobe,Karasuwa,Jajeri,YO-10-10,0.875,lga_fuzzy_exact_ward,loaded
+3967,Yobe,Karasuwa,Jajimaji,YO-10-05,0.875,lga_fuzzy_exact_ward,loaded
+3968,Yobe,Karasuwa,Karasuwa Galu,YO-10-06,0.875,lga_fuzzy_exact_ward,loaded
+3969,Yobe,Karasuwa,Karasuwa Garin Guna,YO-10-07,0.875,lga_fuzzy_exact_ward,loaded
+3970,Yobe,Karasuwa,Wachakal,YO-10-08,0.875,lga_fuzzy_exact_ward,loaded
+3971,Yobe,Karasuwa,Waro,YO-10-09,0.875,lga_fuzzy_exact_ward,loaded
 3972,Yobe,Machina,Bogo,YO-11-01,1.000,exact,loaded
 3973,Yobe,Machina,Damai,YO-11-02,1.000,exact,loaded
 3974,Yobe,Machina,Dole Machina,YO-11-03,1.000,exact,loaded
