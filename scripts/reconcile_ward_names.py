@@ -56,6 +56,26 @@ GRID3_TO_INEC_STATE_CODE = {
     "KB": "KE",  # Kebbi  (GRID3 v1, not in v2 coverage)
 }
 
+# Curated GRID3 -> INEC LGA name aliases. Keyed by (INEC state code,
+# normalised GRID3 LGA name) -> normalised INEC LGA name. These cover
+# the residual no_lga cases that survived state-code aliasing + fuzzy
+# + substring matching, mostly historical renamings ("Yewa" ->
+# colonial-era "Egbado") and INEC abbreviations ("S/BIRNI" for "Sabon
+# Birni") and the Abia / Kano spelling drifts. Add entries here
+# rather than per-ward overrides.csv rows when an entire LGA's worth
+# of wards is being dropped to no_lga.
+LGA_NAME_ALIASES: dict[tuple[str, str], str] = {
+    ("AB", "obi nwga"):    "obingwa",
+    ("SO", "sabon birni"): "s birni",
+    ("OG", "yewa north"):  "egbado north",
+    ("OG", "yewa south"):  "egbado south",
+    ("KO", "kogi"):        "kogi k k",
+    ("KN", "dambatta"):    "danbata",
+    # Borno / Abadam intentionally absent: the LGA has zero polling
+    # units in the INEC scrape (load_polling_units.py skipped it),
+    # so there is no bucket to alias into.
+}
+
 
 @dataclass(frozen=True)
 class InecWard:
@@ -286,6 +306,15 @@ def reconcile(
         # top of a fuzzy parent.
         bucket = by_lga.get((state_key, n_lga))
         lga_conf = 1.0
+        # Curated alias takes precedence over fuzzy / substring — it's
+        # an explicit "treat these two names as the same LGA" statement
+        # so we promote it to a full-confidence match.
+        if not bucket:
+            aliased = LGA_NAME_ALIASES.get((state_key, n_lga))
+            if aliased:
+                bucket = by_lga.get((state_key, aliased))
+                if bucket:
+                    lga_conf = 1.0
         if not bucket and n_lga:
             best_lga: tuple[float, str] | None = None
             for inec_n, _inec_orig in lgas_by_state.get(state_key, ()):
