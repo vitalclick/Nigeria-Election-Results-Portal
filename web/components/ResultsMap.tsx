@@ -21,6 +21,14 @@ import {
   type RegionAggregate,
   type VerificationStatus,
 } from '@/lib/types';
+import {
+  DEFAULT_PARTY_PALETTE,
+  NO_LEADER_FILL,
+  leaderFromCandidateVotes,
+  partyColour,
+  type Party,
+  type PartyPalette,
+} from '@/lib/party-colours';
 
 // Nigeria's geographic bounding box. Coordinates from Natural Earth.
 const NIGERIA_BBOX = { lngMin: 2.5, lngMax: 14.7, latMin: 4.0, latMax: 14.0 };
@@ -150,6 +158,28 @@ function MapPanel({
   const [statusFilter, setStatusFilter] = useState<VerificationStatus | 'all'>('all');
   const [selected, setSelected] = useState<PollingUnitDetail | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<RegionAggregate | null>(null);
+  // Party palette: fetched once and shared with the map renderer +
+  // legend. Region polygons and PU dots are filled with the leader's
+  // brand colour. If the API is unreachable we fall back to the
+  // hard-coded well-known palette so the map still renders sensibly.
+  const [partyPalette, setPartyPalette] = useState<PartyPalette>(DEFAULT_PARTY_PALETTE);
+  const [partyList, setPartyList] = useState<Party[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/v1/parties')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload: { data?: Party[] } | null) => {
+        if (cancelled || !payload?.data) return;
+        const next: PartyPalette = { ...DEFAULT_PARTY_PALETTE };
+        for (const p of payload.data) {
+          if (p.colour_hex) next[p.code] = p.colour_hex;
+        }
+        setPartyPalette(next);
+        setPartyList(payload.data);
+      })
+      .catch(() => {/* keep DEFAULT_PARTY_PALETTE */});
+    return () => { cancelled = true; };
+  }, []);
   const mapboxToken =
     typeof window === 'undefined' ? undefined : process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -269,12 +299,18 @@ function MapPanel({
               focus={focus}
               aggregates={aggregates}
               units={filteredUnits}
+              partyPalette={partyPalette}
               onFocus={setFocus}
               onSelectRegion={setSelectedRegion}
               onSelectPU={setSelected}
             />
           )}
-          <Legend level={focus.level} regions={aggregates} />
+          <Legend
+            level={focus.level}
+            regions={aggregates}
+            parties={partyList}
+            palette={partyPalette}
+          />
         </div>
       </div>
     </div>
@@ -482,29 +518,73 @@ function Breadcrumb({
   );
 }
 
-function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionAggregate[] }) {
+function Legend({
+  level, regions, parties, palette,
+}: {
+  level: MapFocus['level'];
+  regions: RegionAggregate[];
+  parties: Party[];
+  palette: PartyPalette;
+}) {
+  // Party swatches — used at every focus level. Computed from the
+  // parties the API knows about, restricted to ones that actually
+  // hold a colour (so the "unknown party" grey doesn't clutter the
+  // legend). Kept in the order the API returns (alpha by code).
+  const partySwatches = parties.length
+    ? parties.filter((p) => p.colour_hex).slice(0, 8)
+    : Object.entries(palette).slice(0, 8).map(([code, colour_hex]) => ({
+        code, name: code, colour_hex, inec_registered: true,
+      } as Party));
+
   if (level === 'ward') {
     return (
-      <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs">
-        <div className="font-semibold mb-1">Polling unit status</div>
-        {(Object.keys(STATUS_COLOURS) as VerificationStatus[]).map((s) => (
-          <div key={s} className="flex items-center gap-2 py-0.5">
-            <span className="status-dot" style={{ background: STATUS_COLOURS[s] }} />
-            <span>{STATUS_LABEL[s]}</span>
+      <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs space-y-2 max-w-[220px]">
+        <div>
+          <div className="font-semibold mb-1">Leading party</div>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+            {partySwatches.map((p) => (
+              <span key={p.code} className="flex items-center gap-2 text-[10px] text-slate-700">
+                <span
+                  className="inline-block w-3 h-3 rounded-full border border-slate-300"
+                  style={{ background: p.colour_hex ?? '#94a3b8' }}
+                />
+                <span>{p.code}</span>
+              </span>
+            ))}
+            <span className="flex items-center gap-2 text-[10px] text-slate-600">
+              <span
+                className="inline-block w-3 h-3 rounded-full border border-slate-300"
+                style={{ background: NO_LEADER_FILL }}
+              />
+              <span>No result</span>
+            </span>
           </div>
-        ))}
-        <div className="mt-2 pt-1 border-t border-slate-100 text-[9px] text-slate-400">
+        </div>
+        <div>
+          <div className="font-semibold mb-1">PU verification</div>
+          <div className="flex items-center gap-3 text-[10px] text-slate-600">
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded-full border-2" style={{ borderColor: '#dc2626' }} />
+              INEC conflict
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-3 h-3 rounded-full border-2" style={{ borderColor: '#f97316' }} />
+              Discrepancy
+            </span>
+          </div>
+        </div>
+        <div className="text-[9px] text-slate-400 pt-1 border-t border-slate-100">
           Boundaries © GRID3 (CC BY 4.0)
         </div>
       </div>
     );
   }
-  // Proportional-symbol legend at country/state/lga levels.
+  // Proportional-symbol + party-swatch legend at country/state/lga levels.
   const counts = regions.map((r) => r.pu_count).filter((n) => n > 0);
   const max = counts.length ? Math.max(...counts) : 0;
   const ticks = legendTicks(max);
   return (
-    <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs space-y-2 max-w-[220px]">
+    <div className="absolute bottom-3 right-3 bg-white rounded-md shadow p-3 text-xs space-y-2 max-w-[240px]">
       <div>
         <div className="font-semibold mb-1">Polling units</div>
         <div className="flex items-end gap-3 h-12">
@@ -515,7 +595,7 @@ function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionA
                 style={{
                   width: legendRadiusPx(n, max) * 2,
                   height: legendRadiusPx(n, max) * 2,
-                  background: 'rgba(74, 222, 128, 0.6)',
+                  background: 'rgba(148, 163, 184, 0.5)',
                 }}
               />
               <span className="mt-1 text-[10px] text-slate-600">{n.toLocaleString()}</span>
@@ -524,28 +604,29 @@ function Legend({ level, regions }: { level: MapFocus['level']; regions: RegionA
         </div>
       </div>
       <div>
-        <div className="font-semibold mb-1">% verified</div>
-        <div className="flex items-center gap-1">
-          {[
-            ['#e2e8f0', '0'],
-            ['#fde68a', '<50'],
-            ['#a3e635', '<50'],
-            ['#4ade80', '<85'],
-            ['#16a34a', '≥85'],
-          ].map(([c, l], i) => (
-            <span key={i} className="flex items-center gap-1">
+        <div className="font-semibold mb-1">Leading party</div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+          {partySwatches.map((p) => (
+            <span key={p.code} className="flex items-center gap-2 text-[10px] text-slate-700">
               <span
                 className="inline-block w-3 h-3 rounded-sm border border-slate-300"
-                style={{ background: c as string }}
+                style={{ background: p.colour_hex ?? '#94a3b8' }}
               />
-              <span className="text-[10px] text-slate-600">{l}</span>
+              <span>{p.code}</span>
             </span>
           ))}
+          <span className="flex items-center gap-2 text-[10px] text-slate-600">
+            <span
+              className="inline-block w-3 h-3 rounded-sm border border-slate-300"
+              style={{ background: NO_LEADER_FILL }}
+            />
+            <span>No result</span>
+          </span>
         </div>
         <div className="mt-1 flex items-center gap-2 text-[10px] text-slate-600">
-          <span className="inline-block w-3 h-3 rounded-full border-2" style={{ borderColor: '#dc2626' }} />
+          <span className="inline-block w-3 h-3 rounded-sm border-2" style={{ borderColor: '#dc2626' }} />
           INEC conflict
-          <span className="inline-block w-3 h-3 rounded-full border-2 ml-2" style={{ borderColor: '#f97316' }} />
+          <span className="inline-block w-3 h-3 rounded-sm border-2 ml-2" style={{ borderColor: '#f97316' }} />
           Discrepancy
         </div>
       </div>
@@ -664,21 +745,18 @@ function pctVerified(a: RegionAggregate): number {
   return Math.round(((a.units_consensus + a.units_inec_confirmed) / a.pu_count) * 100);
 }
 
-// Green ramp mirroring the proportional-symbol legend so polygons and
-// circles read the same. No data → light grey, partial reporting →
-// amber, ≥50% consensus → light green, ≥85% → strong green.
-function regionFill(a: RegionAggregate): string {
-  if (a.pu_count <= 0) return '#e2e8f0';
-  const verified = a.units_consensus + a.units_inec_confirmed;
-  const pctV = verified / a.pu_count;
-  if (pctV >= 0.85) return '#16a34a';
-  if (pctV >= 0.50) return '#4ade80';
-  if (pctV >= 0.20) return '#a3e635';
-  const pctR = a.units_reporting / a.pu_count;
-  if (pctR >= 0.50) return '#facc15';
-  if (a.units_reporting > 0) return '#fde68a';
-  return '#e2e8f0';
+// Choropleth fill = the brand colour of the leading party in this
+// region (state / LGA / ward). Regions whose leader hasn't been
+// determined yet (no submissions, partial reporting under quorum) get
+// the NO_LEADER neutral grey so the absence is honestly signalled
+// instead of being hidden inside a "no data is data" green ramp.
+// Verification quality (consensus, INEC conflict, discrepancy) moves
+// to the stroke - see each call site below.
+function regionFill(a: RegionAggregate, palette: PartyPalette): string {
+  if (a.pu_count <= 0) return NO_LEADER_FILL;
+  return partyColour(a.leader_party, palette);
 }
+
 
 function pointsBbox(pts: Array<{ lng: number; lat: number }>): [number, number, number, number] | null {
   if (pts.length === 0) return null;
@@ -699,6 +777,7 @@ function SvgFallback({
   focus,
   aggregates,
   units,
+  partyPalette,
   onFocus,
   onSelectRegion,
   onSelectPU,
@@ -706,6 +785,7 @@ function SvgFallback({
   focus: MapFocus;
   aggregates: RegionAggregate[];
   units: PollingUnitDetail[];
+  partyPalette: PartyPalette;
   onFocus: (f: MapFocus) => void;
   onSelectRegion: (r: RegionAggregate | null) => void;
   onSelectPU: (u: PollingUnitDetail) => void;
@@ -997,15 +1077,25 @@ function SvgFallback({
         const clickable = focus.level === 'country';
         const fill = !clickable && !isFocused
           ? '#f1f5f9'
-          : agg ? regionFill(agg) : '#e2e8f0';
+          : agg ? regionFill(agg, partyPalette) : '#e2e8f0';
+        // Stroke surfaces verification quality once the fill is owned
+        // by the leading-party colour: red for INEC conflicts, orange
+        // for discrepancies, blue for the focused state, slate otherwise.
+        const stroke = isFocused
+          ? '#1d4ed8'
+          : agg && agg.units_inec_conflict > 0
+            ? '#dc2626'
+            : agg && agg.units_discrepancy > 0
+              ? '#f97316'
+              : '#94a3b8';
         return (
           <path
             key={s.properties.iso ?? s.properties.name}
             d={featureToPath(s)}
             fill={isFocused ? 'transparent' : fill}
             fillOpacity={isOtherFocused ? 0.55 : 1}
-            stroke={isFocused ? '#1d4ed8' : '#94a3b8'}
-            strokeWidth={isFocused ? 1.6 : 0.6}
+            stroke={stroke}
+            strokeWidth={isFocused ? 1.6 : (stroke !== '#94a3b8' ? 1.0 : 0.6)}
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
             style={{ cursor: clickable ? 'pointer' : 'default' }}
@@ -1047,7 +1137,7 @@ function SvgFallback({
               : undefined;
             const isFocused = focus.level === 'lga' && l.properties.name === focus.lga_name;
             const isOtherFocused = focus.level === 'lga' && !isFocused;
-            const fill = agg ? regionFill(agg) : '#f1f5f9';
+            const fill = agg ? regionFill(agg, partyPalette) : '#f1f5f9';
             const stroke = agg && agg.units_inec_conflict > 0
               ? '#dc2626'
               : agg && agg.units_discrepancy > 0
@@ -1111,7 +1201,7 @@ function SvgFallback({
         .filter((w) => w.geometry !== null && w.properties.lga_code === focus.lga_code)
         .map((w) => {
           const agg = aggregatesByCode.get(w.properties.ward_code);
-          const fill = agg ? regionFill(agg) : '#f1f5f9';
+          const fill = agg ? regionFill(agg, partyPalette) : '#f1f5f9';
           const stroke = agg && agg.units_inec_conflict > 0
             ? '#dc2626'
             : agg && agg.units_discrepancy > 0
@@ -1172,23 +1262,42 @@ function SvgFallback({
         />
       )}
 
-      {focus.level === 'ward' && units.map((u) => (
-        <circle
-          key={u.pu_code}
-          cx={toX(u.coordinates.lng)}
-          cy={toY(u.coordinates.lat)}
-          r={4 / Math.max(pxPerUnit / 10, 1)}
-          fill={STATUS_COLOURS[u.status]}
-          stroke="#0f172a"
-          strokeOpacity={0.3}
-          strokeWidth={0.5}
-          vectorEffect="non-scaling-stroke"
-          style={{ cursor: 'pointer' }}
-          onClick={guarded(() => onSelectPU(u))}
-        >
-          <title>{u.pu_name} — {STATUS_LABEL[u.status]}</title>
-        </circle>
-      ))}
+      {focus.level === 'ward' && units.map((u) => {
+        // PU dot fill = leading party at this polling unit, derived
+        // from consensus_data.candidate_votes (highest vote count
+        // wins). Falls back to NO_LEADER_FILL when the PU has no
+        // submissions yet or the consensus extractor hasn't produced
+        // candidate_votes. Verification status (consensus, INEC
+        // conflict, etc.) moves to the stroke so it remains visible
+        // without competing with the political signal.
+        const leader = leaderFromCandidateVotes(u.consensus_data?.candidate_votes);
+        const fillColour = leader ? partyColour(leader, partyPalette) : NO_LEADER_FILL;
+        const strokeColour =
+          u.status === 'inec_conflict' ? '#dc2626'
+          : u.status === 'discrepancy' ? '#f97316'
+          : '#0f172a';
+        return (
+          <circle
+            key={u.pu_code}
+            cx={toX(u.coordinates.lng)}
+            cy={toY(u.coordinates.lat)}
+            r={4 / Math.max(pxPerUnit / 10, 1)}
+            fill={fillColour}
+            stroke={strokeColour}
+            strokeOpacity={strokeColour === '#0f172a' ? 0.3 : 0.9}
+            strokeWidth={strokeColour === '#0f172a' ? 0.5 : 1}
+            vectorEffect="non-scaling-stroke"
+            style={{ cursor: 'pointer' }}
+            onClick={guarded(() => onSelectPU(u))}
+          >
+            <title>
+              {u.pu_name}
+              {leader ? ` — leading: ${leader}` : ' — no result yet'}
+              {' · '}{STATUS_LABEL[u.status]}
+            </title>
+          </circle>
+        );
+      })}
     </svg>
     </div>
   );
