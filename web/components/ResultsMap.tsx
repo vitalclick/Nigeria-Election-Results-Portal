@@ -983,20 +983,14 @@ function SvgFallback({
         }
       }
     }
-    if (focus.level === 'ward') {
-      // Drill further: prefer the focused ward's own polygon, fall
-      // back to PU coordinates if it has neither polygon nor GPS.
-      const wardFeat = wardGeo?.features.find(
-        (w) => w.geometry !== null && w.properties.ward_code === focus.ward_code,
-      );
-      if (wardFeat) {
-        bbox = geomBbox(wardFeat.geometry as Geom);
-      } else {
-        const pts = units.map((u) => u.coordinates).filter((c) => c.lng !== 0 || c.lat !== 0);
-        const inferred = pointsBbox(pts);
-        if (inferred) bbox = inferred;
-      }
-    }
+    // Note: at ward focus we deliberately DON'T tighten the bbox to
+    // the focused ward alone. The LGA-level bbox computed above keeps
+    // neighbouring wards visible around the focused one (which is
+    // already visually highlighted by stroke + opacity), giving the
+    // user spatial context instead of a context-free zoom into a
+    // single polygon. Falling back to PU coordinates here is also
+    // unreliable on the INEC roster (no GPS) so the LGA bbox is both
+    // the cleaner UX and the safer default.
     const [vx, vy, vw, vh] = bboxToViewBox(bbox);
     const cx = vx + vw / 2, cy = vy + vh / 2;
     const w = vw / zoomScale, h = vh / zoomScale;
@@ -1242,16 +1236,18 @@ function SvgFallback({
         Clicking either form descends into ward focus, which shows the
         polling units in that ward as dots.
       */}
-      {focus.level === 'lga' && wardGeo && wardGeo.features
+      {(focus.level === 'lga' || focus.level === 'ward') && wardGeo && wardGeo.features
         .filter((w) => w.geometry !== null && w.properties.lga_code === focus.lga_code)
         .map((w) => {
           const agg = aggregatesByCode.get(w.properties.ward_code);
+          const isFocused = focus.level === 'ward' && w.properties.ward_code === focus.ward_code;
+          const isOtherFocused = focus.level === 'ward' && !isFocused;
           const fill = agg ? regionFill(agg, partyPalette) : '#f1f5f9';
           const stroke = agg && agg.units_inec_conflict > 0
             ? '#dc2626'
             : agg && agg.units_discrepancy > 0
               ? '#f97316'
-              : '#94a3b8';
+              : isFocused ? '#0f172a' : '#94a3b8';
           // Dashed stroke for low-confidence reconciliations (GRID3 ↔
           // INEC fuzzy match below 0.95). The polygon may be slightly
           // off the actual INEC ward boundary, so signal that
@@ -1260,25 +1256,35 @@ function SvgFallback({
           // fuzzy + exact ward; lower = ward fuzzy.
           const conf = w.properties.match_confidence;
           const isLowConf = conf !== null && conf < 0.95;
+          // At ward focus, dim the non-focused wards so the focused
+          // one stands out but the user still gets geographic context
+          // (which is which, how they nest). Mirrors the LGA-at-state
+          // dim/highlight pattern further up.
+          const baseOpacity = isLowConf ? 0.7 : 1;
+          const fillOpacity = isOtherFocused ? baseOpacity * 0.45 : baseOpacity;
           return (
             <path
               key={w.properties.ward_code}
               d={featureToPath(w as unknown as GeoFeature)}
               fill={fill}
-              fillOpacity={isLowConf ? 0.7 : 1}
+              fillOpacity={fillOpacity}
               stroke={stroke}
-              strokeWidth={0.6}
+              strokeWidth={isFocused ? 1.5 : 0.6}
               strokeDasharray={isLowConf ? '2 2' : undefined}
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
-              style={{ cursor: 'pointer' }}
-              onClick={guarded(() => {
-                if (!agg) return;
-                onSelectRegion(agg);
-                onFocus(descend(focus, {
-                  code: agg.code, name: agg.name, state_code: agg.state_code,
-                }));
-              })}
+              style={{ cursor: focus.level === 'lga' ? 'pointer' : 'default' }}
+              onClick={
+                focus.level === 'lga'
+                  ? guarded(() => {
+                      if (!agg) return;
+                      onSelectRegion(agg);
+                      onFocus(descend(focus, {
+                        code: agg.code, name: agg.name, state_code: agg.state_code,
+                      }));
+                    })
+                  : undefined
+              }
             >
               <title>
                 {w.properties.name}
@@ -1295,12 +1301,13 @@ function SvgFallback({
         window before wardGeo finishes loading). Wards that DO have a
         polygon are filtered out so we don't double-render.
       */}
-      {focus.level === 'lga' && (
+      {(focus.level === 'lga' || focus.level === 'ward') && (
         <AggregateSymbols
           regions={aggregates.filter((r) => !wardsWithPolygons.has(r.code))}
           project={(lng, lat) => ({ x: toX(lng), y: toY(lat) })}
           pxPerUnit={pxPerUnit}
           onSelect={guarded((r) => {
+            if (focus.level !== 'lga') return;  // no descend from ward focus
             onSelectRegion(r);
             onFocus(descend(focus, { code: r.code, name: r.name, state_code: r.state_code }));
           })}
