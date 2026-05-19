@@ -299,6 +299,27 @@ points to `https://inc-s3-cache.incportals.com/cached/express/results/…`
 listed above. The S3 buckets are still the origin per ADR-0001, but
 the scraper should follow whatever URL the API returns.
 
+**Image fetch limitation (verified 2026-05-19):** the
+`inc-s3-cache.incportals.com` CDN allowlists by host — direct fetches
+from outside INEC's partner network return
+`HTTP 403 Host not in allowlist`. The SPA hosts
+(`irev.inecnigeria.org`, `www.inecelectionresults.ng`) do NOT proxy
+through to the image; they return the Angular shell with
+`x-do-orig-status: 404` in the response headers. The metadata API
+(`dolphin-app-sleqh`) is reachable, but the image bytes themselves
+are not. Same allowlist applies to the `irev-v2.herokuapp.com`
+guest fallback. Practical implications:
+
+- **The scraper has a `--catalog-only` flag** that captures all
+  metadata (per-PU records + image URLs) without attempting the image
+  download. Use this when scraping from any host outside the allowlist.
+- A full image archive requires either INEC adding our scrape host to
+  the allowlist, or running the scrape from inside their partner
+  network.
+- Stored `image_url` should still be the IReV URL — re-downloading from
+  an allowlisted host later will produce the same SHA, preserving the
+  evidence chain.
+
 ### Mapping IReV IDs back to INEC delim codes
 
 The good news: the per-PU response includes

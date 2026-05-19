@@ -1,6 +1,20 @@
 #!/usr/bin/env node
 'use strict';
 
+// NOTE (2026-05-19): this script is BROKEN against the post-2026 IReV
+// API. It walks the local Polling-Units registry PU-first and calls
+// fetchPUResult / parseIRevPU — both removed when scrape.js was rewritten
+// for the election-first API model (see README "The traversal model").
+//
+// A rewritten pilot is intentionally not in scope yet; for now use the
+// main scraper with `--smoke --catalog-only --dry-run` (or `npm run smoke`)
+// to validate one ward end-to-end against the live API. The fail-fast
+// guard below prevents this script from running and producing garbage.
+if (require.main === module) {
+  console.error('scripts/pilot.js is stale — see header comment. Use: npm run smoke');
+  process.exit(2);
+}
+
 // One-state pilot scrape with full instrumentation.
 //
 // What it does:
