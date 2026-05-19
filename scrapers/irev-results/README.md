@@ -47,6 +47,9 @@ IREV_BASE=https://lv.irev.inecnigeria.org
 IREV_RESULT_PATHS=/api/v1/elections/{election_id}/polling-units/{pu_code},/api/elections/{election_id}/results/{pu_code}
 
 # Per-election IDs IReV uses internally. Confirm against the live portal.
+# (NB: 2026-05-19 — IReV also exposes FCT Area Council types CHAIRMAN
+# and COUNCILLOR. Add IREV_ID_CHAIRMAN / IREV_ID_COUNCILLOR here once
+# the redesign covers them.)
 IREV_ID_PRESIDENTIAL=presidential-2023
 IREV_ID_SENATE=senate-2023
 IREV_ID_REPS=house-of-reps-2023
@@ -189,14 +192,16 @@ after 2023 and rebuilt IReV on a different stack. The new picture:
 
 ### Hosts
 
+Re-verified 2026-05-19 via `curl -I`:
+
 | Hostname | Status | Role |
 |---|---|---|
 | `lv.irev.inecnigeria.org` | DNS does not resolve | Original 2023 host — gone |
-| `www.inecelectionresults.ng` | Cloudflare → DigitalOcean SPA | Public-facing portal (Angular) |
-| `irev.inecnigeria.org` | Cloudflare → DigitalOcean SPA | Same Angular app under INEC's own domain |
-| `dolphin-app-sleqh.ondigitalocean.app` | **Reachable, this is the live API** | Express + MongoDB backend |
+| `www.inecelectionresults.ng` | HTTP 200 (Cloudflare → DigitalOcean SPA) | Public-facing portal (Angular) |
+| `irev.inecnigeria.org` | HTTP 200 (Cloudflare → DigitalOcean SPA) | Same Angular app under INEC's own domain |
+| `dolphin-app-sleqh.ondigitalocean.app` | HTTP 200 — **live API** | Express + MongoDB backend |
 | `lv001-r.inecelectionresults.ng` | DNS does not resolve | Stale URL still referenced in the SPA bundle |
-| `irev-v2.herokuapp.com` | Legacy — Heroku, likely stale | Pilot environment from earlier vintage |
+| `irev-v2.herokuapp.com` | HTTP 403 — host resolves but the Heroku app no longer serves | Pilot environment from earlier vintage |
 
 EC8A image storage:
 - `ecollation-result-docs.s3.eu-west-2.amazonaws.com` — collated docs
@@ -208,9 +213,30 @@ Base: `https://dolphin-app-sleqh.ondigitalocean.app/api/v1/`
 
 ```
 GET /                     -> { status: "success", request_time: <epoch_ms> }
-GET /elections            -> { success: true, data: [{...election...}] }   paginated, newest first
+GET /elections            -> { success: true, data: [{...election...}] }   400 rows, newest first; see pagination note
 GET /states               -> { success: true, states: [{...state...}] }    37 entries
+GET /elections/{election_id}  -> route is wired; returns { success:false, error_code:6, message:"Unable to complete request" } for unknown ids
 ```
+
+**Pagination is not exposed (verified 2026-05-19).** The `/elections`
+endpoint returns the same 400 rows regardless of `?page=N`, `?limit=N`,
+`?election_type_id=N`, or `?type=…` — query params are silently ignored
+and the response has no `total`, `next`, or `Link` header. Walking past
+the most recent 400 elections via this endpoint is not currently
+possible; the SPA must be using a route we haven't discovered.
+
+**Presidential elections are not in the `/elections` listing
+(verified 2026-05-19).** Across all probed pages, `election_type_id`
+values seen are only `2..7` (Gov, Senate, Reps, Assembly, Chairman,
+Councillor). No `election_type_id=1` row appears. Every state document
+carries a top-level `presidential` ObjectId (e.g.
+`5f0eb67db39f166717b8411f`) and `presidential_id: 1`, suggesting
+Presidential is modelled as a singleton outside the `/elections`
+collection. Guessed routes that returned 404: `/presidential`,
+`/presidentials`, `/presidential-elections`, `/election/1`. Hitting
+`/elections/<presidential ObjectId>` returns `{success:true, data:null}`.
+The redesign step "find 2023 Presidential election_id" must be done via
+the browser-DevTools probe — API guessing has been exhausted.
 
 Schema fragments observed in responses:
 
@@ -256,10 +282,12 @@ for a single `(election_id, pu_id)` pair.
 
 Switching to that model requires:
 
-1. **Find the 2023 Presidential `election_id`.** It is buried far back
-   in `/api/v1/elections`; the response is reverse-chronological and
-   pagination defaults likely cap at 100. Filter by `election_type_id=1`
-   if the API supports a query string (untested), or paginate.
+1. **Find the 2023 Presidential `election_id`.** ~~It is buried far back
+   in `/api/v1/elections`~~ — superseded 2026-05-19: Presidential rows do
+   not appear in `/elections` at all, and `?page=` / `?election_type_id=`
+   are ignored (see "Pagination is not exposed" above). Discovery must
+   come from the DevTools probe on <https://irev.inecnigeria.org/> — the
+   Presidential entry point is on a separate route the SPA calls.
 2. **Find the traversal endpoints.** Plausible patterns to probe (none
    verified yet):
    - `/api/v1/elections/{election_id}/states`
